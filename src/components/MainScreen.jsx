@@ -12,6 +12,7 @@ import {
     Calendar
 } from 'lucide-react';
 import Profile from "./tabs/Profile.jsx";
+import OrderedCars from "./tabs/OrderedCars.jsx";
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -24,10 +25,12 @@ const Dashboard = () => {
     };
 
     const tabs = [
+        { id: 'ordered cars', label: 'Ordered cars', icon: User },
         { id: 'dashboard', label: 'Dashboard', icon: Home },
         { id: 'profile', label: 'Profile', icon: User },
         { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-        { id: 'settings', label: 'Settings', icon: Settings }
+        { id: 'settings', label: 'Settings', icon: Settings },
+
     ];
 
     const renderContent = () => {
@@ -122,6 +125,10 @@ const Dashboard = () => {
             case 'profile':
                 return (
                     <Profile></Profile>
+                );
+            case 'ordered cars':
+                return (
+                    <OrderedCars></OrderedCars>
                 );
 
             case 'analytics':
