@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice.js";
 import userRegistrationReducer from "./userRegistrationSlice.js";
+import vehicleReducer from "./vehicleSlice.js";
 
 export const store = configureStore({
     reducer: {auth: authReducer,
-    registerUser: userRegistrationReducer,}
+    registerUser: userRegistrationReducer,
+    vehicles: vehicleReducer}
 });

@@ -12,7 +12,7 @@ import {
     Calendar
 } from 'lucide-react';
 import Profile from "./tabs/Profile.jsx";
-import OrderedCars from "./tabs/OrderedCars.jsx";
+import OrderedCars from "./tabs/orderedCars/OrderedCars.jsx";
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
