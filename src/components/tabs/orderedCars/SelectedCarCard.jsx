@@ -11,6 +11,7 @@ import {
 } from "../../../state/vehicleSlice.js";
 import Notification from "../../common/Notification.jsx"
 import {SELECTED_VEHICLE_CARD_OPTIONS} from "../../common/Costants.js";
+import config from "../../../configs/config.json";
 
 const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const dispatch = useDispatch();
@@ -72,6 +73,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const financials = selectedCar.vehicle_financials || {};
     const sales = selectedCar.vehicle_sales || {};
     const purchase = selectedCar.vehicle_purchase || {};
+    const images = selectedCar.vehicle_image || {};
 
     // Initialize edited data
     useEffect(() => {
@@ -645,7 +647,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         {/* Left Column - Vehicle Image and Basic Info */}
                         <div>
                             <img
-                                src=""
+                                src={`${config.car_service.base_url}/vehicles/upload-image/${images.filename}`}
                                 alt={`${editedData.vehicle?.make || vehicle.make} ${editedData.vehicle?.model || vehicle.model}`}
                                 className="w-full h-48 object-cover rounded-lg mb-4"
                                 onError={(e) => {

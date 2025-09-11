@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { Car, Calendar, Truck, Package, ChevronLeft, ChevronRight, Eye, MapPin, Plus, X, Ship, DollarSign, Search } from 'lucide-react';
-import CreateNewOrder from "../CreateNewOrder.jsx";
+import { Car, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import CreateVehicle from "./CreateVehicle.jsx";
 import SelectedCarCard from "./SelectedCarCard.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -180,7 +180,7 @@ const OrderedCars = () => {
                         className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                     >
                         <Plus className="w-4 h-4" />
-                        <span>New Order</span>
+                        <span>Add Car</span>
                     </button>
                 </div>
             </div>
@@ -327,7 +327,7 @@ const OrderedCars = () => {
 
             {/* Create New Order Modal */}
             {showCreateOrder && (
-                <CreateNewOrder
+                <CreateVehicle
                     isOpen={showCreateOrder}
                     onClose={() => setShowCreateOrder(false)}
                     onSubmit={handleOrderSubmit}

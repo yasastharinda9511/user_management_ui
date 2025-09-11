@@ -1,8 +1,9 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {URLBuilder} from "../components/util/URLUtil.js";
+import config from "../configs/config.json";
 
 // API Base URL - adjust according to your setup
-const API_BASE_URL = 'http://localhost:8085/api/v1';
+const API_BASE_URL = config.car_service.base_url;
 
 // Fetch all vehicles with pagination
 export const fetchVehicles = createAsyncThunk(
@@ -176,6 +177,44 @@ export const updateVehicleSales = createAsyncThunk(
             }
             return { vehicleId, salesData };
         } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const createVehicleRecordWithImage = createAsyncThunk(
+    'vehicles/create',
+    async ({vehicleData, images }, { rejectWithValue }) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/vehicles`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(vehicleData)
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const vehicle = await response.json();
+
+            if(images.length > 0){
+                const formData = new FormData();
+                images.forEach(image => formData.append('image', image.file));
+
+                const imageResponse = await fetch(`${API_BASE_URL}/api/v1/vehicles/upload-image/${vehicle.data.id}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!imageResponse.ok) {
+                    // Vehicle was created but image upload failed
+                    // You might want to handle this scenario
+                    console.warn('Vehicle created but image upload failed');
+                }
+            }
+
+
+        }catch (error) {
             return rejectWithValue(error.message);
         }
     }
@@ -457,7 +496,23 @@ const vehicleSlice = createSlice({
                         ...salesData
                     };
                 }
+            })
+
+            .addCase(createVehicleRecordWithImage.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(createVehicleRecordWithImage.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            .addCase(createVehicleRecordWithImage.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
+
+
+
     },
 });
 

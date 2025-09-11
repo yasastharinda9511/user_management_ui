@@ -1,19 +1,9 @@
 import React from "react";
 import { Car, Truck, Package, Eye, MapPin, Ship} from 'lucide-react';
-import {setCurrentPage} from "../../../state/vehicleSlice.js";
+import {getStatusColor} from "../../util/CommonLogics.js";
+import config from "../../../configs/config.json";
 
 const PreviewCard= ({car , handleViewDetails})=>{
-
-    const getStatusColor = (status) => {
-        const statusColors = {
-            'Delivered': 'bg-green-100 text-green-800 border-green-200',
-            'Cleared': 'bg-blue-100 text-blue-800 border-blue-200',
-            'Arrived': 'bg-purple-100 text-purple-800 border-purple-200',
-            'Shipped': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-            'Processing': 'bg-orange-100 text-orange-800 border-orange-200'
-        };
-        return statusColors[status] || 'bg-gray-100 text-gray-800 border-gray-200';
-    };
 
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
@@ -29,7 +19,7 @@ const PreviewCard= ({car , handleViewDetails})=>{
             {/* Car Image */}
             <div className="h-48 bg-gray-200 overflow-hidden">
                 <img
-                    src= ""
+                    src={`${config.car_service.base_url}/vehicles/upload-image/${car.vehicle_image.filename}`}
                     alt= ""
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
@@ -44,19 +34,19 @@ const PreviewCard= ({car , handleViewDetails})=>{
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <h3 className="text-lg font-semibold text-gray-900">{car.vehicle.make}</h3>
-                        <p className="text-sm text-gray-600">{car.vehicle.year_of_manufacture} • {car.color} • {car.trimLevel}</p>
-                        <p className="text-xs text-gray-500">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage} km</p>
+                        <p className="text-sm text-gray-600">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
+                        <p className="text-xs text-gray-500">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
                     </div>
                     <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
-                                    {car.shippingStatus}
-                                </span>
+                                    {car.vehicle_shipping.shipping_status}
+                    </span>
                 </div>
 
                 {/* Details Grid */}
                 <div className="space-y-3 mb-4">
                     <div className="flex items-center text-sm">
                         <Package className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
-                        <span className="text-gray-600 min-w-[80px]">Order:</span>
+                        <span className="text-gray-600 min-w-[80px]">vehicleID:</span>
                         <span className="font-medium text-gray-900">{car.vehicle.id}</span>
                     </div>
 
@@ -75,7 +65,7 @@ const PreviewCard= ({car , handleViewDetails})=>{
                     <div className="flex items-center text-sm">
                         <MapPin className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
                         <span className="text-gray-600 min-w-[80px]">Location:</span>
-                        <span className="text-gray-900">{car.vehicle.updated_at}</span>
+                        <span className="text-gray-900">{car.vehicle_shipping.departure_harbour}</span>
                     </div>
 
                     {car.vehicle_shipping && (
@@ -90,9 +80,9 @@ const PreviewCard= ({car , handleViewDetails})=>{
                 {/* Footer */}
                 <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                     <div className="text-sm">
-                        <div className="text-lg font-bold text-blue-600">{car.price}</div>
+                        <div className="text-lg font-bold text-blue-600">{car.vehicle.price}</div>
                         {car.profit !== 'N/A' && (
-                            <div className="text-xs text-green-600">Profit: {car.profit}</div>
+                            <div className="text-xs text-green-600">Profit: {car.vehicle.profit}</div>
                         )}
                     </div>
                     <button

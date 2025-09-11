@@ -21,8 +21,7 @@ export const loginUser = createAsyncThunk(
             }
 
             // Store tokens in localStorage
-            localStorage.setItem('access_token', data.auth.access_token);
-            localStorage.setItem('refresh_token', data.auth.refresh_token);
+            localStorage.setItem('access_token', data.auth.token);
             localStorage.setItem('user_info', JSON.stringify(data.auth.user));
 
             return data;
@@ -64,6 +63,31 @@ export const updateUserProfile = createAsyncThunk(
             return rejectWithValue(error.message);
         }
     }
+);
+
+export const introspectUser = createAsyncThunk(
+    'auth/introspectUser',
+        async (accessToken, { rejectWithValue }) => {
+            try {
+                console.log("Introspect called !!!");
+                const response = await fetch(`${API_BASE_URL}/user_management/introspect`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to update profile');
+                }
+
+                const data = await response.json();
+                return data; // Should return updated user data
+            } catch (error) {
+                return rejectWithValue(error.message);
+            }
+        }
 );
 
 
@@ -163,9 +187,23 @@ const authSlice = createSlice({
                     text: `Your Profile Details are Updated, ${action.payload.auth.user.username}!`
                 }
             })
-        ;
 
+            .addCase(introspectUser.pending, (state) => {
+                state.isLoading = true;
+                state.message = { type: '', text: '' };
+            })
 
+            .addCase(introspectUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isAuthenticated = action.payload.active;
+                state.user = action.payload.auth.user;
+            })
+
+            .addCase(introspectUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isAuthenticated = false;
+                state.user = null;
+            });
     }
 });
 

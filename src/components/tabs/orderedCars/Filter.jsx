@@ -31,7 +31,7 @@ const Filter = ({closeModal}) => {
     });
 
     const filterOptions = {
-        brands: ['Toyota', 'Honda', 'Nissan', 'Mazda', 'Suzuki', 'BMW', 'Mercedes', 'Audi'],
+        make: ['Toyota', 'Honda', 'Nissan', 'Mazda', 'Suzuki', 'BMW', 'Mercedes', 'Audi'],
         models: ['Aqua', 'Prius', 'Vitz', 'Axio', 'Fielder', 'Allion', 'Fit', 'Vezel', 'Grace', 'Freed'],
         years: Array.from({length: 15}, (_, i) => (new Date().getFullYear() - i).toString()),
         statuses: ['Available', 'Shipped', 'In Transit', 'Arrived', 'Clearing', 'Ready for Delivery', 'Delivered'],
@@ -88,12 +88,12 @@ const Filter = ({closeModal}) => {
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
                     <select
-                        value={pendingFilters.brand}
-                        onChange={(e) => handleFilterChange('brand', e.target.value)}
+                        value={pendingFilters.make}
+                        onChange={(e) => handleFilterChange('make', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">All Brands</option>
-                        {filterOptions.brands.map(brand => (
+                        {filterOptions.make.map(brand => (
                             <option key={brand} value={brand}>{brand}</option>
                         ))}
                     </select>
