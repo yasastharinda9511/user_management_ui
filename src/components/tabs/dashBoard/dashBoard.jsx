@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
     Car,
     DollarSign,
@@ -31,9 +31,21 @@ import {
     Cell,
     Tooltip
 } from "recharts";
+import {useDispatch, useSelector} from "react-redux";
+
+import {
+    fetchShippingStatus,
+    selectShippingStatus,
+    selectFinancialSummary, fetchFinancialSummary,
+    selectVehicleStatsSummary, fetchVehicleStats
+} from '../../../state/dashBoardSlice.js';
 
 const Dashboard = () => {
-    const [selectedTab, setSelectedTab] = useState("overview");
+    const dispatch = useDispatch();
+
+    const shippingStatus = useSelector(selectShippingStatus);
+    const financialSummary = useSelector(selectFinancialSummary);
+    const vehicleStatsSummary = useSelector(selectVehicleStatsSummary);
 
     // Enhanced sample data with more details
     const dashboardData = {
@@ -53,33 +65,29 @@ const Dashboard = () => {
         }
     };
 
+    const [filters, setFilters] = useState({
+        dateRangeStart: "",
+        dateRangeEnd: "",
+    })
+
+    useEffect(() => {
+        dispatch(fetchShippingStatus(
+            {
+                filters: filters,
+            }));
+        dispatch(fetchFinancialSummary({
+            filters:filters,
+        }));
+        dispatch(fetchVehicleStats({
+            filters:filters,
+        }));
+    }, [])
     // Chart data using your corrected structure
     const vehicleStatusData = [
         { name: "Available", value: 23, color: "#10b981" },
         { name: "Sold", value: 18, color: "#3b82f6" },
         { name: "In Transit", value: 8, color: "#8b5cf6" },
         { name: "Reserved", value: 4, color: "#f59e0b" }
-    ];
-
-    const vehicleBrandData = [
-        { name: "Toyota", value: 18, color: "#ef4444" },
-        { name: "Honda", value: 12, color: "#3b82f6" },
-        { name: "Nissan", value: 8, color: "#10b981" },
-        { name: "Suzuki", value: 5, color: "#f59e0b" },
-        { name: "Others", value: 2, color: "#8b5cf6" }
-    ];
-
-    const shippingStatusData = [
-        { name: "Delivered", value: 25, color: "#10b981" },
-        { name: "In Transit", value: 12, color: "#3b82f6" },
-        { name: "Processing", value: 8, color: "#f59e0b" }
-    ];
-
-    const financialBreakdownData = [
-        { name: "Vehicle Cost", value: 65, color: "#ef4444" },
-        { name: "Duty & Taxes", value: 20, color: "#f59e0b" },
-        { name: "Shipping", value: 10, color: "#3b82f6" },
-        { name: "Other Expenses", value: 5, color: "#8b5cf6" }
     ];
 
     // Enhanced vehicle data with full details
@@ -484,7 +492,7 @@ const Dashboard = () => {
                             <ResponsiveContainer width="100%" height={200}>
                                 <PieChart>
                                     <Pie
-                                        data={vehicleBrandData}
+                                        data={vehicleStatsSummary.data}
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
@@ -493,7 +501,7 @@ const Dashboard = () => {
                                         fill="#8884d8"
                                         dataKey="value"
                                     >
-                                        {vehicleBrandData.map((entry, index) => (
+                                        {vehicleStatsSummary.data.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
@@ -501,7 +509,7 @@ const Dashboard = () => {
                                 </PieChart>
                             </ResponsiveContainer>
                             <div className="mt-4 space-y-2">
-                                {vehicleBrandData.map((item, index) => (
+                                {vehicleStatsSummary.data.map((item, index) => (
                                     <div key={index} className="flex items-center justify-between text-sm">
                                         <div className="flex items-center">
                                             <div
@@ -522,7 +530,7 @@ const Dashboard = () => {
                             <ResponsiveContainer width="100%" height={200}>
                                 <PieChart>
                                     <Pie
-                                        data={shippingStatusData}
+                                        data={shippingStatus.data}
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
@@ -531,7 +539,7 @@ const Dashboard = () => {
                                         fill="#8884d8"
                                         dataKey="value"
                                     >
-                                        {shippingStatusData.map((entry, index) => (
+                                        {shippingStatus.data.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
@@ -539,7 +547,7 @@ const Dashboard = () => {
                                 </PieChart>
                             </ResponsiveContainer>
                             <div className="mt-4 space-y-2">
-                                {shippingStatusData.map((item, index) => (
+                                {shippingStatus.data.map((item, index) => (
                                     <div key={index} className="flex items-center justify-between text-sm">
                                         <div className="flex items-center">
                                             <div
@@ -560,7 +568,7 @@ const Dashboard = () => {
                             <ResponsiveContainer width="100%" height={200}>
                                 <PieChart>
                                     <Pie
-                                        data={financialBreakdownData}
+                                        data={financialSummary.data}
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
@@ -569,7 +577,7 @@ const Dashboard = () => {
                                         fill="#8884d8"
                                         dataKey="value"
                                     >
-                                        {financialBreakdownData.map((entry, index) => (
+                                        {financialSummary.data.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
@@ -577,7 +585,7 @@ const Dashboard = () => {
                                 </PieChart>
                             </ResponsiveContainer>
                             <div className="mt-4 space-y-2">
-                                {financialBreakdownData.map((item, index) => (
+                                {financialSummary.data.map((item, index) => (
                                     <div key={index} className="flex items-center justify-between text-sm">
                                         <div className="flex items-center">
                                             <div
@@ -586,7 +594,7 @@ const Dashboard = () => {
                                             ></div>
                                             <span className="text-gray-600">{item.name}</span>
                                         </div>
-                                        <span className="font-medium">{item.value}%</span>
+                                        <span className="font-medium">{formatCurrency(item.value)}</span>
                                     </div>
                                 ))}
                             </div>
