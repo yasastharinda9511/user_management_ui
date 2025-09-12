@@ -199,9 +199,9 @@ export const createVehicleRecordWithImage = createAsyncThunk(
 
             if(images.length > 0){
                 const formData = new FormData();
-                images.forEach(image => formData.append('image', image.file));
+                images.forEach(image => formData.append('images', image.file));
 
-                const imageResponse = await fetch(`${API_BASE_URL}/api/v1/vehicles/upload-image/${vehicle.data.id}`, {
+                const imageResponse = await fetch(`${API_BASE_URL}/vehicles/upload-image/${vehicle.data.id}`, {
                     method: 'POST',
                     body: formData
                 });

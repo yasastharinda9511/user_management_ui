@@ -13,8 +13,9 @@ import {
 } from 'lucide-react';
 import Profile from "./tabs/Profile.jsx";
 import OrderedCars from "./tabs/orderedCars/OrderedCars.jsx";
+import DashBoard from "./tabs/dashBoard/dashBoard.jsx";
 
-const Dashboard = () => {
+const MainScreen = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -36,91 +37,7 @@ const Dashboard = () => {
     const renderContent = () => {
         switch (activeTab) {
             case 'dashboard':
-                return (
-                    <div className="space-y-6">
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-                            <p className="text-gray-600 mt-2">Welcome back! Here's what's happening.</p>
-                        </div>
-
-                        {/* Stats Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div className="bg-white rounded-lg border border-gray-200 p-6">
-                                <div className="flex items-center">
-                                    <div className="p-3 rounded-full bg-blue-100">
-                                        <User className="w-6 h-6 text-blue-600" />
-                                    </div>
-                                    <div className="ml-4">
-                                        <p className="text-sm font-medium text-gray-600">Total Users</p>
-                                        <p className="text-2xl font-bold text-gray-900">1,234</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-white rounded-lg border border-gray-200 p-6">
-                                <div className="flex items-center">
-                                    <div className="p-3 rounded-full bg-green-100">
-                                        <BarChart3 className="w-6 h-6 text-green-600" />
-                                    </div>
-                                    <div className="ml-4">
-                                        <p className="text-sm font-medium text-gray-600">Revenue</p>
-                                        <p className="text-2xl font-bold text-gray-900">$12,345</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-white rounded-lg border border-gray-200 p-6">
-                                <div className="flex items-center">
-                                    <div className="p-3 rounded-full bg-purple-100">
-                                        <Bell className="w-6 h-6 text-purple-600" />
-                                    </div>
-                                    <div className="ml-4">
-                                        <p className="text-sm font-medium text-gray-600">Notifications</p>
-                                        <p className="text-2xl font-bold text-gray-900">23</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-white rounded-lg border border-gray-200 p-6">
-                                <div className="flex items-center">
-                                    <div className="p-3 rounded-full bg-orange-100">
-                                        <Settings className="w-6 h-6 text-orange-600" />
-                                    </div>
-                                    <div className="ml-4">
-                                        <p className="text-sm font-medium text-gray-600">Active Sessions</p>
-                                        <p className="text-2xl font-bold text-gray-900">8</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Recent Activity */}
-                        <div className="bg-white rounded-lg border border-gray-200">
-                            <div className="p-6 border-b border-gray-200">
-                                <h2 className="text-xl font-semibold text-gray-900">Recent Activity</h2>
-                            </div>
-                            <div className="p-6">
-                                <div className="space-y-4">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                        <p className="text-sm text-gray-600">New user registered - Sarah Johnson</p>
-                                        <span className="text-xs text-gray-400">2 hours ago</span>
-                                    </div>
-                                    <div className="flex items-center space-x-3">
-                                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                        <p className="text-sm text-gray-600">Payment processed - $299.99</p>
-                                        <span className="text-xs text-gray-400">4 hours ago</span>
-                                    </div>
-                                    <div className="flex items-center space-x-3">
-                                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                                        <p className="text-sm text-gray-600">System update completed</p>
-                                        <span className="text-xs text-gray-400">6 hours ago</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
+                return(<DashBoard></DashBoard>);
 
             case 'profile':
                 return (
@@ -295,4 +212,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default MainScreen;

@@ -14,12 +14,24 @@ const PreviewCard= ({car , handleViewDetails})=>{
         });
     };
 
+
+    const getImageUrl = (car) => {
+        const sortedImages = car.vehicle_image.sort((a, b) => a.display_order - b.display_order);
+
+        if(sortedImages.length > 0){
+            console.log(`${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`)
+            return `${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`
+        }
+
+        return "";
+    }
+    //
     return (
         <div key={car.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
             {/* Car Image */}
             <div className="h-48 bg-gray-200 overflow-hidden">
                 <img
-                    src={`${config.car_service.base_url}/vehicles/upload-image/${car.vehicle_image.filename}`}
+                    src={getImageUrl(car)}
                     alt= ""
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     onError={(e) => {

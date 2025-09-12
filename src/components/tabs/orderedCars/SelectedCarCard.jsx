@@ -28,6 +28,17 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     // Minimum swipe distance (in px)
     const minSwipeDistance = 50;
 
+    const getImageUrl = (car) => {
+        const sortedImages = car.vehicle_image.sort((a, b) => a.display_order - b.display_order);
+
+        if(sortedImages.length > 0){
+            console.log(`${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`)
+            return `${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`
+        }
+
+        return "";
+    }
+
     const getStatusColor = (status) => {
         const statusColors = {
             'DELIVERED': 'bg-green-100 text-green-800 border-green-200',
@@ -647,7 +658,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         {/* Left Column - Vehicle Image and Basic Info */}
                         <div>
                             <img
-                                src={`${config.car_service.base_url}/vehicles/upload-image/${images.filename}`}
+                                src={getImageUrl(selectedCar)}
                                 alt={`${editedData.vehicle?.make || vehicle.make} ${editedData.vehicle?.model || vehicle.model}`}
                                 className="w-full h-48 object-cover rounded-lg mb-4"
                                 onError={(e) => {
