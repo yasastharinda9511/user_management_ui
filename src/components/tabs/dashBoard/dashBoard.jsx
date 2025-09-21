@@ -37,7 +37,7 @@ import {
     fetchShippingStatus,
     selectShippingStatus,
     selectFinancialSummary, fetchFinancialSummary,
-    selectVehicleStatsSummary, fetchVehicleStats
+    selectVehicleStatsSummary, fetchVehicleStats, selectVehicleSalesSummary, fetSalesStatusSummary
 } from '../../../state/dashBoardSlice.js';
 
 const Dashboard = () => {
@@ -46,7 +46,7 @@ const Dashboard = () => {
     const shippingStatus = useSelector(selectShippingStatus);
     const financialSummary = useSelector(selectFinancialSummary);
     const vehicleStatsSummary = useSelector(selectVehicleStatsSummary);
-
+    const vehicleSalesSummary = useSelector(selectVehicleSalesSummary);
     // Enhanced sample data with more details
     const dashboardData = {
         totalVehicles: 45,
@@ -81,6 +81,10 @@ const Dashboard = () => {
         dispatch(fetchVehicleStats({
             filters:filters,
         }));
+        dispatch(fetSalesStatusSummary({
+                filters:filters,
+            }
+        ))
     }, [])
     // Chart data using your corrected structure
     const vehicleStatusData = [
@@ -454,7 +458,7 @@ const Dashboard = () => {
                             <ResponsiveContainer width="100%" height={200}>
                                 <PieChart>
                                     <Pie
-                                        data={vehicleStatusData}
+                                        data={vehicleSalesSummary.data}
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
@@ -463,7 +467,7 @@ const Dashboard = () => {
                                         fill="#8884d8"
                                         dataKey="value"
                                     >
-                                        {vehicleStatusData.map((entry, index) => (
+                                        {vehicleSalesSummary.data.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
@@ -471,7 +475,7 @@ const Dashboard = () => {
                                 </PieChart>
                             </ResponsiveContainer>
                             <div className="mt-4 space-y-2">
-                                {vehicleStatusData.map((item, index) => (
+                                {vehicleSalesSummary.data.map((item, index) => (
                                     <div key={index} className="flex items-center justify-between text-sm">
                                         <div className="flex items-center">
                                             <div

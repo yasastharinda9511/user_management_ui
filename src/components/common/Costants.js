@@ -40,10 +40,14 @@ export const financialStatusColors = {
 
 }
 
-export const vehicleBrandData = {
+export const vehicleBrandDataColors = {
     "Toyota": '#8b5cf6',
     "Honda": "#3b82f6",
     "Nissan": "#10b981",
     "Suzuki": "#f59e0b",
     "Others": "#8b5cf6"
+}
+export const vehicleSalesDataColors = {
+    "SOLD": '#8b5cf6',
+    "AVAILABLE": "#3b82f6",
 }

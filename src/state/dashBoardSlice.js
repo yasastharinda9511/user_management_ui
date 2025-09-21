@@ -1,7 +1,12 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import config from "../configs/config.json";
 import {URLBuilder} from "../components/util/URLUtil.js";
-import {financialStatusColors, shippingStatusColors, vehicleBrandData} from "../components/common/Costants.js";
+import {
+    financialStatusColors,
+    shippingStatusColors,
+    vehicleBrandDataColors,
+    vehicleSalesDataColors
+} from "../components/common/Costants.js";
 
 const API_BASE_URL = config.car_service.base_url;
 
@@ -69,12 +74,12 @@ export const fetchVehicleStats = createAsyncThunk(
 );
 
 export const fetSalesStatusSummary = createAsyncThunk(
-    'dashboard/fetchingVehicleBrands',
+    'dashboard/fetchingVehicleSales',
     async ({ filters }, { rejectWithValue }) => {
         try {
 
             const queryParams = { ...filters };
-            const url = URLBuilder(`${API_BASE_URL}/analytics/vehicle-brand-status`, queryParams);
+            const url = URLBuilder(`${API_BASE_URL}/analytics/sales-status`, queryParams);
             const response = await fetch(url);
 
             if (!response.ok) {
@@ -124,7 +129,22 @@ const transformVehicleBrands = (data) => {
         return {
             name: formattedName,
             value: count,
-            color: vehicleBrandData[status] || '#6b7280'
+            color: vehicleBrandDataColors[status] || '#6b7280'
+        };
+    });
+};
+
+const transformVehicleSales = (data) => {
+    return Object.entries(data).map(([status, count]) => {
+        const formattedName = status
+            .split('_') // ["total", "charges"]
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' '); // "Total Charges"
+
+        return {
+            name: formattedName,
+            value: count,
+            color: vehicleSalesDataColors[status] || '#6b7280'
         };
     });
 };
@@ -145,6 +165,15 @@ const dashboardSlice = createSlice({
 
         // Vehicle stats
         vehicleStats: {
+            data: [],
+            rawData: {},
+            loading: false,
+            error: null,
+            lastFetched: null
+        },
+
+        // sales stats
+        salesStats: {
             data: [],
             rawData: {},
             loading: false,
@@ -242,10 +271,24 @@ const dashboardSlice = createSlice({
                 state.vehicleStats.loading = false;
                 state.vehicleStats.rawData = action.payload;
                 state.vehicleStats.data = transformVehicleBrands(action.payload);
-                console.log( JSON.stringify(state.financialSummary.data));
                 state.vehicleStats.lastFetched = Date.now();
             })
             .addCase(fetchVehicleStats.rejected, (state, action) => {
+                state.vehicleStats.loading = false;
+                state.vehicleStats.error = action.payload;
+            })
+
+            .addCase(fetSalesStatusSummary.pending, (state) => {
+                state.financialSummary.loading = true;
+                state.financialSummary.error = null;
+            })
+            .addCase(fetSalesStatusSummary.fulfilled, (state, action) => {
+                state.salesStats.loading = false;
+                state.salesStats.rawData = action.payload;
+                state.salesStats.data = transformVehicleSales(action.payload);
+                state.salesStats.lastFetched = Date.now();
+            })
+            .addCase(fetSalesStatusSummary.rejected, (state, action) => {
                 state.vehicleStats.loading = false;
                 state.vehicleStats.error = action.payload;
             })
@@ -256,6 +299,7 @@ const dashboardSlice = createSlice({
 export const selectShippingStatus = (state) => state.dashBoard.shippingStatus;
 export const selectFinancialSummary = (state) => state.dashBoard.financialSummary;
 export const selectVehicleStatsSummary = (state) => state.dashBoard.vehicleStats;
+export const selectVehicleSalesSummary = (state) => state.dashBoard.salesStats
 // Check if data is stale (older than 5 minutes)
 export const selectIsDataStale = (section) => (state) => {
     const lastFetched = state.dashboard[section]?.lastFetched;
