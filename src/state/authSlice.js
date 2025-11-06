@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import  configs from '../configs/config.json';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = configs.user_management_service.base_url;
 
 export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async (loginData, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+            const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,7 +38,7 @@ export const updateUserProfile = createAsyncThunk(
     async (userData, { rejectWithValue }) => {
         try {
             // Replace with your actual API endpoint
-            const response = await fetch(`/api/users/${userData.id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/users/${userData.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail, User, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import {useDispatch, useSelector} from "react-redux";
 import {loginUser} from "../state/authSlice.js";
@@ -7,8 +7,8 @@ import {registerUser} from "../state/userRegistrationSlice.js";
 const LoginPage = () => {
 
     const  dispatch = useDispatch();
-    const { isLoading: authLoading, message, isAuthenticated } = useSelector((state) => state.auth);
-    const {user, isLoading: registerLoading, error, isRegistered} = useSelector((state) => state.registerUser);
+    const { isLoading: authLoading, message} = useSelector((state) => state.auth);
+    const {user, isLoading: registerLoading} = useSelector((state) => state.registerUser);
 
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
