@@ -31,7 +31,7 @@ function App() {
     }, [accessToken])
 
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="/car-app">
             <Routes>
                 <Route path="/login" element={<LoginPage/>} />
                 <Route path="/*" element={

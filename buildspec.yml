@@ -1,0 +1,75 @@
+version: 0.2
+
+env:
+  variables:
+    # Default environment variables
+    NODE_ENV: production
+    # Add your S3 bucket name here or pass as parameter
+    S3_BUCKET: "tarragon"
+  parameter-store:
+    # Optionally fetch secrets from AWS Systems Manager Parameter Store
+    # API_KEY: /carapp/api/key
+  # secrets-manager:
+    # Optionally fetch secrets from AWS Secrets Manager
+    # DB_PASSWORD: prod/db/password
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - echo Installing dependencies...
+      - npm ci --production=false
+
+  pre_build:
+    commands:
+      - echo Pre-build started on `date`
+      - echo Running linter...
+      - npm run lint || true
+      - echo Listing environment...
+      - node --version
+      - npm --version
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the React application...
+      - npm run build
+      - echo Build completed successfully on `date`
+      - ls -la dist/
+
+  post_build:
+    commands:
+      - echo Post-build started on `date`
+      # Uncomment to deploy to S3
+      - |
+         if [ -n "$S3_BUCKET" ]; then
+           echo "Deploying to S3 bucket: $S3_BUCKET"
+           aws s3 sync dist/ s3://$S3_BUCKET/car-app --delete
+           echo "Deployment completed"
+         fi
+      # Uncomment to invalidate CloudFront cache
+      - |
+         if [ -n "$CLOUDFRONT_DISTRIBUTION_ID" ]; then
+           echo "Invalidating CloudFront cache..."
+           aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/car-app/*"
+         fi
+      - echo Build artifacts ready
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: dist
+  name: car-app-build-$(date +%Y%m%d-%H%M%S)
+  discard-paths: no
+
+cache:
+  paths:
+    - 'node_modules/**/*'
+
+reports:
+  # Uncomment if you add test reports
+  # test_report:
+  #   files:
+  #     - 'test-results/**/*'
+  #   file-format: 'JUNITXML'
