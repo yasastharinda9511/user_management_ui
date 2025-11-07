@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Lock, Mail, User, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import {useDispatch, useSelector} from "react-redux";
 import {loginUser} from "../state/authSlice.js";
 import {registerUser} from "../state/userRegistrationSlice.js";
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
 
     const  dispatch = useDispatch();
-    const { isLoading: authLoading, message} = useSelector((state) => state.auth);
+    const navigate = useNavigate();
+    const { isLoading: authLoading, message, isAuthenticated} = useSelector((state) => state.auth);
     const {user, isLoading: registerLoading} = useSelector((state) => state.registerUser);
+
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/dashboard');
+        }
+    }, [isAuthenticated, navigate]);
 
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -58,8 +67,7 @@ const LoginPage = () => {
             // Redirect logic here
             console.log("loged Sucessfully !!!!!")
             setTimeout(() => {
-                // You can dispatch another action or handle redirect
-                console.log('Redirecting to dashboard...');
+                navigate('/dashboard');
             }, 1000);
         }
     };

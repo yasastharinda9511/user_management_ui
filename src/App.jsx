@@ -7,6 +7,8 @@ import {
     loadUserFromStorage,
     introspectUser
 } from "./state/authSlice.js";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -22,16 +24,24 @@ function App() {
 
     useEffect(()=>{
         if (accessToken) {
+            console.log("accessToken", accessToken);
             dispatch(introspectUser(accessToken));
         }
 
     }, [accessToken])
 
     return (
-        <>
-            {!isAuthenticated && <LoginPage/>}
-            {isAuthenticated && <MainScreen/>}
-        </>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<LoginPage/>} />
+                <Route path="/*" element={
+                    <ProtectedRoute>
+                        <MainScreen/>
+                    </ProtectedRoute>
+                } />
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+        </BrowserRouter>
     )
 }
 

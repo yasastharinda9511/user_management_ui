@@ -14,10 +14,20 @@ import {
 import Profile from "./tabs/Profile.jsx";
 import OrderedCars from "./tabs/orderedCars/OrderedCars.jsx";
 import DashBoard from "./tabs/dashBoard/dashBoard.jsx";
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../state/authSlice.js';
 
 const MainScreen = () => {
-    const [activeTab, setActiveTab] = useState('dashboard');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const dispatch = useDispatch();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate('/login');
+    };
 
     const user = {
         name: 'John Doe',
@@ -26,95 +36,74 @@ const MainScreen = () => {
     };
 
     const tabs = [
-        { id: 'ordered cars', label: 'Ordered cars', icon: User },
-        { id: 'dashboard', label: 'Dashboard', icon: Home },
-        { id: 'profile', label: 'Profile', icon: User },
-        { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-        { id: 'settings', label: 'Settings', icon: Settings },
+        { path: '/ordered-cars', label: 'Ordered cars', icon: User },
+        { path: '/dashboard', label: 'Dashboard', icon: Home },
+        { path: '/profile', label: 'Profile', icon: User },
+        { path: '/analytics', label: 'Analytics', icon: BarChart3 },
+        { path: '/settings', label: 'Settings', icon: Settings },
 
     ];
 
-    const renderContent = () => {
-        switch (activeTab) {
-            case 'dashboard':
-                return(<DashBoard></DashBoard>);
+    const AnalyticsComponent = () => (
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
+                <p className="text-gray-600 mt-2">View your performance metrics.</p>
+            </div>
 
-            case 'profile':
-                return (
-                    <Profile></Profile>
-                );
-            case 'ordered cars':
-                return (
-                    <OrderedCars></OrderedCars>
-                );
-
-            case 'analytics':
-                return (
-                    <div className="space-y-6">
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
-                            <p className="text-gray-600 mt-2">View your performance metrics.</p>
-                        </div>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <div className="bg-white rounded-lg border border-gray-200 p-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4">User Growth</h3>
-                                <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-                                    <p className="text-gray-500">Chart placeholder</p>
-                                </div>
-                            </div>
-
-                            <div className="bg-white rounded-lg border border-gray-200 p-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Trends</h3>
-                                <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-                                    <p className="text-gray-500">Chart placeholder</p>
-                                </div>
-                            </div>
-                        </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">User Growth</h3>
+                    <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+                        <p className="text-gray-500">Chart placeholder</p>
                     </div>
-                );
+                </div>
 
-            case 'settings':
-                return (
-                    <div className="space-y-6">
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-                            <p className="text-gray-600 mt-2">Configure your preferences.</p>
-                        </div>
-
-                        <div className="bg-white rounded-lg border border-gray-200 p-6">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">General Settings</h3>
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="font-medium text-gray-900">Email Notifications</p>
-                                        <p className="text-sm text-gray-600">Receive email updates and notifications</p>
-                                    </div>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" className="sr-only peer" defaultChecked />
-                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                                    </label>
-                                </div>
-
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="font-medium text-gray-900">Dark Mode</p>
-                                        <p className="text-sm text-gray-600">Toggle dark mode theme</p>
-                                    </div>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" className="sr-only peer" />
-                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Trends</h3>
+                    <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+                        <p className="text-gray-500">Chart placeholder</p>
                     </div>
-                );
+                </div>
+            </div>
+        </div>
+    );
 
-            default:
-                return null;
-        }
-    };
+    const SettingsComponent = () => (
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
+                <p className="text-gray-600 mt-2">Configure your preferences.</p>
+            </div>
+
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">General Settings</h3>
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="font-medium text-gray-900">Email Notifications</p>
+                            <p className="text-sm text-gray-600">Receive email updates and notifications</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" className="sr-only peer" defaultChecked />
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="font-medium text-gray-900">Dark Mode</p>
+                            <p className="text-sm text-gray-600">Toggle dark mode theme</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" className="sr-only peer" />
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <div className="h-screen w-screen bg-gray-100">
@@ -136,13 +125,13 @@ const MainScreen = () => {
                         const Icon = tab.icon;
                         return (
                             <button
-                                key={tab.id}
+                                key={tab.path}
                                 onClick={() => {
-                                    setActiveTab(tab.id);
+                                    navigate(tab.path);
                                     setSidebarOpen(false);
                                 }}
                                 className={`w-full flex items-center space-x-3 px-4 py-3 text-left rounded-lg transition-colors ${
-                                    activeTab === tab.id
+                                    location.pathname === tab.path
                                         ? 'bg-blue-50 text-blue-600 border border-blue-200'
                                         : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                                 }`}
@@ -165,7 +154,10 @@ const MainScreen = () => {
                             <p className="text-xs text-gray-500 truncate">{user.email}</p>
                         </div>
                     </div>
-                    <button className="w-full flex items-center space-x-3 px-4 py-2 text-left text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors">
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center space-x-3 px-4 py-2 text-left text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
+                    >
                         <LogOut className="w-4 h-4" />
                         <span className="text-sm">Sign out</span>
                     </button>
@@ -205,7 +197,13 @@ const MainScreen = () => {
 
                 {/* Page content - starts immediately after header */}
                 <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
-                    {renderContent()}
+                    <Routes>
+                        <Route path="/dashboard" element={<DashBoard />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/ordered-cars" element={<OrderedCars />} />
+                        <Route path="/analytics" element={<AnalyticsComponent />} />
+                        <Route path="/settings" element={<SettingsComponent />} />
+                    </Routes>
                 </div>
             </div>
         </div>

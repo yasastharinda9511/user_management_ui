@@ -71,7 +71,7 @@ export const introspectUser = createAsyncThunk(
         async (accessToken, { rejectWithValue }) => {
             try {
                 console.log("Introspect called !!!");
-                const response = await fetch(`${API_BASE_URL}/user_management/introspect`, {
+                const response = await fetch(`${API_BASE_URL}/introspect`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ const authSlice = createSlice({
             const token = localStorage.getItem('access_token');
             const userInfo = localStorage.getItem('user_info');
 
-            if (token && userInfo) {
+            if (token !== undefined && userInfo !==undefined) {
                 state.accessToken = token;
                 state.refreshToken = localStorage.getItem('refresh_token');
                 state.user = JSON.parse(userInfo);
@@ -147,6 +147,10 @@ const authSlice = createSlice({
                     type: 'success',
                     text: `Welcome back, ${action.payload.auth.user.username || action.payload.auth.user.first_name}!`
                 };
+
+                localStorage.setItem('access_token', action.payload.auth.access_token);
+                localStorage.setItem('refresh_token', action.payload.auth.refresh_token);
+                localStorage.setItem('user_info', JSON.stringify(action.payload.auth.user));
             })
             // Login rejected
             .addCase(loginUser.rejected, (state, action) => {
