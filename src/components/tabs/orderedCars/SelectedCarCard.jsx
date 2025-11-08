@@ -29,7 +29,8 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const minSwipeDistance = 50;
 
     const getImageUrl = (car) => {
-        const sortedImages = car.vehicle_image.sort((a, b) => a.display_order - b.display_order);
+        const images = [...car.vehicle_image];
+        const sortedImages = images.sort((a, b) => a.display_order - b.display_order);
 
         if(sortedImages.length > 0){
             console.log(`${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`)
