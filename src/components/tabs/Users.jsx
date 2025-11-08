@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Users as UsersIcon, Mail, Phone, User, Calendar, CheckCircle, XCircle, RefreshCw, Power } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Users as UsersIcon, Mail, Phone, User, Calendar, CheckCircle, XCircle, RefreshCw, Power, Edit, Shield } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     fetchUsers,
@@ -12,6 +12,7 @@ import {
     selectActiveUsersCount,
     selectVerifiedUsersCount
 } from '../../state/userSlice.js';
+import EditUserModal from './EditUserModal.jsx';
 
 const Users = () => {
     const dispatch = useDispatch();
@@ -22,6 +23,8 @@ const Users = () => {
     const error = useSelector(selectError);
     const activeUsersCount = useSelector(selectActiveUsersCount);
     const verifiedUsersCount = useSelector(selectVerifiedUsersCount);
+
+    const [editingUser, setEditingUser] = useState(null);
 
     useEffect(() => {
         dispatch(fetchUsers());
@@ -120,6 +123,9 @@ const Users = () => {
                                         Contact
                                     </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Role
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Status
                                     </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -170,6 +176,16 @@ const Users = () => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
+                                            {user.role ? (
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                                    <Shield className="w-3 h-3 mr-1" />
+                                                    {user.role.name || user.role}
+                                                </span>
+                                            ) : (
+                                                <span className="text-xs text-gray-400 italic">No role</span>
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="space-y-1">
                                                 <div className="flex items-center">
                                                     {user.is_active ? (
@@ -209,19 +225,28 @@ const Users = () => {
                                             {formatDate(user.last_login)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                            <button
-                                                onClick={() => handleToggleStatus(user.id)}
-                                                disabled={updating}
-                                                className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                                                    user.is_active
-                                                        ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                                                        : 'bg-green-100 text-green-700 hover:bg-green-200'
-                                                } disabled:opacity-50 disabled:cursor-not-allowed`}
-                                                title={user.is_active ? 'Deactivate user' : 'Activate user'}
-                                            >
-                                                <Power className="w-3 h-3 mr-1" />
-                                                {user.is_active ? 'Deactivate' : 'Activate'}
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => setEditingUser(user)}
+                                                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
+                                                >
+                                                    <Edit className="w-3 h-3 mr-1" />
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => handleToggleStatus(user.id)}
+                                                    disabled={updating}
+                                                    className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                                        user.is_active
+                                                            ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                                                            : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                                                    title={user.is_active ? 'Deactivate user' : 'Activate user'}
+                                                >
+                                                    <Power className="w-3 h-3 mr-1" />
+                                                    {user.is_active ? 'Deactivate' : 'Activate'}
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -276,6 +301,14 @@ const Users = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Edit User Modal */}
+            {editingUser && (
+                <EditUserModal
+                    user={editingUser}
+                    onClose={() => setEditingUser(null)}
+                />
             )}
         </div>
     );

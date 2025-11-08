@@ -11,6 +11,7 @@ import {
     selectUpdating
 } from '../../state/roleSlice.js';
 import EditRoleModal from './EditRoleModal.jsx';
+import CreateRoleModal from './CreateRoleModal.jsx';
 
 const Roles = () => {
     const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const Roles = () => {
     const error = useSelector(selectError);
 
     const [editingRole, setEditingRole] = useState(null);
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     useEffect(() => {
         dispatch(fetchRoles());
@@ -76,6 +78,7 @@ const Roles = () => {
                         <span>Refresh</span>
                     </button>
                     <button
+                        onClick={() => setShowCreateModal(true)}
                         className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                     >
                         <Plus className="w-4 h-4" />
@@ -111,6 +114,7 @@ const Roles = () => {
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No roles found</h3>
                     <p className="text-gray-600 mb-4">Get started by creating your first role.</p>
                     <button
+                        onClick={() => setShowCreateModal(true)}
                         className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                     >
                         <Plus className="w-4 h-4" />
@@ -267,6 +271,13 @@ const Roles = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Create Role Modal */}
+            {showCreateModal && (
+                <CreateRoleModal
+                    onClose={() => setShowCreateModal(false)}
+                />
             )}
 
             {/* Edit Role Modal */}

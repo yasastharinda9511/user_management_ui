@@ -2,22 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { X, Save, Shield, CheckSquare, Square } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    updateRole,
+    createRole,
     fetchAllPermissions,
     selectAllPermissions,
     selectLoadingPermissions,
     selectUpdating
 } from '../../state/roleSlice.js';
 
-const EditRoleModal = ({ role, onClose }) => {
+const CreateRoleModal = ({ onClose }) => {
     const dispatch = useDispatch();
     const allPermissions = useSelector(selectAllPermissions);
     const loadingPermissions = useSelector(selectLoadingPermissions);
     const updating = useSelector(selectUpdating);
 
     const [formData, setFormData] = useState({
-        name: role.name || '',
-        description: role.description || '',
+        name: '',
+        description: '',
+        is_active: true,
     });
 
     const [selectedPermissions, setSelectedPermissions] = useState([]);
@@ -26,14 +27,6 @@ const EditRoleModal = ({ role, onClose }) => {
     useEffect(() => {
         dispatch(fetchAllPermissions());
     }, [dispatch]);
-
-    // Initialize selected permissions when role or allPermissions change
-    useEffect(() => {
-        if (role.permissions) {
-            const permissionIds = role.permissions.map(p => p.id);
-            setSelectedPermissions(permissionIds);
-        }
-    }, [role.permissions]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -61,16 +54,24 @@ const EditRoleModal = ({ role, onClose }) => {
         }
     };
 
+    const handleToggleActive = () => {
+        setFormData(prev => ({
+            ...prev,
+            is_active: !prev.is_active
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const roleData = {
             role_name: formData.name,
             description: formData.description,
+            is_active: formData.is_active,
             permission_ids: selectedPermissions
         };
 
-        await dispatch(updateRole({ roleId: role.id, roleData }));
+        await dispatch(createRole(roleData));
         onClose();
     };
 
@@ -99,10 +100,10 @@ const EditRoleModal = ({ role, onClose }) => {
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-semibold text-gray-900">
-                                        Edit Role
+                                        Create New Role
                                     </h3>
                                     <p className="text-sm text-gray-600">
-                                        Update role details and permissions
+                                        Set up a new role with permissions
                                     </p>
                                 </div>
                             </div>
@@ -114,7 +115,6 @@ const EditRoleModal = ({ role, onClose }) => {
                             </button>
                         </div>
                     </div>
-
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="px-6 py-6">
@@ -132,20 +132,25 @@ const EditRoleModal = ({ role, onClose }) => {
                                         onChange={handleInputChange}
                                         required
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                        placeholder="e.g., admin, manager"
+                                        placeholder="e.g., Developer, Manager"
                                     />
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Role ID
+                                        Status
                                     </label>
-                                    <input
-                                        type="text"
-                                        value={role.id}
-                                        disabled
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500"
-                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleToggleActive}
+                                        className={`w-full px-3 py-2 rounded-lg font-medium text-sm transition-colors ${
+                                            formData.is_active
+                                                ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                                                : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                        }`}
+                                    >
+                                        {formData.is_active ? 'Active' : 'Inactive'}
+                                    </button>
                                 </div>
                             </div>
 
@@ -244,11 +249,11 @@ const EditRoleModal = ({ role, onClose }) => {
                             </button>
                             <button
                                 type="submit"
-                                disabled={updating}
+                                disabled={updating || !formData.name}
                                 className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4" />
-                                <span>{updating ? 'Saving...' : 'Save Changes'}</span>
+                                <span>{updating ? 'Creating...' : 'Create Role'}</span>
                             </button>
                         </div>
                     </form>
@@ -258,4 +263,4 @@ const EditRoleModal = ({ role, onClose }) => {
     );
 };
 
-export default EditRoleModal;
+export default CreateRoleModal;

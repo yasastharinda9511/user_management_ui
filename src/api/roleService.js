@@ -36,7 +36,7 @@ const roleService = {
     /**
      * Update role
      * @param {number} roleId - Role ID
-     * @param {Object} roleData - Updated role data
+     * @param {Object} roleData - Updated role data {role_name, description, permission_ids}
      * @returns {Promise} - Updated role data
      */
     updateRole: async (roleId, roleData) => {
