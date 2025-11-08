@@ -226,7 +226,7 @@ export const fetchAllOptions = createAsyncThunk(
     'vehicles/fetchAllOptions',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch(`http://localhost:8080/car-service/api/v1/vehicles/dropdown/options`, {
+            const response = await fetch(`${API_BASE_URL}/vehicles/dropdown/options`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -280,7 +280,9 @@ const initialState = {
         dateRangeEnd: '',
         color: '',
         transmission: '',
-        fuelType: ''
+        fuelType: '',
+        order_by: 'id',
+        sort: 'ASC'
     },
     sortBy: 'created_at',
     sortOrder: 'desc',
@@ -344,6 +346,8 @@ const vehicleSlice = createSlice({
                 color: '',
                 transmission: '',
                 fuelType: '',
+                order_by: 'id',
+                sort: 'ASC'
             };
             state.currentPage = 1;
         },

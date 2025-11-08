@@ -296,6 +296,45 @@ const Filter = ({closeModal}) => {
                             </div>
                         </div>
                     </div>
+
+                    {/* Sorting */}
+                    <div>
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Sorting</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Order By */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                                <select
+                                    value={pendingFilters.order_by || 'id'}
+                                    onChange={(e) => handleFilterChange('order_by', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="id">ID</option>
+                                    <option value="make">Make</option>
+                                    <option value="model">Model</option>
+                                    <option value="year">Year</option>
+                                    <option value="price">Price</option>
+                                    <option value="created_at">Created Date</option>
+                                    <option value="updated_at">Updated Date</option>
+                                    <option value="shipping_status">Shipping Status</option>
+                                    <option value="sale_status">Sale Status</option>
+                                </select>
+                            </div>
+
+                            {/* Sort Direction */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
+                                <select
+                                    value={pendingFilters.sort || 'ASC'}
+                                    onChange={(e) => handleFilterChange('sort', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="ASC">Ascending (A-Z, 0-9)</option>
+                                    <option value="DESC">Descending (Z-A, 9-0)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">

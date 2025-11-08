@@ -7,12 +7,14 @@ import {
     fetchVehicles,
     fetchVehicleById,
     setCurrentPage,
+    setPageLimit,
     selectVehicles,
     selectLoading,
     selectError,
     selectCurrentPage,
     selectTotalPages,
     selectTotalVehicles,
+    selectPageLimit,
     clearSelectedVehicle,
     selectSelectedVehicle,
     selectShouldRefresh,
@@ -26,8 +28,8 @@ const OrderedCars = () => {
     const [selectedCar, setSelectedCar] = useState(null);
     const [showCreateOrder, setShowCreateOrder] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
-    const carsPerPage = 9;
     const filters = useSelector(selectFilters);
+    const pageLimit = useSelector(selectPageLimit);
 
     const shouldRefresh = useSelector(selectShouldRefresh);
 
@@ -44,16 +46,16 @@ const OrderedCars = () => {
     useEffect(() => {
         dispatch(fetchVehicles({
             page: currentPage,
-            limit: 10,
+            limit: pageLimit,
             filters: filters // Pass filters to API
         }))
-    }, [dispatch, currentPage, filters]); // Added filters to dependency array
+    }, [dispatch, currentPage, pageLimit, filters]); // Added pageLimit to dependency array
 
     useEffect(() => {
         if (shouldRefresh) {
             dispatch(fetchVehicles({
                 page: currentPage,
-                limit: 10,
+                limit: pageLimit,
                 filters: filters
             }))
         }
@@ -118,8 +120,8 @@ const OrderedCars = () => {
         return false;
     });
 
-    const indexOfLastCar = currentPage * carsPerPage;
-    const indexOfFirstCar = indexOfLastCar - carsPerPage;
+    const indexOfLastCar = currentPage * pageLimit;
+    const indexOfFirstCar = indexOfLastCar - pageLimit;
 
     const handlePageChange = (pageNumber) => {
         dispatch(setCurrentPage(pageNumber));
@@ -144,6 +146,10 @@ const OrderedCars = () => {
 
     const closeCreateOrder = () => {
         setShowCreateOrder(false);
+    };
+
+    const handlePageLimitChange = (newLimit) => {
+        dispatch(setPageLimit(Number(newLimit)));
     };
 
     return (
@@ -230,17 +236,24 @@ const OrderedCars = () => {
             )}
 
             {/* Pagination */}
-            {totalPages > 1 && !loading && (
-                <div className="flex items-center justify-center mt-8 space-x-2">
-                    {/* Previous Button */}
-                    <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                        <ChevronLeft className="w-4 h-4 mr-1" />
-                        Previous
-                    </button>
+            {!loading && vehicles.length > 0 && (
+                <div className="mt-8">
+                    <div className="flex items-center justify-between">
+                        {/* Spacer for left side to center pagination */}
+                        <div className="w-48"></div>
+
+                        {/* Pagination Controls - Centered */}
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-center space-x-2">
+                                {/* Previous Button */}
+                                <button
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    <ChevronLeft className="w-4 h-4 mr-1" />
+                                    Previous
+                                </button>
 
                     {/* Page Numbers */}
                     <div className="flex items-center space-x-1">
@@ -308,15 +321,40 @@ const OrderedCars = () => {
                         })()}
                     </div>
 
-                    {/* Next Button */}
-                    <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                        Next
-                        <ChevronRight className="w-4 h-4 ml-1" />
-                    </button>
+                                {/* Next Button */}
+                                <button
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Next
+                                    <ChevronRight className="w-4 h-4 ml-1" />
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Items per page selector - Right side */}
+                        <div className="flex items-center gap-2">
+                            <label htmlFor="pageLimit" className="text-sm font-medium text-gray-700">
+                                Items per page:
+                            </label>
+                            <select
+                                id="pageLimit"
+                                value={pageLimit}
+                                onChange={(e) => handlePageLimitChange(e.target.value)}
+                                className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="6">6</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="12">12</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             )}
 
