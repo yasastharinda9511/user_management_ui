@@ -95,199 +95,198 @@ const Filter = ({closeModal}) => {
                     </div>
                 </div>
 
-            <div className="space-y-6">
-                {/* Search */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <input
-                            type="text"
-                            placeholder="Search by make, model, or VIN..."
-                            value={pendingFilters.search}
-                            onChange={(e) => handleFilterChange('search', e.target.value)}
-                            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-                </div>
-
-                {/* Vehicle Details */}
-                <div>
-                    <h4 className="text-sm font-semibold text-gray-900 mb-3">Vehicle Details</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {/* Brand */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
-                            <select
-                                value={pendingFilters.make}
-                                onChange={(e) => handleFilterChange('make', e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="">All Brands</option>
-                                {filterOptions.make.map(brand => (
-                                    <option key={brand} value={brand}>{brand}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Model */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
-                            <select
-                                value={pendingFilters.model}
-                                onChange={(e) => handleFilterChange('model', e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="">All Models</option>
-                                {filterOptions.models.map(model => (
-                                    <option key={model} value={model}>{model}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Year */}
-
-
-                        {/* Transmission */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Transmission</label>
-                            <select
-                                value={pendingFilters.transmission}
-                                onChange={(e) => handleFilterChange('transmission', e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="">All Types</option>
-                                {filterOptions.transmissions.map(transmission => (
-                                    <option key={transmission} value={transmission}>{transmission}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Fuel Type */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Fuel Type</label>
-                            <select
-                                value={pendingFilters.fuelType}
-                                onChange={(e) => handleFilterChange('fuelType', e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="">All Types</option>
-                                {filterOptions.fuelTypes.map(fuelType => (
-                                    <option key={fuelType} value={fuelType}>{fuelType}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Status */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                            <select
-                                value={pendingFilters.status}
-                                onChange={(e) => handleFilterChange('status', e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="">All Statuses</option>
-                                {filterOptions.statuses.map(status => (
-                                    <option key={status} value={status}>{status}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div>
+                <div className="space-y-6">
+                    {/* Search */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
-                        <select
-                            value={pendingFilters.year}
-                            onChange={(e) => handleFilterChange('year', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option value="">All Years</option>
-                            {filterOptions.years.map(year => (
-                                <option key={year} value={year}>{year}</option>
-                            ))}
-                        </select>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                            <input
+                                type="text"
+                                placeholder="Search by make, model, or VIN..."
+                                value={pendingFilters.search}
+                                onChange={(e) => handleFilterChange('search', e.target.value)}
+                                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
                     </div>
 
-                    {/* Color */}
+                    {/* Vehicle Details */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
-                        <select
-                            value={pendingFilters.color}
-                            onChange={(e) => handleFilterChange('color', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option value="">All Colors</option>
-                            {filterOptions.colors.map(color => (
-                                <option key={color} value={color}>{color}</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-
-                {/* Price and Date Range */}
-                <div>
-                    <h4 className="text-sm font-semibold text-gray-900 mb-3">Price & Date Range</h4>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        {/* Price Range */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Price Range (LKR)</label>
-                            <div className="flex items-center space-x-2">
-                                <input
-                                    type="number"
-                                    placeholder="Min"
-                                    value={pendingFilters.priceRangeMin}
-                                    onChange={(e) => handleFilterChange('priceRangeMin', e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                                <span className="text-gray-500">-</span>
-                                <input
-                                    type="number"
-                                    placeholder="Max"
-                                    value={pendingFilters.priceRangeMax}
-                                    onChange={(e) => handleFilterChange('priceRangeMax', e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Vehicle Details</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                            {/* Brand */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                                <select
+                                    value={pendingFilters.make}
+                                    onChange={(e) => handleFilterChange('make', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Brands</option>
+                                    {filterOptions.make.map(brand => (
+                                        <option key={brand} value={brand}>{brand}</option>
+                                    ))}
+                                </select>
                             </div>
-                        </div>
 
-                        {/* Date Range */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
-                            <div className="flex items-center space-x-2">
-                                <input
-                                    type="date"
-                                    value={pendingFilters.dateRangeStart}
-                                    onChange={(e) => handleFilterChange('dateRangeStart', e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                                <span className="text-gray-500">-</span>
-                                <input
-                                    type="date"
-                                    value={pendingFilters.dateRangeEnd}
-                                    onChange={(e) => handleFilterChange('dateRangeEnd', e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
+                            {/* Model */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
+                                <select
+                                    value={pendingFilters.model}
+                                    onChange={(e) => handleFilterChange('model', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Models</option>
+                                    {filterOptions.models.map(model => (
+                                        <option key={model} value={model}>{model}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+
+                            {/* Transmission */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Transmission</label>
+                                <select
+                                    value={pendingFilters.transmission}
+                                    onChange={(e) => handleFilterChange('transmission', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Types</option>
+                                    {filterOptions.transmissions.map(transmission => (
+                                        <option key={transmission} value={transmission}>{transmission}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Fuel Type */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Fuel Type</label>
+                                <select
+                                    value={pendingFilters.fuelType}
+                                    onChange={(e) => handleFilterChange('fuelType', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Types</option>
+                                    {filterOptions.fuelTypes.map(fuelType => (
+                                        <option key={fuelType} value={fuelType}>{fuelType}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Status */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <select
+                                    value={pendingFilters.status}
+                                    onChange={(e) => handleFilterChange('status', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Statuses</option>
+                                    {filterOptions.statuses.map(status => (
+                                        <option key={status} value={status}>{status}</option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
                     </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                            <select
+                                value={pendingFilters.year}
+                                onChange={(e) => handleFilterChange('year', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="">All Years</option>
+                                {filterOptions.years.map(year => (
+                                    <option key={year} value={year}>{year}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Color */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                            <select
+                                value={pendingFilters.color}
+                                onChange={(e) => handleFilterChange('color', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="">All Colors</option>
+                                {filterOptions.colors.map(color => (
+                                    <option key={color} value={color}>{color}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Price and Date Range */}
+                    <div>
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Price & Date Range</h4>
+                        <div className="space-y-4">
+                            {/* Price Range */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Price Range (LKR)</label>
+                                <div className="flex items-center space-x-2 max-w-md">
+                                    <input
+                                        type="number"
+                                        placeholder="Min"
+                                        value={pendingFilters.priceRangeMin}
+                                        onChange={(e) => handleFilterChange('priceRangeMin', e.target.value)}
+                                        className="flex-1 max-w-40 px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <span className="text-gray-500">-</span>
+                                    <input
+                                        type="number"
+                                        placeholder="Max"
+                                        value={pendingFilters.priceRangeMax}
+                                        onChange={(e) => handleFilterChange('priceRangeMax', e.target.value)}
+                                        className="flex-1 max-w-40 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Date Range */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="date"
+                                        value={pendingFilters.dateRangeStart}
+                                        onChange={(e) => handleFilterChange('dateRangeStart', e.target.value)}
+                                        className="flex-1 px-3 max-w-40 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <span className="text-gray-500">-</span>
+                                    <input
+                                        type="date"
+                                        value={pendingFilters.dateRangeEnd}
+                                        onChange={(e) => handleFilterChange('dateRangeEnd', e.target.value)}
+                                        className="flex-1 max-w-40 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
                 <div className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
-                    <button
-                        onClick={handleApplyFilters}
-                        disabled={!hasChanges && !hasPendingActiveFilters}
-                        className={`px-6 py-2 text-sm font-medium rounded-lg transition-colors ${
-                            hasChanges || hasPendingActiveFilters
-                                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        }`}
-                    >
-                        {hasChanges ? 'Apply Filters' : 'Apply'}
-                    </button>
+                        <button
+                            onClick={handleApplyFilters}
+                            disabled={!hasChanges && !hasPendingActiveFilters}
+                            className={`px-6 py-2 text-sm font-medium rounded-lg transition-colors ${
+                                hasChanges || hasPendingActiveFilters
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                        >
+                            {hasChanges ? 'Apply Filters' : 'Apply'}
+                        </button>
+                </div>
 
-                    {/* Active Filters Display */}
+                <div className="flex items-center justify-between pt-4 mt-4 ">
                     {hasActiveFilters && (
                         <div className="flex flex-wrap items-center gap-2 p-4 bg-blue-50 rounded-lg">
                             <span className="text-sm font-medium text-blue-800">Active Filters:</span>
@@ -311,14 +310,15 @@ const Filter = ({closeModal}) => {
                             })}
                             <button
                                 onClick={handlerClearFilters}
-                                className="text-sm text-red-600 hover:text-red-800 font-medium ml-2"
+                                className="text-sm text-red-600 hover:text-red-800 bg-red-100 font-medium ml-2"
                             >
                                 Clear All
                             </button>
                         </div>
                     )}
                 </div>
-            </div>
+
+                </div>
         </div>
     )
 }
