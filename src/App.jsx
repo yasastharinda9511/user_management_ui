@@ -15,6 +15,7 @@ import DashBoard from "./components/tabs/dashBoard/dashBoard.jsx";
 import Analytics from "./components/tabs/Analytics.jsx";
 import Settings from "./components/tabs/Settings.jsx";
 import Users from "./components/tabs/Users.jsx";
+import Roles from "./components/tabs/Roles.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -53,6 +54,7 @@ function App() {
                     <Route path="profile" element={<Profile />} />
                     <Route path="ordered-cars" element={<OrderedCars />} />
                     <Route path="users" element={<Users />} />
+                    <Route path="roles" element={<Roles />} />
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="settings" element={<Settings />} />
                 </Route>

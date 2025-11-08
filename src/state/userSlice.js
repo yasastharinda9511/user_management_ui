@@ -228,13 +228,6 @@ const userSlice = createSlice({
             })
             .addCase(toggleUserStatus.fulfilled, (state, action) => {
                 state.updating = false;
-                const index = state.users.findIndex(u => u.id === action.payload.user.id);
-                if (index !== -1) {
-                    state.users[index] = action.payload.user;
-                }
-                if (state.selectedUser && state.selectedUser.id === action.payload.user.id) {
-                    state.selectedUser = action.payload.user;
-                }
             })
             .addCase(toggleUserStatus.rejected, (state, action) => {
                 state.updating = false;

@@ -35,6 +35,12 @@ const Users = () => {
         await dispatch(toggleUserStatus(userId));
     };
 
+    useEffect(()=>{
+        if(!updating){
+            dispatch(fetchUsers());
+        }
+    },[updating])
+
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
         return new Date(dateString).toLocaleDateString('en-US', {

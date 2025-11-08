@@ -12,7 +12,8 @@ import {
     Calendar,
     ChevronLeft,
     ChevronRight,
-    Menu
+    Menu,
+    Shield
 } from 'lucide-react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -39,6 +40,7 @@ const MainScreen = () => {
         { path: '/ordered-cars', label: 'Ordered cars', icon: User },
         { path: '/dashboard', label: 'Dashboard', icon: Home },
         { path: '/users', label: 'Users', icon: Users },
+        { path: '/roles', label: 'Roles', icon: Shield },
         { path: '/profile', label: 'Profile', icon: User },
         { path: '/analytics', label: 'Analytics', icon: BarChart3 },
         { path: '/settings', label: 'Settings', icon: Settings },

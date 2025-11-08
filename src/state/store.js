@@ -4,6 +4,7 @@ import userRegistrationReducer from "./userRegistrationSlice.js";
 import vehicleReducer from "./vehicleSlice.js";
 import dashboardReducer from "./dashBoardSlice.js";
 import userReducer from "./userSlice.js";
+import roleReducer from "./roleSlice.js";
 
 export const store = configureStore({
     reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
         vehicles: vehicleReducer,
         dashBoard: dashboardReducer,
         users: userReducer,
+        roles: roleReducer,
     }
 });
