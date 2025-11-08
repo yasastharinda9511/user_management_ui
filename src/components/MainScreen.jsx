@@ -11,10 +11,7 @@ import {
     FileText,
     Calendar
 } from 'lucide-react';
-import Profile from "./tabs/Profile.jsx";
-import OrderedCars from "./tabs/orderedCars/OrderedCars.jsx";
-import DashBoard from "./tabs/dashBoard/dashBoard.jsx";
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../state/authSlice.js';
 
@@ -43,67 +40,6 @@ const MainScreen = () => {
         { path: '/settings', label: 'Settings', icon: Settings },
 
     ];
-
-    const AnalyticsComponent = () => (
-        <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
-                <p className="text-gray-600 mt-2">View your performance metrics.</p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">User Growth</h3>
-                    <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-                        <p className="text-gray-500">Chart placeholder</p>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Trends</h3>
-                    <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-                        <p className="text-gray-500">Chart placeholder</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-
-    const SettingsComponent = () => (
-        <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-                <p className="text-gray-600 mt-2">Configure your preferences.</p>
-            </div>
-
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">General Settings</h3>
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="font-medium text-gray-900">Email Notifications</p>
-                            <p className="text-sm text-gray-600">Receive email updates and notifications</p>
-                        </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" className="sr-only peer" defaultChecked />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                        </label>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="font-medium text-gray-900">Dark Mode</p>
-                            <p className="text-sm text-gray-600">Toggle dark mode theme</p>
-                        </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" className="sr-only peer" />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
 
     return (
         <div className="h-screen w-screen bg-gray-100">
@@ -197,13 +133,8 @@ const MainScreen = () => {
 
                 {/* Page content - starts immediately after header */}
                 <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
-                    <Routes>
-                        <Route path="/dashboard" element={<DashBoard />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/ordered-cars" element={<OrderedCars />} />
-                        <Route path="/analytics" element={<AnalyticsComponent />} />
-                        <Route path="/settings" element={<SettingsComponent />} />
-                    </Routes>
+                    {/* Outlet renders the child route components */}
+                    <Outlet />
                 </div>
             </div>
         </div>

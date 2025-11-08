@@ -16,13 +16,11 @@ const PreviewCard= ({car , handleViewDetails})=>{
 
 
     const getImageUrl = (car) => {
-        console.log(car.vehicle.id);
         const sortedImages = [...car.vehicle_image].sort((a, b) =>
             +a.display_order - +b.display_order
         );
 
         if(sortedImages.length > 0){
-            console.log(`${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`)
             return `${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`
         }
 

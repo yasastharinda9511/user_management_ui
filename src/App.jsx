@@ -9,6 +9,11 @@ import {
 } from "./state/authSlice.js";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import Profile from "./components/tabs/Profile.jsx";
+import OrderedCars from "./components/tabs/orderedCars/OrderedCars.jsx";
+import DashBoard from "./components/tabs/dashBoard/dashBoard.jsx";
+import Analytics from "./components/tabs/Analytics.jsx";
+import Settings from "./components/tabs/Settings.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -33,13 +38,25 @@ function App() {
     return (
         <BrowserRouter basename="/car-app">
             <Routes>
+                {/* Public Route */}
                 <Route path="/login" element={<LoginPage/>} />
-                <Route path="/*" element={
+
+                {/* Protected Routes - Each route is explicitly wrapped with ProtectedRoute */}
+                <Route path="/" element={
                     <ProtectedRoute>
                         <MainScreen/>
                     </ProtectedRoute>
-                } />
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                }>
+                    <Route index element={<Navigate to="/dashboard" replace />} />
+                    <Route path="dashboard" element={<DashBoard />} />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="ordered-cars" element={<OrderedCars />} />
+                    <Route path="analytics" element={<Analytics />} />
+                    <Route path="settings" element={<Settings />} />
+                </Route>
+
+                {/* Catch all - redirect to dashboard */}
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
         </BrowserRouter>
     )

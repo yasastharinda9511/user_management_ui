@@ -122,11 +122,10 @@ const authSlice = createSlice({
             const token = localStorage.getItem('access_token');
             const userInfo = localStorage.getItem('user_info');
 
-            if (token !== undefined && userInfo !==undefined) {
+            if (token && userInfo) {
                 state.accessToken = token;
                 state.refreshToken = localStorage.getItem('refresh_token');
                 state.user = JSON.parse(userInfo);
-                state.isAuthenticated = true;
             }
         }
     },
@@ -201,13 +200,28 @@ const authSlice = createSlice({
             .addCase(introspectUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isAuthenticated = action.payload.active;
-                state.user = action.payload.auth.user;
+
+                // If token is not active, clear everything including localStorage
+                if (!action.payload.active) {
+                    state.user = null;
+                    state.accessToken = null;
+                    state.refreshToken = null;
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('refresh_token');
+                    localStorage.removeItem('user_info');
+                }
             })
 
             .addCase(introspectUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isAuthenticated = false;
                 state.user = null;
+                state.accessToken = null;
+                state.refreshToken = null;
+                // Clear localStorage when token is invalid
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                localStorage.removeItem('user_info');
             });
     }
 });
