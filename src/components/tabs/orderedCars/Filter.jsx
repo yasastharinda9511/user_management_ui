@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {applyFilters, clearFilters, selectFilters, setCurrentPage, setFilters} from "../../../state/vehicleSlice.js";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {X, Search, Car, ChevronLeft} from 'lucide-react';
 import PreviewCard from "./PreviewCard.jsx";
 
@@ -8,9 +8,35 @@ import PreviewCard from "./PreviewCard.jsx";
 const Filter = ({closeModal}) => {
     const dispatch = useDispatch();
     const appliedFilters = useSelector(selectFilters);
+    const filterRef = useRef(null);
 
     const [pendingFilters, setPendingFilters] = useState(appliedFilters);
     const [hasChanges, setHasChanges] = useState(false);
+
+    // Handle ESC key to close filter
+    useEffect(() => {
+        const handleEscKey = (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        };
+        document.addEventListener('keydown', handleEscKey);
+        return () => document.removeEventListener('keydown', handleEscKey);
+    }, [closeModal]);
+
+    // Handle click outside to close filter
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (filterRef.current && !filterRef.current.contains(e.target)) {
+                closeModal();
+            }
+        };
+        // Add slight delay to prevent immediate closing on button click
+        setTimeout(() => {
+            document.addEventListener('mousedown', handleClickOutside);
+        }, 0);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [closeModal]);
 
     const hasPendingActiveFilters = Object.values(pendingFilters).some(value => {
         return value && value.toString().trim() !== '';
@@ -55,18 +81,19 @@ const Filter = ({closeModal}) => {
 
     }
     return(
-        <div className="bg-white p-6 rounded-lg shadow-lg border">
-            <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Filter Options</h3>
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={closeModal}
-                        className="text-gray-400 hover:text-gray-600"
-                    >
-                        <X className="w-5 h-5" />
-                    </button>
+        <div ref={filterRef} className="absolute right-0 top-full mt-2 w-full max-w-4xl z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl border max-h-[80vh] overflow-y-auto">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Filter Options</h3>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={closeModal}
+                            className="text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
                 </div>
-            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {/* Search */}
@@ -232,49 +259,50 @@ const Filter = ({closeModal}) => {
                 </div>
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                <button
-                    onClick={handleApplyFilters}
-                    disabled={!hasChanges && !hasPendingActiveFilters}
-                    className={`px-6 py-2 text-sm font-medium rounded-lg transition-colors ${
-                        hasChanges || hasPendingActiveFilters
-                            ? 'bg-blue-600 text-white hover:bg-blue-700'
-                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
-                >
-                    {hasChanges ? 'Apply Filters' : 'Apply'}
-                </button>
+                <div className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
+                    <button
+                        onClick={handleApplyFilters}
+                        disabled={!hasChanges && !hasPendingActiveFilters}
+                        className={`px-6 py-2 text-sm font-medium rounded-lg transition-colors ${
+                            hasChanges || hasPendingActiveFilters
+                                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
+                    >
+                        {hasChanges ? 'Apply Filters' : 'Apply'}
+                    </button>
 
-                {/* Active Filters Display */}
-                {hasActiveFilters && (
-                    <div className="flex flex-wrap items-center gap-2 p-4 bg-blue-50 rounded-lg">
-                        <span className="text-sm font-medium text-blue-800">Active Filters:</span>
-                        {Object.entries(pendingFilters).map(([key, value]) => {
-                            if (typeof value === 'string' && value) {
-                                return (
-                                    <span
-                                        key={key}
-                                        className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
-                                    >
-                                    {key}: {value}
-                                        <button
-                                            onClick={() => handleFilterChange(key, '')}
-                                            className="text-blue-600 hover:text-blue-800"
+                    {/* Active Filters Display */}
+                    {hasActiveFilters && (
+                        <div className="flex flex-wrap items-center gap-2 p-4 bg-blue-50 rounded-lg">
+                            <span className="text-sm font-medium text-blue-800">Active Filters:</span>
+                            {Object.entries(pendingFilters).map(([key, value]) => {
+                                if (typeof value === 'string' && value) {
+                                    return (
+                                        <span
+                                            key={key}
+                                            className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
                                         >
-                                        <X className="w-3 h-3" />
-                                    </button>
-                                </span>
-                                );
-                            }
-                        })}
-                        <button
-                            onClick={handlerClearFilters}
-                            className="text-sm text-red-600 hover:text-red-800 font-medium ml-2"
-                        >
-                            Clear All
-                        </button>
-                    </div>
-                )}
+                                        {key}: {value}
+                                            <button
+                                                onClick={() => handleFilterChange(key, '')}
+                                                className="text-blue-600 hover:text-blue-800"
+                                            >
+                                            <X className="w-3 h-3" />
+                                        </button>
+                                    </span>
+                                    );
+                                }
+                            })}
+                            <button
+                                onClick={handlerClearFilters}
+                                className="text-sm text-red-600 hover:text-red-800 font-medium ml-2"
+                            >
+                                Clear All
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     )

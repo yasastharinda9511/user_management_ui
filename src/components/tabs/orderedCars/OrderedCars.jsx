@@ -156,7 +156,7 @@ const OrderedCars = () => {
                         Track imported car orders from Japan - Shipping, clearing, and sales management
                     </p>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 relative">
                     <div className="text-sm text-gray-600">
                         Showing {indexOfFirstCar + 1}-{Math.min(indexOfLastCar, vehicles.length)} of {totalVehicles} deals
                     </div>
@@ -182,13 +182,11 @@ const OrderedCars = () => {
                         <Plus className="w-4 h-4" />
                         <span>Add Car</span>
                     </button>
+
+                    {/* Filters Panel - Positioned relative to button container */}
+                    {showFilters && <Filter closeModal={closeFilterModal}></Filter>}
                 </div>
             </div>
-
-            {/* Filters Panel */}
-            {showFilters &&  <Filter closeModal ={closeFilterModal}></Filter> }
-
-
 
             {/* Loading State */}
             {loading && (
