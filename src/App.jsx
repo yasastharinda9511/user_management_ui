@@ -14,6 +14,7 @@ import OrderedCars from "./components/tabs/orderedCars/OrderedCars.jsx";
 import DashBoard from "./components/tabs/dashBoard/dashBoard.jsx";
 import Analytics from "./components/tabs/Analytics.jsx";
 import Settings from "./components/tabs/Settings.jsx";
+import Users from "./components/tabs/Users.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -51,6 +52,7 @@ function App() {
                     <Route path="dashboard" element={<DashBoard />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="ordered-cars" element={<OrderedCars />} />
+                    <Route path="users" element={<Users />} />
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="settings" element={<Settings />} />
                 </Route>

@@ -38,6 +38,7 @@ const MainScreen = () => {
     const tabs = [
         { path: '/ordered-cars', label: 'Ordered cars', icon: User },
         { path: '/dashboard', label: 'Dashboard', icon: Home },
+        { path: '/users', label: 'Users', icon: Users },
         { path: '/profile', label: 'Profile', icon: User },
         { path: '/analytics', label: 'Analytics', icon: BarChart3 },
         { path: '/settings', label: 'Settings', icon: Settings },
