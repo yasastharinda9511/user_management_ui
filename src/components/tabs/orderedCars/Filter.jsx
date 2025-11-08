@@ -310,7 +310,7 @@ const Filter = ({closeModal}) => {
                             })}
                             <button
                                 onClick={handlerClearFilters}
-                                className="text-sm text-red-600 hover:text-red-800 bg-red-100 font-medium ml-2"
+                                className="text-sm text-red-600 hover:text-red-800 bg-red-100 font-medium ml-2 px-4 py-2 rounded-full transition-colors hover:bg-red-200"
                             >
                                 Clear All
                             </button>
