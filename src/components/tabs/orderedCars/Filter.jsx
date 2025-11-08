@@ -1,5 +1,14 @@
 import {useDispatch, useSelector} from "react-redux";
-import {applyFilters, clearFilters, selectFilters, setCurrentPage, setFilters} from "../../../state/vehicleSlice.js";
+import {
+    applyFilters,
+    clearFilters,
+    selectFilters,
+    setCurrentPage,
+    setFilters,
+    fetchAllOptions,
+    selectFilterOptions,
+    selectLoadingOptions
+} from "../../../state/vehicleSlice.js";
 import React, {useEffect, useState, useRef} from "react";
 import {X, Search, Car, ChevronLeft} from 'lucide-react';
 import PreviewCard from "./PreviewCard.jsx";
@@ -8,10 +17,17 @@ import PreviewCard from "./PreviewCard.jsx";
 const Filter = ({closeModal}) => {
     const dispatch = useDispatch();
     const appliedFilters = useSelector(selectFilters);
+    const filterOptions = useSelector(selectFilterOptions);
+    const loadingOptions = useSelector(selectLoadingOptions);
     const filterRef = useRef(null);
 
     const [pendingFilters, setPendingFilters] = useState(appliedFilters);
     const [hasChanges, setHasChanges] = useState(false);
+
+    // Fetch filter options on mount
+    useEffect(() => {
+        dispatch(fetchAllOptions());
+    }, [dispatch]);
 
     // Handle ESC key to close filter
     useEffect(() => {
@@ -55,16 +71,6 @@ const Filter = ({closeModal}) => {
     const hasActiveFilters = Object.values(pendingFilters).some(value => {
         return value && value.toString().trim() !== '';
     });
-
-    const filterOptions = {
-        make: ['Toyota', 'Honda', 'Nissan', 'Mazda', 'Suzuki', 'BMW', 'Mercedes', 'Audi'],
-        models: ['Aqua', 'Prius', 'Vitz', 'Axio', 'Fielder', 'Allion', 'Fit', 'Vezel', 'Grace', 'Freed'],
-        years: Array.from({length: 15}, (_, i) => (new Date().getFullYear() - i).toString()),
-        statuses: ['Available', 'Shipped', 'In Transit', 'Arrived', 'Clearing', 'Ready for Delivery', 'Delivered'],
-        colors: ['Pearl White', 'Silver', 'Black', 'Blue', 'Red', 'Gray', 'White', 'Dark Blue'],
-        transmissions: ['Automatic', 'Manual', 'CVT'],
-        fuelTypes: ['Petrol', 'Hybrid', 'Diesel', 'Electric']
-    };
 
     const handleApplyFilters = () => {
         dispatch(applyFilters(pendingFilters));
@@ -124,9 +130,13 @@ const Filter = ({closeModal}) => {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Brands</option>
-                                    {filterOptions.make.map(brand => (
-                                        <option key={brand} value={brand}>{brand}</option>
-                                    ))}
+                                    {loadingOptions ? (
+                                        <option disabled>Loading...</option>
+                                    ) : (
+                                        Object.keys(filterOptions.makes_models || {}).map(brand => (
+                                            <option key={brand} value={brand}>{brand}</option>
+                                        ))
+                                    )}
                                 </select>
                             </div>
 
@@ -139,9 +149,13 @@ const Filter = ({closeModal}) => {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Models</option>
-                                    {filterOptions.models.map(model => (
-                                        <option key={model} value={model}>{model}</option>
-                                    ))}
+                                    {loadingOptions ? (
+                                        <option disabled>Loading...</option>
+                                    ) : (
+                                        filterOptions.makes_models[pendingFilters['make']]?.map(model => (
+                                            <option key={model} value={model}>{model}</option>
+                                        ))
+                                    )}
                                 </select>
                             </div>
 
@@ -155,9 +169,13 @@ const Filter = ({closeModal}) => {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Types</option>
-                                    {filterOptions.transmissions.map(transmission => (
-                                        <option key={transmission} value={transmission}>{transmission}</option>
-                                    ))}
+                                    {loadingOptions ? (
+                                        <option disabled>Loading...</option>
+                                    ) : (
+                                        filterOptions.transmissions?.map(transmission => (
+                                            <option key={transmission} value={transmission}>{transmission}</option>
+                                        ))
+                                    )}
                                 </select>
                             </div>
 
@@ -170,9 +188,13 @@ const Filter = ({closeModal}) => {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Types</option>
-                                    {filterOptions.fuelTypes.map(fuelType => (
-                                        <option key={fuelType} value={fuelType}>{fuelType}</option>
-                                    ))}
+                                    {loadingOptions ? (
+                                        <option disabled>Loading...</option>
+                                    ) : (
+                                        filterOptions.fuelTypes?.map(fuelType => (
+                                            <option key={fuelType} value={fuelType}>{fuelType}</option>
+                                        ))
+                                    )}
                                 </select>
                             </div>
 
@@ -181,13 +203,17 @@ const Filter = ({closeModal}) => {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                                 <select
                                     value={pendingFilters.status}
-                                    onChange={(e) => handleFilterChange('status', e.target.value)}
+                                    onChange={(e) => handleFilterChange('shipping_status', e.target.value)}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Statuses</option>
-                                    {filterOptions.statuses.map(status => (
-                                        <option key={status} value={status}>{status}</option>
-                                    ))}
+                                    {loadingOptions ? (
+                                        <option disabled>Loading...</option>
+                                    ) : (
+                                        filterOptions.statuses?.map(status => (
+                                            <option key={status} value={status}>{status}</option>
+                                        ))
+                                    )}
                                 </select>
                             </div>
                         </div>

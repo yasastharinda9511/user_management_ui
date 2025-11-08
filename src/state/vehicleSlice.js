@@ -220,6 +220,27 @@ export const createVehicleRecordWithImage = createAsyncThunk(
     }
 );
 
+
+// Fetch all dropdown options for filters
+export const fetchAllOptions = createAsyncThunk(
+    'vehicles/fetchAllOptions',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await fetch(`http://localhost:8080/car-service/api/v1/vehicles/dropdown/options`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            return data.data || data;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 // =====================================================
 // INITIAL STATE
 // =====================================================
@@ -239,18 +260,20 @@ const initialState = {
     loading: false,
     loadingVehicle: false,
     updating: false,
+    loadingOptions: false,
 
     // Error states
     error: null,
     updateError: null,
+    optionsError: null,
 
     // UI states
     filters: {
         search: '',
-        brand: '',
+        make: '',
         model: '',
         year: '',
-        status: '',
+        shipping_status: '',
         priceRangeMin: '',
         priceRangeMax: '',
         dateRangeStart: '',
@@ -262,6 +285,17 @@ const initialState = {
     sortBy: 'created_at',
     sortOrder: 'desc',
 
+    // Filter options from backend
+    filterOptions: {
+        makes_models: {},
+        years: [],
+        shipping_statuses: [],
+        sale_statuses:[],
+        condition_statuses:[],
+        colors: [],
+        transmissions: [],
+        fuelTypes: []
+    },
 
     shouldRefresh:false
 };
@@ -292,7 +326,6 @@ const vehicleSlice = createSlice({
         },
 
         applyFilters: (state, action) => {
-            console.log('filters are applied !!!!!');
             state.filters = {...action.payload };
         },
 
@@ -303,7 +336,7 @@ const vehicleSlice = createSlice({
                 brand: '',
                 model: '',
                 year: '',
-                status: '',
+                shipping_status: '',
                 priceRangeMin: '',
                 priceRangeMax: '',
                 dateRangeStart: '',
@@ -509,6 +542,20 @@ const vehicleSlice = createSlice({
             .addCase(createVehicleRecordWithImage.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+
+            // Fetch All Options
+            .addCase(fetchAllOptions.pending, (state) => {
+                state.loadingOptions = true;
+                state.optionsError = null;
+            })
+            .addCase(fetchAllOptions.fulfilled, (state, action) => {
+                state.loadingOptions = false;
+                state.filterOptions = action.payload;
+            })
+            .addCase(fetchAllOptions.rejected, (state, action) => {
+                state.loadingOptions = false;
+                state.optionsError = action.payload;
             });
 
 
@@ -558,7 +605,10 @@ export const selectSorting = (state) => ({
     sortOrder: state.vehicles.sortOrder,
 });
 
-
+// Filter options selectors
+export const selectFilterOptions = (state) => state.vehicles.filterOptions;
+export const selectLoadingOptions = (state) => state.vehicles.loadingOptions;
+export const selectOptionsError = (state) => state.vehicles.optionsError;
 
 export const selectVehiclesByStatus = (state) => {
     const vehicles = selectVehicles(state);
