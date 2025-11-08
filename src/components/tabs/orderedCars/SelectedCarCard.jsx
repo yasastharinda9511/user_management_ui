@@ -1,10 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {
-    fetchVehicles,
-    selectCurrentPage,
-    selectShouldRefresh,
-    selectUpdating,
     updateVehicle,
     updateVehicleFinancials, updateVehiclePurchase,
     updateVehicleShipping
@@ -16,28 +12,31 @@ import config from "../../../configs/config.json";
 const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const dispatch = useDispatch();
     const [currentSection, setCurrentSection] = useState(0);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [touchStart, setTouchStart] = useState(null);
     const [touchEnd, setTouchEnd] = useState(null);
+    const [imageTouchStart, setImageTouchStart] = useState(null);
+    const [imageTouchEnd, setImageTouchEnd] = useState(null);
     const [editingSection, setEditingSection] = useState(null);
     const [editedData, setEditedData] = useState({});
     const [originalData, setOriginalData] = useState({});
     const containerRef = useRef(null);
+    const imageContainerRef = useRef(null);
     const [notification, setNotification] = useState({ show: false, type: '', title: '', message: '' });
 
 
     // Minimum swipe distance (in px)
     const minSwipeDistance = 50;
 
-    const getImageUrl = (car) => {
+    const getAllImageUrls = (car) => {
         const images = [...car.vehicle_image];
         const sortedImages = images.sort((a, b) => a.display_order - b.display_order);
+        return sortedImages.map(img => `${config.car_service.base_url}/vehicles/upload-image/${img.filename}`);
+    }
 
-        if(sortedImages.length > 0){
-            console.log(`${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`)
-            return `${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`
-        }
-
-        return "";
+    const getImageUrl = (car, index = 0) => {
+        const allImages = getAllImageUrls(car);
+        return allImages[index] || "";
     }
 
     const getStatusColor = (status) => {
@@ -633,6 +632,45 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
         }
     };
 
+    // Image swipe handlers
+    const onImageTouchStart = (e) => {
+        setImageTouchEnd(null);
+        setImageTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const onImageTouchMove = (e) => {
+        setImageTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const onImageTouchEnd = () => {
+        if (!imageTouchStart || !imageTouchEnd) return;
+
+        const distance = imageTouchStart - imageTouchEnd;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+        const allImages = getAllImageUrls(selectedCar);
+
+        if (isLeftSwipe && currentImageIndex < allImages.length - 1) {
+            setCurrentImageIndex(currentImageIndex + 1);
+        }
+        if (isRightSwipe && currentImageIndex > 0) {
+            setCurrentImageIndex(currentImageIndex - 1);
+        }
+    };
+
+    const nextImage = () => {
+        const allImages = getAllImageUrls(selectedCar);
+        if (currentImageIndex < allImages.length - 1) {
+            setCurrentImageIndex(currentImageIndex + 1);
+        }
+    };
+
+    const prevImage = () => {
+        if (currentImageIndex > 0) {
+            setCurrentImageIndex(currentImageIndex - 1);
+        }
+    };
+
     return (
         <>
         <Notification
@@ -658,14 +696,73 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Left Column - Vehicle Image and Basic Info */}
                         <div>
-                            <img
-                                src={getImageUrl(selectedCar)}
-                                alt={`${editedData.vehicle?.make || vehicle.make} ${editedData.vehicle?.model || vehicle.model}`}
-                                className="w-full h-48 object-cover rounded-lg mb-4"
-                                onError={(e) => {
-                                    e.target.src = `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(editedData.vehicle?.make || vehicle.make || 'Car')}+${encodeURIComponent(editedData.vehicle?.model || vehicle.model || 'Model')}`;
-                                }}
-                            />
+                            {/* Image Container with Swipe */}
+                            <div className="relative mb-4 group">
+                                <div
+                                    ref={imageContainerRef}
+                                    className="relative overflow-hidden rounded-lg"
+                                    onTouchStart={onImageTouchStart}
+                                    onTouchMove={onImageTouchMove}
+                                    onTouchEnd={onImageTouchEnd}
+                                >
+                                    <img
+                                        src={getImageUrl(selectedCar, currentImageIndex)}
+                                        alt={`${editedData.vehicle?.make || vehicle.make} ${editedData.vehicle?.model || vehicle.model} - Image ${currentImageIndex + 1}`}
+                                        className="w-full h-48 object-cover transition-opacity duration-300"
+                                        onError={(e) => {
+                                            e.target.src = `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(editedData.vehicle?.make || vehicle.make || 'Car')}+${encodeURIComponent(editedData.vehicle?.model || vehicle.model || 'Model')}`;
+                                        }}
+                                    />
+
+                                    {/* Navigation Arrows */}
+                                    {getAllImageUrls(selectedCar).length > 1 && (
+                                        <>
+                                            {currentImageIndex > 0 && (
+                                                <button
+                                                    onClick={prevImage}
+                                                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                                    </svg>
+                                                </button>
+                                            )}
+                                            {currentImageIndex < getAllImageUrls(selectedCar).length - 1 && (
+                                                <button
+                                                    onClick={nextImage}
+                                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </button>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+
+                                {/* Image Indicators */}
+                                {getAllImageUrls(selectedCar).length > 1 && (
+                                    <div className="flex justify-center mt-2 space-x-1">
+                                        {getAllImageUrls(selectedCar).map((_, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => setCurrentImageIndex(index)}
+                                                className={`w-2 h-2 rounded-full transition-colors ${
+                                                    index === currentImageIndex ? 'bg-blue-600' : 'bg-gray-300'
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Image Counter */}
+                                {getAllImageUrls(selectedCar).length > 1 && (
+                                    <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                                        {currentImageIndex + 1} / {getAllImageUrls(selectedCar).length}
+                                    </div>
+                                )}
+                            </div>
 
                             <div className="space-y-2">
                                 <h3 className="text-xl font-semibold text-gray-900">
