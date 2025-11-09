@@ -19,7 +19,7 @@ import {
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, selectPermissions } from '../state/authSlice.js';
-import  {allTabs} from "./tabs/tabs.js";
+import { getAccessibleTabs } from '../utils/permissionUtils.js';
 
 const MainScreen = () => {
     const navigate = useNavigate();
@@ -39,25 +39,8 @@ const MainScreen = () => {
         avatar: 'JD'
     };
 
-    // Check if user has a specific permission
-    const hasPermission = (permissionName) => {
-        if (!permissions || permissions.length === 0) return false;
-        return permissions.some(p =>
-            p.name === permissionName ||
-            `${p.resource}.${p.action}` === permissionName
-        );
-    };
-
-    // Define all tabs with optional permission requirements
-
-
-    // Filter tabs based on permissions
-    const tabs = allTabs.filter(tab => {
-        if (tab.requiredPermission) {
-            return hasPermission(tab.requiredPermission);
-        }
-        return true; // Show tabs without permission requirements
-    });
+    // Get tabs based on user permissions
+    const tabs = getAccessibleTabs(permissions);
 
     return (
         <div className="h-screen w-screen bg-gray-100">

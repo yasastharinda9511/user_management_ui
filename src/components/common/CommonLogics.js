@@ -1,4 +1,4 @@
-import {SHIPPING_STATUS} from "../common/Costants.js";
+import {SHIPPING_STATUS} from "./Costants.js";
 
 
 export const getStatusColor = (status) => {

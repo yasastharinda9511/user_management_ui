@@ -1,6 +1,6 @@
 import React from "react";
 import { Car, Truck, Package, Eye, MapPin, Ship} from 'lucide-react';
-import {getStatusColor} from "../../util/CommonLogics.js";
+import {getStatusColor} from "../../common/CommonLogics.js";
 import config from "../../../configs/config.json";
 
 const PreviewCard= ({car , handleViewDetails})=>{

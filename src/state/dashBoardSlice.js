@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import config from "../configs/config.json";
-import {URLBuilder} from "../components/util/URLUtil.js";
+import {URLBuilder} from "../utils/URLUtil.js";
 import {
     financialStatusColors,
     shippingStatusColors,

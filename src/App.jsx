@@ -9,6 +9,7 @@ import {
 } from "./state/authSlice.js";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import DefaultRedirect from "./components/DefaultRedirect.jsx";
 import Profile from "./components/tabs/Profile.jsx";
 import OrderedCars from "./components/tabs/orderedCars/OrderedCars.jsx";
 import DashBoard from "./components/tabs/dashBoard/dashBoard.jsx";
@@ -50,7 +51,7 @@ function App() {
                         <MainScreen/>
                     </ProtectedRoute>
                 }>
-                    <Route index element={<Navigate to="/dashboard" replace />} />
+                    <Route index element={<DefaultRedirect />} />
                     <Route path="dashboard" element={<DashBoard />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="ordered-cars" element={<OrderedCars />} />
@@ -61,8 +62,12 @@ function App() {
                     <Route path="settings" element={<Settings />} />
                 </Route>
 
-                {/* Catch all - redirect to dashboard */}
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                {/* Catch all - redirect to first accessible path */}
+                <Route path="*" element={
+                    <ProtectedRoute>
+                        <DefaultRedirect />
+                    </ProtectedRoute>
+                } />
             </Routes>
         </BrowserRouter>
     )

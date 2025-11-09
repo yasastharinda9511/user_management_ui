@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {URLBuilder} from "../components/util/URLUtil.js";
+import {URLBuilder} from "../utils/URLUtil.js";
 import config from "../configs/config.json";
 
 // API Base URL - adjust according to your setup

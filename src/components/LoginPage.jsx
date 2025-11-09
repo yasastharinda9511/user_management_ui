@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Lock, Mail, User, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import {useDispatch, useSelector} from "react-redux";
-import {hasPermission, loginUser, selectPermissions} from "../state/authSlice.js";
+import { loginUser, selectPermissions } from "../state/authSlice.js";
 import {registerUser} from "../state/userRegistrationSlice.js";
 import { useNavigate } from 'react-router-dom';
-import {allTabs} from "./tabs/tabs.js";
+import { getFirstAccessiblePath } from '../utils/permissionUtils.js';
 
 const LoginPage = () => {
 
@@ -16,14 +16,9 @@ const LoginPage = () => {
 
     // Redirect if already authenticated
     useEffect(() => {
-        if (isAuthenticated && permissions) {
-            let allAllowedtabs = []
-            allTabs.forEach(tab => {
-                if(hasPermission(tab.requiredPermission)){
-                    allAllowedtabs.push(tab);
-                }
-            });
-            navigate(allAllowedtabs[0].path);
+        if (isAuthenticated) {
+            const firstPath = getFirstAccessiblePath(permissions);
+            navigate(firstPath);
         }
     }, [isAuthenticated, permissions, navigate]);
 
@@ -72,11 +67,9 @@ const LoginPage = () => {
 
         // Handle success case
         if (loginUser.fulfilled.match(result)) {
-            // Redirect logic here
+            // Redirect logic here - permissions will be available in Redux state after login
             console.log("loged Sucessfully !!!!!")
-            setTimeout(() => {
-                navigate('/dashboard');
-            }, 1000);
+            // Note: The useEffect hook above will handle the redirect based on permissions
         }
     };
 
