@@ -9,7 +9,7 @@ import {
     selectLoading,
     selectError,
     selectUpdating
-} from '../../state/roleSlice.js';
+} from '../../../state/roleSlice.js';
 import EditRoleModal from './EditRoleModal.jsx';
 import CreateRoleModal from './CreateRoleModal.jsx';
 

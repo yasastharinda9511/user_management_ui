@@ -10,7 +10,7 @@ import {
     selectUpdating,
     selectActiveUsersCount,
     selectVerifiedUsersCount
-} from '../../state/userSlice.js';
+} from '../../../state/userSlice.js';
 import EditUserModal from './EditUserModal.jsx';
 
 const Users = () => {

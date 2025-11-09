@@ -7,7 +7,7 @@ import {
     selectAllPermissions,
     selectLoadingPermissions,
     selectUpdating
-} from '../../state/roleSlice.js';
+} from '../../../state/roleSlice.js';
 
 const EditRoleModal = ({ role, onClose }) => {
     const dispatch = useDispatch();

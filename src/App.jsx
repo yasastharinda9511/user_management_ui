@@ -10,14 +10,14 @@ import {
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import DefaultRedirect from "./components/DefaultRedirect.jsx";
-import Profile from "./components/tabs/Profile.jsx";
+import Profile from "./components/tabs/profile/Profile.jsx";
 import OrderedCars from "./components/tabs/orderedCars/OrderedCars.jsx";
 import DashBoard from "./components/tabs/dashBoard/dashBoard.jsx";
-import Analytics from "./components/tabs/Analytics.jsx";
-import Settings from "./components/tabs/Settings.jsx";
-import Users from "./components/tabs/Users.jsx";
-import Roles from "./components/tabs/Roles.jsx";
-import Permissions from "./components/tabs/Permissions.jsx";
+import Analytics from "./components/tabs/analytics/Analytics.jsx";
+import Settings from "./components/tabs/settings/Settings.jsx";
+import Users from "./components/tabs/users/Users.jsx";
+import Roles from "./components/tabs/roles/Roles.jsx";
+import Permissions from "./components/tabs/permissions/Permissions.jsx";
 
 function App() {
     const dispatch = useDispatch();

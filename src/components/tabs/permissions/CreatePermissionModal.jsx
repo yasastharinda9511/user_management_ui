@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     createPermission,
     selectUpdating
-} from '../../state/roleSlice.js';
+} from '../../../state/roleSlice.js';
 
 const CreatePermissionModal = ({ onClose }) => {
     const dispatch = useDispatch();

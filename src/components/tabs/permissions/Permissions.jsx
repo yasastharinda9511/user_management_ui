@@ -9,7 +9,7 @@ import {
     selectLoadingPermissions,
     selectError,
     selectUpdating
-} from '../../state/roleSlice.js';
+} from '../../../state/roleSlice.js';
 import EditPermissionModal from './EditPermissionModal.jsx';
 import CreatePermissionModal from './CreatePermissionModal.jsx';
 

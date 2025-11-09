@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, User, Mail, Phone, Shield } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUser, selectUpdating } from '../../state/userSlice.js';
-import { fetchRoles, selectRoles } from '../../state/roleSlice.js';
+import { updateUser, selectUpdating } from '../../../state/userSlice.js';
+import { fetchRoles, selectRoles } from '../../../state/roleSlice.js';
 
 const EditUserModal = ({ user, onClose }) => {
     const dispatch = useDispatch();
