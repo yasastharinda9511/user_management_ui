@@ -13,7 +13,8 @@ import {
     ChevronLeft,
     ChevronRight,
     Menu,
-    Shield
+    Shield,
+    Key
 } from 'lucide-react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -41,6 +42,7 @@ const MainScreen = () => {
         { path: '/dashboard', label: 'Dashboard', icon: Home },
         { path: '/users', label: 'Users', icon: Users },
         { path: '/roles', label: 'Roles', icon: Shield },
+        { path: '/permissions', label: 'Permissions', icon: Key },
         { path: '/profile', label: 'Profile', icon: User },
         { path: '/analytics', label: 'Analytics', icon: BarChart3 },
         { path: '/settings', label: 'Settings', icon: Settings },

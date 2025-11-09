@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import roleService from '../api/roleService';
+import permissionService from '../api/permissionService';
 
 // Fetch all roles
 export const fetchRoles = createAsyncThunk(
@@ -71,8 +72,60 @@ export const fetchAllPermissions = createAsyncThunk(
     'roles/fetchAllPermissions',
     async (_, { rejectWithValue }) => {
         try {
-            const data = await roleService.getAllPermissions();
+            const data = await permissionService.getAllPermissions();
             return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
+// Fetch permission by ID
+export const fetchPermissionById = createAsyncThunk(
+    'roles/fetchPermissionById',
+    async (permissionId, { rejectWithValue }) => {
+        try {
+            const data = await permissionService.getPermissionById(permissionId);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
+// Create new permission
+export const createPermission = createAsyncThunk(
+    'roles/createPermission',
+    async (permissionData, { rejectWithValue }) => {
+        try {
+            const data = await permissionService.createPermission(permissionData);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
+// Update permission
+export const updatePermission = createAsyncThunk(
+    'roles/updatePermission',
+    async ({ permissionId, permissionData }, { rejectWithValue }) => {
+        try {
+            const data = await permissionService.updatePermission(permissionId, permissionData);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
+// Delete permission
+export const deletePermission = createAsyncThunk(
+    'roles/deletePermission',
+    async (permissionId, { rejectWithValue }) => {
+        try {
+            const data = await permissionService.deletePermission(permissionId);
+            return { permissionId, ...data };
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || error.message);
         }
@@ -84,10 +137,13 @@ const initialState = {
     roles: [],
     selectedRole: null,
     allPermissions: [],
+    selectedPermission: null,
     totalCount: 0,
+    permissionsCount: 0,
     loading: false,
     loadingRole: false,
     loadingPermissions: false,
+    loadingPermission: false,
     updating: false,
     error: null,
     updateError: null,
@@ -104,6 +160,9 @@ const roleSlice = createSlice({
         },
         clearSelectedRole: (state) => {
             state.selectedRole = null;
+        },
+        clearSelectedPermission: (state) => {
+            state.selectedPermission = null;
         },
     },
     extraReducers: (builder) => {
@@ -201,25 +260,97 @@ const roleSlice = createSlice({
             .addCase(fetchAllPermissions.fulfilled, (state, action) => {
                 state.loadingPermissions = false;
                 state.allPermissions = action.payload.permissions || [];
+                state.permissionsCount = action.payload.count || 0;
             })
             .addCase(fetchAllPermissions.rejected, (state, action) => {
                 state.loadingPermissions = false;
                 state.error = action.payload;
+            })
+
+            // Fetch Permission by ID
+            .addCase(fetchPermissionById.pending, (state) => {
+                state.loadingPermission = true;
+                state.error = null;
+            })
+            .addCase(fetchPermissionById.fulfilled, (state, action) => {
+                state.loadingPermission = false;
+                state.selectedPermission = action.payload;
+            })
+            .addCase(fetchPermissionById.rejected, (state, action) => {
+                state.loadingPermission = false;
+                state.error = action.payload;
+                state.selectedPermission = null;
+            })
+
+            // Create Permission
+            .addCase(createPermission.pending, (state) => {
+                state.updating = true;
+                state.updateError = null;
+            })
+            .addCase(createPermission.fulfilled, (state, action) => {
+                state.updating = false;
+                state.allPermissions.unshift(action.payload);
+                state.permissionsCount += 1;
+            })
+            .addCase(createPermission.rejected, (state, action) => {
+                state.updating = false;
+                state.updateError = action.payload;
+            })
+
+            // Update Permission
+            .addCase(updatePermission.pending, (state) => {
+                state.updating = true;
+                state.updateError = null;
+            })
+            .addCase(updatePermission.fulfilled, (state, action) => {
+                state.updating = false;
+                const index = state.allPermissions.findIndex(p => p.id === action.payload.id);
+                if (index !== -1) {
+                    state.allPermissions[index] = action.payload;
+                }
+                if (state.selectedPermission && state.selectedPermission.id === action.payload.id) {
+                    state.selectedPermission = action.payload;
+                }
+            })
+            .addCase(updatePermission.rejected, (state, action) => {
+                state.updating = false;
+                state.updateError = action.payload;
+            })
+
+            // Delete Permission
+            .addCase(deletePermission.pending, (state) => {
+                state.updating = true;
+                state.updateError = null;
+            })
+            .addCase(deletePermission.fulfilled, (state, action) => {
+                state.updating = false;
+                state.allPermissions = state.allPermissions.filter(p => p.id !== action.payload.permissionId);
+                state.permissionsCount -= 1;
+                if (state.selectedPermission && state.selectedPermission.id === action.payload.permissionId) {
+                    state.selectedPermission = null;
+                }
+            })
+            .addCase(deletePermission.rejected, (state, action) => {
+                state.updating = false;
+                state.updateError = action.payload;
             });
     },
 });
 
 // Actions
-export const { clearError, clearSelectedRole } = roleSlice.actions;
+export const { clearError, clearSelectedRole, clearSelectedPermission } = roleSlice.actions;
 
 // Selectors
 export const selectRoles = (state) => state.roles.roles;
 export const selectSelectedRole = (state) => state.roles.selectedRole;
 export const selectAllPermissions = (state) => state.roles.allPermissions;
+export const selectSelectedPermission = (state) => state.roles.selectedPermission;
 export const selectTotalCount = (state) => state.roles.totalCount;
+export const selectPermissionsCount = (state) => state.roles.permissionsCount;
 export const selectLoading = (state) => state.roles.loading;
 export const selectLoadingRole = (state) => state.roles.loadingRole;
 export const selectLoadingPermissions = (state) => state.roles.loadingPermissions;
+export const selectLoadingPermission = (state) => state.roles.loadingPermission;
 export const selectUpdating = (state) => state.roles.updating;
 export const selectError = (state) => state.roles.error;
 export const selectUpdateError = (state) => state.roles.updateError;
