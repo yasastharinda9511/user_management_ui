@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Users as UsersIcon, Mail, Phone, User, Calendar, CheckCircle, XCircle, RefreshCw, Power, Edit, Shield } from 'lucide-react';
+import { Users as UsersIcon, Mail, Phone, User, Calendar, CheckCircle, XCircle, RefreshCw, Edit, Shield } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     fetchUsers,
-    toggleUserStatus,
     selectUsers,
     selectTotalCount,
     selectLoading,
@@ -32,10 +31,6 @@ const Users = () => {
 
     const handleRefresh = () => {
         dispatch(fetchUsers());
-    };
-
-    const handleToggleStatus = async (userId) => {
-        await dispatch(toggleUserStatus(userId));
     };
 
     useEffect(()=>{
@@ -225,28 +220,13 @@ const Users = () => {
                                             {formatDate(user.last_login)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => setEditingUser(user)}
-                                                    className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
-                                                >
-                                                    <Edit className="w-3 h-3 mr-1" />
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    onClick={() => handleToggleStatus(user.id)}
-                                                    disabled={updating}
-                                                    className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                                                        user.is_active
-                                                            ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                                                            : 'bg-green-100 text-green-700 hover:bg-green-200'
-                                                    } disabled:opacity-50 disabled:cursor-not-allowed`}
-                                                    title={user.is_active ? 'Deactivate user' : 'Activate user'}
-                                                >
-                                                    <Power className="w-3 h-3 mr-1" />
-                                                    {user.is_active ? 'Deactivate' : 'Activate'}
-                                                </button>
-                                            </div>
+                                            <button
+                                                onClick={() => setEditingUser(user)}
+                                                className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
+                                            >
+                                                <Edit className="w-3 h-3 mr-1" />
+                                                Edit
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

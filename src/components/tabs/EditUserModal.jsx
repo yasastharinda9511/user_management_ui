@@ -14,7 +14,8 @@ const EditUserModal = ({ user, onClose }) => {
         last_name: user.last_name || '',
         phone: user.phone || '',
         email: user.email || '',
-        role_id: user.role_id || ''
+        role_id: user.role_id || '',
+        is_active: user.is_active !== undefined ? user.is_active : true
     });
 
     // Fetch roles on mount
@@ -30,6 +31,13 @@ const EditUserModal = ({ user, onClose }) => {
         }));
     };
 
+    const handleToggleActive = () => {
+        setFormData(prev => ({
+            ...prev,
+            is_active: !prev.is_active
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -38,7 +46,8 @@ const EditUserModal = ({ user, onClose }) => {
             last_name: formData.last_name,
             phone: formData.phone,
             email: formData.email,
-            role_id: formData.role_id ? parseInt(formData.role_id) : undefined
+            role_id: formData.role_id ? parseInt(formData.role_id) : undefined,
+            is_active: formData.is_active
         };
 
         await dispatch(updateUser({ userId: user.id, userData }));
@@ -161,32 +170,51 @@ const EditUserModal = ({ user, onClose }) => {
                                 />
                             </div>
 
-                            {/* Role Selection */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    <div className="flex items-center space-x-2">
-                                        <Shield className="w-4 h-4" />
-                                        <span>Role</span>
-                                    </div>
-                                </label>
-                                <select
-                                    name="role_id"
-                                    value={formData.role_id}
-                                    onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                >
-                                    <option value="">No Role Assigned</option>
-                                    {roles.map(role => (
-                                        <option key={role.id} value={role.id}>
-                                            {role.name}
-                                        </option>
-                                    ))}
-                                </select>
-                                {formData.role_id && (
-                                    <p className="text-xs text-gray-500 mt-1">
-                                        Selected role will define user permissions
-                                    </p>
-                                )}
+                            {/* Role Selection and Status */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <div className="flex items-center space-x-2">
+                                            <Shield className="w-4 h-4" />
+                                            <span>Role</span>
+                                        </div>
+                                    </label>
+                                    <select
+                                        name="role_id"
+                                        value={formData.role_id}
+                                        onChange={handleInputChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        <option value="">No Role Assigned</option>
+                                        {roles.map(role => (
+                                            <option key={role.id} value={role.id}>
+                                                {role.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {formData.role_id && (
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Selected role will define user permissions
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Status
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={handleToggleActive}
+                                        className={`w-full px-3 py-2 rounded-lg font-medium text-sm transition-colors ${
+                                            formData.is_active
+                                                ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                                                : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                        }`}
+                                    >
+                                        {formData.is_active ? 'Active' : 'Inactive'}
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Username (read-only) */}
