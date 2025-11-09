@@ -17,13 +17,15 @@ import {
     Key
 } from 'lucide-react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logout } from '../state/authSlice.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, selectPermissions } from '../state/authSlice.js';
+import  {allTabs} from "./tabs/tabs.js";
 
 const MainScreen = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
+    const permissions = useSelector(selectPermissions);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     const handleLogout = () => {
@@ -37,17 +39,25 @@ const MainScreen = () => {
         avatar: 'JD'
     };
 
-    const tabs = [
-        { path: '/ordered-cars', label: 'Ordered cars', icon: User },
-        { path: '/dashboard', label: 'Dashboard', icon: Home },
-        { path: '/users', label: 'Users', icon: Users },
-        { path: '/roles', label: 'Roles', icon: Shield },
-        { path: '/permissions', label: 'Permissions', icon: Key },
-        { path: '/profile', label: 'Profile', icon: User },
-        { path: '/analytics', label: 'Analytics', icon: BarChart3 },
-        { path: '/settings', label: 'Settings', icon: Settings },
+    // Check if user has a specific permission
+    const hasPermission = (permissionName) => {
+        if (!permissions || permissions.length === 0) return false;
+        return permissions.some(p =>
+            p.name === permissionName ||
+            `${p.resource}.${p.action}` === permissionName
+        );
+    };
 
-    ];
+    // Define all tabs with optional permission requirements
+
+
+    // Filter tabs based on permissions
+    const tabs = allTabs.filter(tab => {
+        if (tab.requiredPermission) {
+            return hasPermission(tab.requiredPermission);
+        }
+        return true; // Show tabs without permission requirements
+    });
 
     return (
         <div className="h-screen w-screen bg-gray-100">

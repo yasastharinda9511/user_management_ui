@@ -40,10 +40,10 @@ const CreatePermissionModal = ({ onClose }) => {
     };
 
     // Common action suggestions
-    const commonActions = ['create', 'read', 'update', 'delete', 'list', 'manage', 'view', 'edit'];
+    const commonActions = ['access','create', 'read', 'update', 'delete', 'list', 'manage', 'view', 'edit'];
 
     // Common resource suggestions
-    const commonResources = ['users', 'roles', 'permissions', 'vehicles', 'orders', 'reports', 'settings'];
+    const commonResources = ['users', 'roles', 'permissions', 'vehicles', 'orders', 'reports','analytics', 'settings'];
 
     return (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">

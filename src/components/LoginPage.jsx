@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Lock, Mail, User, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import {useDispatch, useSelector} from "react-redux";
-import {loginUser} from "../state/authSlice.js";
+import {hasPermission, loginUser, selectPermissions} from "../state/authSlice.js";
 import {registerUser} from "../state/userRegistrationSlice.js";
 import { useNavigate } from 'react-router-dom';
+import {allTabs} from "./tabs/tabs.js";
 
 const LoginPage = () => {
 
     const  dispatch = useDispatch();
     const navigate = useNavigate();
+    const permissions = useSelector(selectPermissions);
     const { isLoading: authLoading, message, isAuthenticated} = useSelector((state) => state.auth);
     const {user, isLoading: registerLoading} = useSelector((state) => state.registerUser);
 
     // Redirect if already authenticated
     useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/dashboard');
+        if (isAuthenticated && permissions) {
+            let allAllowedtabs = []
+            allTabs.forEach(tab => {
+                if(hasPermission(tab.requiredPermission)){
+                    allAllowedtabs.push(tab);
+                }
+            });
+            navigate(allAllowedtabs[0].path);
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, permissions, navigate]);
 
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
