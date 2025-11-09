@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {useDispatch} from "react-redux";
 import {
     updateVehicle,
@@ -8,6 +8,85 @@ import {
 import Notification from "../../common/Notification.jsx"
 import {SELECTED_VEHICLE_CARD_OPTIONS} from "../../common/Costants.js";
 import config from "../../../configs/config.json";
+
+// Move EditableField outside to prevent recreation on every render
+const EditableField = React.memo(({ label, value, section, field, type = "text", options = null, isEditing, currentValue, updateField }) => {
+    const [inputValue, setInputValue] = useState(currentValue?.toString() || '');
+
+    useEffect(() => {
+        setInputValue(currentValue?.toString() || '');
+    }, [currentValue]);
+
+    if (!isEditing) {
+        if (type === "currency") {
+            return (
+                <div className="flex justify-between">
+                    <span className="text-gray-600">{label}:</span>
+                    <span className="font-medium">{value}</span>
+                </div>
+            );
+        }
+        return (
+            <div className="flex justify-between">
+                <span className="text-gray-600">{label}:</span>
+                <span className="font-medium">{value || 'N/A'}</span>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex justify-between items-center">
+            <span className="text-gray-600 text-sm">{label}:</span>
+            <div className="flex-1 ml-2">
+                {options ? (
+                    <select
+                        value={currentValue}
+                        onChange={(e) => updateField(section, field, e.target.value)}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        {options.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                        ))}
+                    </select>
+                ) : type === "date" ? (
+                    <input
+                        type="date"
+                        value={(currentValue && currentValue !== "N/A")? new Date(currentValue).toISOString().split('T')[0] : ''}
+                        onChange={(e) => updateField(section, field, e.target.value)}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                ) : type === "number" ? (
+                    <input
+                        type="number"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onBlur={() => {
+                            const num = parseFloat(inputValue);
+                            updateField(section, field, isNaN(num) ? 0 : num);
+                        }}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                ) : type === "textarea" ? (
+                    <textarea
+                        value={currentValue}
+                        onChange={(e) => updateField(section, field, e.target.value)}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows="2"
+                    />
+                ) : (
+                    <input
+                        type="text"
+                        value={currentValue}
+                        onChange={(e) => updateField(section, field, e.target.value)}
+                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                )}
+            </div>
+        </div>
+    );
+});
+
+EditableField.displayName = 'EditableField';
 
 const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const dispatch = useDispatch();
@@ -178,22 +257,23 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
         }
     };
 
-    const updateField = (section, field, value) => {
+    const updateField = useCallback((section, field, value) => {
+        setEditedData(prev => {
+            const updatedSection = {
+                ...prev[section],
+                [field]: value
+            }
 
-        const updatedSection = {
-            ...editedData[section],
-            [field]: value
-        }
+            if (section === "financials"){
+                updatedSection.total_cost_lkr = calculateTotalCost(updatedSection);
+            }
 
-        if (section === "financials"){
-            updatedSection.total_cost_lkr = calculateTotalCost(updatedSection);
-        }
-
-        setEditedData(prev => ({
-            ...prev,
-            [section]: updatedSection,
-        }));
-    };
+            return {
+                ...prev,
+                [section]: updatedSection,
+            };
+        });
+    }, []);
 
     const calculateTotalCost = (financials) => {
         const tt_charges = parseFloat(financials?.tt_lkr)
@@ -212,92 +292,6 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
         updateField("financials","total_cost_lkr", newTotal);
     };
 
-    const EditableField = ({ label, value, section, field, type = "text", options = null}) => {
-        const isEditing = editingSection !== null;
-        const currentValue = editedData[section]?.[field] || value || '';
-        const [inputValue, setInputValue] = useState(currentValue.toString());
-
-        if (!isEditing) {
-            if (type === "currency") {
-                return (
-                    <div className="flex justify-between">
-                        <span className="text-gray-600">{label}:</span>
-                        <span className="font-medium">{value}</span>
-                    </div>
-                );
-            }
-            return (
-                <div className="flex justify-between">
-                    <span className="text-gray-600">{label}:</span>
-                    <span className="font-medium">{value || 'N/A'}</span>
-                </div>
-            );
-        }
-
-        return (
-            <div className="flex justify-between items-center">
-                <span className="text-gray-600 text-sm">{label}:</span>
-                <div className="flex-1 ml-2">
-                    {options ? (
-                        <select
-                            value={currentValue}
-                            onChange={(e) => updateField(section, field, e.target.value)}
-                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            {options.map(option => (
-                                <option key={option} value={option}>{option}</option>
-                            ))}
-                        </select>
-                    ) : type === "date" ? (
-                        <input
-                            type="date"
-                            value={(currentValue && currentValue !== "N/A")? new Date(currentValue).toISOString().split('T')[0] : ''}
-                            onChange={(e) => {
-                                updateField(section, field, e.target.value);
-                            }
-                        }
-                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    ) : type === "number" ? (
-                        <input
-                            type="number"
-                            value={inputValue}
-                            onChange={(e) => {
-                                setInputValue(e.target.value); // let user type freely
-                            }}
-                            onBlur={() => {
-                                const num = parseFloat(inputValue);
-                                console.log("val" +  num);
-                                updateField(section, field, isNaN(num) ? 0 : num);
-                            }}
-                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    ) : type === "textarea" ? (
-                        <textarea
-                            value={currentValue}
-                            onChange={(e) => {
-                                updateField(section, field, e.target.value);
-                            }
-                        }
-                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            rows="2"
-                        />
-                    ) : (
-                        <input
-                            type="text"
-                            value={currentValue}
-                            onChange={(e) =>{
-                                updateField(section, field, e.target.value);
-                            }
-                        }
-                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    )}
-                </div>
-            </div>
-        );
-    };
-
     // Define sections with editable fields
     const sections = [
         {
@@ -311,12 +305,18 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         value={editedData.vehicle?.make || vehicle.make}
                         section="vehicle"
                         field="make"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.make || vehicle.make || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Model"
                         value={editedData.vehicle?.model || vehicle.model}
                         section="vehicle"
                         field="model"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.model || vehicle.model || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Year"
@@ -324,18 +324,27 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="vehicle"
                         field="year_of_manufacture"
                         type="number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.year_of_manufacture || vehicle.year_of_manufacture || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Color"
                         value={editedData.vehicle?.color || vehicle.color}
                         section="vehicle"
                         field="color"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.color || vehicle.color || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Trim Level"
                         value={editedData.vehicle?.trim_level || vehicle.trim_level}
                         section="vehicle"
                         field="trim_level"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.trim_level || vehicle.trim_level || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Mileage (km)"
@@ -343,6 +352,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="vehicle"
                         field="mileage_km"
                         type="number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.mileage_km || vehicle.mileage_km || 0}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Condition"
@@ -350,30 +362,45 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="vehicle"
                         field="condition_status"
                         options={['REGISTERED', 'UNREGISTERED']}
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.condition_status || vehicle.condition_status || 'UNREGISTERED'}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Auction Grade"
                         value={editedData.vehicle?.auction_grade || vehicle.auction_grade}
                         section="vehicle"
                         field="auction_grade"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.auction_grade || vehicle.auction_grade || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Vehicle Code"
                         value={`ORD-${editedData.vehicle?.code || vehicle.code || 'N/A'}`}
                         section="vehicle"
                         field="code"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.code || vehicle.code || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Chassis Number"
                         value={editedData.vehicle?.chassis_id || vehicle.chassis_id}
                         section="vehicle"
                         field="chassis_id"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.chassis_id || vehicle.chassis_id || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Vehicle ID"
                         value={editedData.vehicle?.id || vehicle.id}
                         section="vehicle"
                         field="id"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.id || vehicle.id || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Currency"
@@ -381,6 +408,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="vehicle"
                         field="currency"
                         options={['JPY', 'USD', 'LKR', 'EUR']}
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.vehicle?.currency || vehicle.currency || 'LKR'}
+                        updateField={updateField}
                     />
                 </div>
             )
@@ -396,12 +426,18 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         value={editedData.shipping?.vessel_name || shipping.vessel_name}
                         section="shipping"
                         field="vessel_name"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.shipping?.vessel_name || shipping.vessel_name || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Departure Port"
                         value={editedData.shipping?.departure_harbour || shipping.departure_harbour}
                         section="shipping"
                         field="departure_harbour"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.shipping?.departure_harbour || shipping.departure_harbour || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Shipped Date"
@@ -409,6 +445,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="shipping"
                         field="shipment_date"
                         type="date"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.shipping?.shipment_date || shipping.shipment_date || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Arrival Date"
@@ -416,6 +455,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="shipping"
                         field="arrival_date"
                         type="date"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.shipping?.arrival_date || shipping.arrival_date || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Clearing Date"
@@ -423,6 +465,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="shipping"
                         field="clearing_date"
                         type="date"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.shipping?.clearing_date || shipping.clearing_date || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Shipping Status"
@@ -430,6 +475,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="shipping"
                         field="shipping_status"
                         options={['PROCESSING', 'SHIPPED', 'ARRIVED', 'CLEARED', 'DELIVERED']}
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.shipping?.shipping_status || shipping.shipping_status || 'PROCESSING'}
+                        updateField={updateField}
                     />
                 </div>
             )
@@ -446,6 +494,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="purchase"
                         field="purchase_date"
                         type="date"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.purchase?.purchase_date || purchase.purchase_date || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="LC Cost (JPY)"
@@ -453,6 +504,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="purchase"
                         field="lc_cost_jpy"
                         type="number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.purchase?.lc_cost_jpy || purchase.lc_cost_jpy || 0}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Purchase Remarks"
@@ -460,6 +514,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="purchase"
                         field="purchase_remarks"
                         type="textarea"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.purchase?.purchase_remarks || purchase.purchase_remarks || ''}
+                        updateField={updateField}
                     />
                 </div>
             )
@@ -476,6 +533,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="financials"
                         field="tt_lkr"
                         type="number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.financials?.tt_lkr || financials.tt_lkr || 0}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Charges (LKR)"
@@ -483,6 +543,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="financials"
                         field="charges_lkr"
                         type="number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.financials?.charges_lkr || financials.charges_lkr || 0}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Duty (LKR)"
@@ -490,6 +553,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="financials"
                         field="duty_lkr"
                         type="number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.financials?.duty_lkr || financials.duty_lkr || 0}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Clearing (LKR)"
@@ -497,6 +563,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="financials"
                         field="clearing_lkr"
                         type="number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.financials?.clearing_lkr || financials.clearing_lkr || 0}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Other Expenses (LKR)"
@@ -504,6 +573,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="financials"
                         field="other_expenses_lkr"
                         type="number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.financials?.other_expenses_lkr || 0}
+                        updateField={updateField}
                     />
                     <div className="flex justify-between border-t pt-2">
                         <span className="text-gray-600 font-semibold">Total Cost:</span>
@@ -526,6 +598,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="sales"
                         field="sale_status"
                         options={['AVAILABLE', 'SOLD', 'RESERVED']}
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.sales?.sale_status || sales.sale_status || 'AVAILABLE'}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Sold Date"
@@ -533,6 +608,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="sales"
                         field="sold_date"
                         type="date"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.sales?.sold_date || sales.sold_date || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Revenue (LKR)"
@@ -540,6 +618,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="sales"
                         field="revenue"
                         type="number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.sales?.revenue || sales.revenue || 0}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Profit (LKR)"
@@ -547,6 +628,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="sales"
                         field="profit"
                         type="number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.sales?.profit || sales.profit || 0}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Customer Title"
@@ -554,18 +638,27 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="sales"
                         field="sold_to_title"
                         options={['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.']}
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.sales?.sold_to_title || sales.sold_to_title || 'Mr.'}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Customer Name"
                         value={editedData.sales?.sold_to_name || sales.sold_to_name}
                         section="sales"
                         field="sold_to_name"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.sales?.sold_to_name || sales.sold_to_name || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Contact Number"
                         value={editedData.sales?.contact_number || sales.contact_number}
                         section="sales"
                         field="contact_number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.sales?.contact_number || sales.contact_number || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Customer Address"
@@ -573,6 +666,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="sales"
                         field="customer_address"
                         type="textarea"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.sales?.customer_address || sales.customer_address || ''}
+                        updateField={updateField}
                     />
                     <EditableField
                         label="Sale Remarks"
@@ -580,6 +676,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                         section="sales"
                         field="sale_remarks"
                         type="textarea"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.sales?.sale_remarks || sales.sale_remarks || ''}
+                        updateField={updateField}
                     />
                 </div>
             )

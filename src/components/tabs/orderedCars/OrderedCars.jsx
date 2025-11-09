@@ -365,7 +365,7 @@ const OrderedCars = () => {
             {showCreateOrder && (
                 <CreateVehicle
                     isOpen={showCreateOrder}
-                    onClose={() => setShowCreateOrder(false)}
+                    onClose={closeCreateOrder}
                     onSubmit={handleOrderSubmit}
                 />
             )}
