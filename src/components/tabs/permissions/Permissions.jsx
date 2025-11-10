@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Key, RefreshCw, XCircle, Plus, Edit, Trash2, Shield } from 'lucide-react';
+import { Key, RefreshCw, XCircle, Plus, Edit, Trash2, Shield, ChevronDown, ChevronRight } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     fetchAllPermissions,
@@ -23,6 +23,7 @@ const Permissions = () => {
 
     const [editingPermission, setEditingPermission] = useState(null);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [collapsedResources, setCollapsedResources] = useState({});
 
     useEffect(() => {
         dispatch(fetchAllPermissions());
@@ -42,6 +43,26 @@ const Permissions = () => {
         if (window.confirm(`Are you sure you want to delete the permission "${permissionName}"?`)) {
             await dispatch(deletePermission(permissionId));
         }
+    };
+
+    const toggleResourceCollapse = (resource) => {
+        setCollapsedResources(prev => ({
+            ...prev,
+            [resource]: !prev[resource]
+        }));
+    };
+
+    const collapseAll = () => {
+        const allResources = Object.keys(groupedPermissions);
+        const collapsed = {};
+        allResources.forEach(resource => {
+            collapsed[resource] = true;
+        });
+        setCollapsedResources(collapsed);
+    };
+
+    const expandAll = () => {
+        setCollapsedResources({});
     };
 
     const formatDate = (dateString) => {
@@ -133,14 +154,42 @@ const Permissions = () => {
                 </div>
             )}
 
+            {/* Collapse/Expand All Controls */}
+            {!loading && permissions.length > 0 && Object.keys(groupedPermissions).length > 1 && (
+                <div className="flex items-center justify-end gap-2">
+                    <button
+                        onClick={expandAll}
+                        className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                        <ChevronDown className="w-4 h-4" />
+                        <span>Expand All</span>
+                    </button>
+                    <button
+                        onClick={collapseAll}
+                        className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                        <ChevronRight className="w-4 h-4" />
+                        <span>Collapse All</span>
+                    </button>
+                </div>
+            )}
+
             {/* Permissions Table - Grouped by Resource */}
             {!loading && permissions.length > 0 && (
                 <div className="space-y-4">
                     {Object.keys(groupedPermissions).sort().map(resource => (
                         <div key={resource} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                            {/* Resource Header */}
-                            <div className="bg-gray-50 px-6 py-3 border-b border-gray-200">
+                            {/* Resource Header - Clickable */}
+                            <button
+                                onClick={() => toggleResourceCollapse(resource)}
+                                className="w-full bg-gray-50 px-6 py-3 border-b border-gray-200 hover:bg-gray-100 transition-colors"
+                            >
                                 <div className="flex items-center space-x-2">
+                                    {collapsedResources[resource] ? (
+                                        <ChevronRight className="w-5 h-5 text-gray-600" />
+                                    ) : (
+                                        <ChevronDown className="w-5 h-5 text-gray-600" />
+                                    )}
                                     <Shield className="w-5 h-5 text-gray-600" />
                                     <h3 className="text-lg font-semibold text-gray-900 uppercase">
                                         {resource}
@@ -149,10 +198,11 @@ const Permissions = () => {
                                         ({groupedPermissions[resource].length} permissions)
                                     </span>
                                 </div>
-                            </div>
+                            </button>
 
-                            {/* Permissions Table */}
-                            <div className="overflow-x-auto">
+                            {/* Permissions Table - Collapsible */}
+                            {!collapsedResources[resource] && (
+                                <div className="overflow-x-auto">
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>
@@ -231,7 +281,8 @@ const Permissions = () => {
                                         ))}
                                     </tbody>
                                 </table>
-                            </div>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
