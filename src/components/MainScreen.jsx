@@ -4,21 +4,12 @@ import {
     LogOut,
     Search,
     Bell,
-    Home,
-    Users,
-    BarChart3,
-    Settings,
-    FileText,
-    Calendar,
     ChevronLeft,
     ChevronRight,
-    Menu,
-    Shield,
-    Key
 } from 'lucide-react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout, selectPermissions } from '../state/authSlice.js';
+import {logout, selectPermissions, selectUser} from '../state/authSlice.js';
 import { getAccessibleTabs } from '../utils/permissionUtils.js';
 
 const MainScreen = () => {
@@ -26,6 +17,7 @@ const MainScreen = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const permissions = useSelector(selectPermissions);
+    const user = useSelector(selectUser);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     const handleLogout = () => {
@@ -33,13 +25,11 @@ const MainScreen = () => {
         navigate('/login');
     };
 
-    const user = {
-        name: 'John Doe',
-        email: 'john@example.com',
-        avatar: 'JD'
-    };
+    const getAvatarNameFromUsername = (user) =>{
+        return user.first_name[0] + user.last_name[0];
+    }
 
-    // Get tabs based on user permissions
+
     const tabs = getAccessibleTabs(permissions);
 
     return (
@@ -103,10 +93,10 @@ const MainScreen = () => {
                         <>
                             <div className="flex items-center space-x-3 mb-4">
                                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                    <span className="text-sm font-medium text-blue-600">{user.avatar}</span>
+                                    <span className="text-sm font-medium text-blue-600">{getAvatarNameFromUsername(user)}</span>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
+                                    <p className="text-sm font-medium text-gray-900 truncate">{user.first_name} {user.last_name} </p>
                                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                                 </div>
                             </div>
@@ -121,7 +111,7 @@ const MainScreen = () => {
                     ) : (
                         <div className="flex flex-col items-center space-y-4">
                             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                <span className="text-sm font-medium text-blue-600">{user.avatar}</span>
+                                <span className="text-sm font-medium text-blue-600">{getAvatarNameFromUsername(user)}</span>
                             </div>
                             <button
                                 onClick={handleLogout}
@@ -162,7 +152,7 @@ const MainScreen = () => {
                             </button>
 
                             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                <span className="text-sm font-medium text-blue-600">{user.avatar}</span>
+                                <span className="text-sm font-medium text-blue-600">{getAvatarNameFromUsername(user)}</span>
                             </div>
                         </div>
                     </div>
