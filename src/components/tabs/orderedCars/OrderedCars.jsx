@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Car, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { Car, ChevronLeft, ChevronRight, Plus, Grid, List } from 'lucide-react';
 import CreateVehicle from "./CreateVehicle.jsx";
 import SelectedCarCard from "./SelectedCarCard.jsx";
 import {useDispatch, useSelector} from "react-redux";
@@ -31,6 +31,7 @@ const OrderedCars = () => {
     const [selectedCar, setSelectedCar] = useState(null);
     const [showCreateOrder, setShowCreateOrder] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
+    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
     const filters = useSelector(selectFilters);
     const pageLimit = useSelector(selectPageLimit);
     const permissions = useSelector(selectPermissions);
@@ -167,9 +168,33 @@ const OrderedCars = () => {
                     </p>
                 </div>
                 <div className="flex items-center gap-4 relative">
-                    <div className="text-sm text-gray-600">
-                        Showing {indexOfFirstCar + 1}-{Math.min(indexOfLastCar, vehicles.length)} of {totalVehicles} deals
+
+                    {/* View Mode Toggle */}
+                    <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                        <button
+                            onClick={() => setViewMode('grid')}
+                            className={`p-2 rounded transition-colors ${
+                                viewMode === 'grid'
+                                    ? 'bg-white text-blue-600 shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
+                            }`}
+                            title="Grid View"
+                        >
+                            <Grid className="w-4 h-4" />
+                        </button>
+                        <button
+                            onClick={() => setViewMode('list')}
+                            className={`p-2 rounded transition-colors ${
+                                viewMode === 'list'
+                                    ? 'bg-white text-blue-600 shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
+                            }`}
+                            title="List View"
+                        >
+                            <List className="w-4 h-4" />
+                        </button>
                     </div>
+
                     <button
                         onClick={() => setShowFilters(!showFilters)}
                         className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors font-medium ${
@@ -230,13 +255,27 @@ const OrderedCars = () => {
                 </div>
             )}
 
-            {/* Cars Grid */}
+            {/* Cars Display - Grid or List */}
             {!loading && vehicles.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {vehicles.map((car) => (
-                        <PreviewCard car={car} key={car.id} handleViewDetails={handleViewDetails} />
-                    ))}
-                </div>
+                <>
+                    {/* Grid View */}
+                    {viewMode === 'grid' && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {vehicles.map((car) => (
+                                <PreviewCard car={car} key={car.id} handleViewDetails={handleViewDetails} />
+                            ))}
+                        </div>
+                    )}
+
+                    {/* List View */}
+                    {viewMode === 'list' && (
+                        <div className="space-y-4">
+                            {vehicles.map((car) => (
+                                <PreviewCard car={car} key={car.id} handleViewDetails={handleViewDetails} viewMode="list" />
+                            ))}
+                        </div>
+                    )}
+                </>
             )}
 
             {/* Pagination */}
