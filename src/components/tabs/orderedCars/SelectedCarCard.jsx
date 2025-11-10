@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     updateVehicle,
     updateVehicleFinancials, updateVehiclePurchase,
@@ -8,6 +8,9 @@ import {
 import Notification from "../../common/Notification.jsx"
 import {SELECTED_VEHICLE_CARD_OPTIONS} from "../../common/Costants.js";
 import config from "../../../configs/config.json";
+import {hasPermission} from "../../../utils/permissionUtils.js";
+import {PERMISSIONS} from "../../../utils/permissions.js";
+import {selectPermissions} from "../../../state/authSlice.js";
 
 // Move EditableField outside to prevent recreation on every render
 const EditableField = React.memo(({ label, value, section, field, type = "text", options = null, isEditing, currentValue, updateField }) => {
@@ -102,6 +105,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const containerRef = useRef(null);
     const imageContainerRef = useRef(null);
     const [notification, setNotification] = useState({ show: false, type: '', title: '', message: '' });
+    const permissions = useSelector(selectPermissions);
 
 
     // Minimum swipe distance (in px)
@@ -899,8 +903,8 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                         {currentSection + 1} of {sections.length}
                                     </p>
                                 </div>
-                                {editingSection === null && (
-                                    <button
+                                {editingSection === null && hasPermission(permissions, PERMISSIONS.CAR_UPDATE) &&
+                                    (<button
                                         onClick={() => startEdit(currentSection)}
                                         className="ml-2 p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                         title="Edit section"

@@ -5,7 +5,6 @@ import {
     createVehicleRecordWithImage,
 } from "../../../state/vehicleSlice.js";
 import {useDispatch} from "react-redux";
-import {SELECTED_VEHICLE_CARD_OPTIONS} from "../../common/Costants.js";
 import Notification from "../../common/Notification.jsx"
 
 const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
