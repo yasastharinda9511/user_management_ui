@@ -253,18 +253,4 @@ export const selectPermissions = (state) => state.auth.permissions;
 export const selectUser = (state) => state.auth.user;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 
-// Permission check helpers
-export const hasPermission = (state, permissionName) => {
-    const permissions = state.auth.permissions;
-    return permissions.some(p => p.name === permissionName || `${p.action}:${p.resource}` === permissionName);
-};
-
-export const hasAnyPermission = (state, permissionNames) => {
-    return permissionNames.some(name => hasPermission(state, name));
-};
-
-export const hasAllPermissions = (state, permissionNames) => {
-    return permissionNames.every(name => hasPermission(state, name));
-};
-
 export default authSlice.reducer;

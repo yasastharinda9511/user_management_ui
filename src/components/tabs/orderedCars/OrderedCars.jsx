@@ -22,6 +22,9 @@ import {
 } from '../../../state/vehicleSlice.js';
 import PreviewCard from "./PreviewCard.jsx";
 import Filter from "./Filter.jsx";
+import {selectPermissions} from "../../../state/authSlice.js";
+import {PERMISSIONS} from "../../../utils/permissions.js";
+import {hasPermission} from "../../../utils/permissionUtils.js";
 
 const OrderedCars = () => {
     const dispatch = useDispatch();
@@ -30,6 +33,7 @@ const OrderedCars = () => {
     const [showFilters, setShowFilters] = useState(false);
     const filters = useSelector(selectFilters);
     const pageLimit = useSelector(selectPageLimit);
+    const permissions = useSelector(selectPermissions);
 
     const shouldRefresh = useSelector(selectShouldRefresh);
 
@@ -181,13 +185,13 @@ const OrderedCars = () => {
                             </span>
                         )}
                     </button>
-                    <button
+                    {hasPermission(permissions,PERMISSIONS.CAR_CREATE) && <button
                         onClick={handleCreateOrder}
                         className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                     >
                         <Plus className="w-4 h-4" />
                         <span>Add Car</span>
-                    </button>
+                    </button>}
 
                     {/* Filters Panel - Positioned relative to button container */}
                     {showFilters && <Filter closeModal={closeFilterModal}></Filter>}
