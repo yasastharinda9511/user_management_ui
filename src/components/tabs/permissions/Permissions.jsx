@@ -203,7 +203,14 @@ const Permissions = () => {
                             {/* Permissions Table - Collapsible */}
                             {!collapsedResources[resource] && (
                                 <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-gray-200">
+                                <table className="min-w-full divide-y divide-gray-200 table-fixed w-full">
+                                    <colgroup>
+                                        <col style={{width: '20%'}} />
+                                        <col style={{width: '12%'}} />
+                                        <col style={{width: '35%'}} />
+                                        <col style={{width: '18%'}} />
+                                        <col style={{width: '15%'}} />
+                                    </colgroup>
                                     <thead className="bg-gray-50">
                                         <tr>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -227,29 +234,29 @@ const Permissions = () => {
                                         {groupedPermissions[resource].map((permission) => (
                                             <tr key={permission.id} className="hover:bg-gray-50 transition-colors">
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex items-center">
+                                                    <div className="flex items-center min-w-0">
                                                         <div className="flex-shrink-0 h-10 w-10">
                                                             <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                                                                 <Key className="w-5 h-5 text-blue-600" />
                                                             </div>
                                                         </div>
-                                                        <div className="ml-4">
-                                                            <div className="text-sm font-medium text-gray-900">
+                                                        <div className="ml-4 min-w-0 flex-1">
+                                                            <div className="text-sm font-medium text-gray-900 truncate" title={permission.name}>
                                                                 {permission.name}
                                                             </div>
-                                                            <div className="text-sm text-gray-500">
+                                                            <div className="text-sm text-gray-500 truncate">
                                                                 ID: {permission.id}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 max-w-full truncate" title={permission.action}>
                                                         {permission.action}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <div className="text-sm text-gray-900 max-w-xs">
+                                                    <div className="text-sm text-gray-900 truncate" title={permission.description}>
                                                         {permission.description || (
                                                             <span className="text-gray-400 italic">No description</span>
                                                         )}

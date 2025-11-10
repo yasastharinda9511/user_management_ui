@@ -232,7 +232,7 @@ export const VehicleSections = ({
             title: SELECTED_VEHICLE_CARD_OPTIONS.PURCHASE_DETAILS,
             color: "bg-indigo-50",
             sectionKey: "purchase",
-            requiredPermission: `${RESOURCES.PURCHASES}.${ACTIONS.ACCESS}`,
+            requiredPermission: `${RESOURCES.PURCHASE}.${ACTIONS.ACCESS}`,
             content: (
                 <div className="space-y-3">
                     <EditableField
