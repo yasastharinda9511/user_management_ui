@@ -5,6 +5,7 @@ import {PERMISSIONS} from "../../../utils/permissions.js";
 import {RESOURCES, ACTIONS} from "../../../utils/resources.js";
 import {hasPermission} from "../../../utils/permissionUtils.js";
 import {useSelector} from "react-redux";
+import {selectPermissions} from "../../../state/authSlice.js";
 
 /**
  * Get vehicle sections configuration for SelectedCarCard
@@ -34,7 +35,7 @@ export const VehicleSections = ({
     formatCurrency
 }) => {
 
-    const permission = useSelector(state => state.permission);
+    const permissions = useSelector(selectPermissions);
 
     const carInfoSection = [
         {
@@ -434,6 +435,6 @@ export const VehicleSections = ({
     ]
 
     return carInfoSection.filter(section => {
-        return hasPermission(permission, section.requiredPermission);
+        return hasPermission(permissions, section.requiredPermission);
     })
 };
