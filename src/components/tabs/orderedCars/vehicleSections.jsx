@@ -42,7 +42,7 @@ export const VehicleSections = ({
             title: SELECTED_VEHICLE_CARD_OPTIONS.VEHICLE_INFORMATION,
             color: "bg-gray-50",
             sectionKey: "vehicle",
-            requiredPermission: `${RESOURCES.CAR_CARD_OPTIONS_INFO}.${ACTIONS.ACCESS}`,
+            requiredPermission: `${RESOURCES.CAR}.${ACTIONS.ACCESS}`,
             content: (
                 <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                     <EditableField
@@ -164,7 +164,7 @@ export const VehicleSections = ({
             title: SELECTED_VEHICLE_CARD_OPTIONS.SHIPPING_DETAILS,
             color: "bg-yellow-50",
             sectionKey: "shipping",
-            requiredPermission: `${RESOURCES.CAR_CARD_OPTIONS_SHIPPING}.${ACTIONS.ACCESS}`,
+            requiredPermission: `${RESOURCES.SHIPPING}.${ACTIONS.ACCESS}`,
             content: (
                 <div className="space-y-3">
                     <EditableField
@@ -232,7 +232,7 @@ export const VehicleSections = ({
             title: SELECTED_VEHICLE_CARD_OPTIONS.PURCHASE_DETAILS,
             color: "bg-indigo-50",
             sectionKey: "purchase",
-            requiredPermission: `${RESOURCES.CAR_CARD_OPTIONS_PURCHASE}.${ACTIONS.ACCESS}`,
+            requiredPermission: `${RESOURCES.PURCHASES}.${ACTIONS.ACCESS}`,
             content: (
                 <div className="space-y-3">
                     <EditableField
@@ -272,7 +272,7 @@ export const VehicleSections = ({
             title: SELECTED_VEHICLE_CARD_OPTIONS.FINANCIAL_SUMMARY,
             color: "bg-green-50",
             sectionKey: "financials",
-            requiredPermission: `${RESOURCES.CAR_CARD_OPTIONS_FINANCIAL}.${ACTIONS.ACCESS}`,
+            requiredPermission: `${RESOURCES.FINANCIAL}.${ACTIONS.ACCESS}`,
             content: (
                 <div className="space-y-3">
                     <EditableField
@@ -338,7 +338,7 @@ export const VehicleSections = ({
             title: SELECTED_VEHICLE_CARD_OPTIONS.SALES_INFORMATION,
             color: "bg-purple-50",
             sectionKey: "sales",
-            requiredPermission: `${RESOURCES.CAR_CARD_OPTIONS_INFO}.${ACTIONS.ACCESS}`,
+            requiredPermission: `${RESOURCES.SALES}.${ACTIONS.ACCESS}`,
             content: (
                 <div className="space-y-3">
                     <EditableField

@@ -16,6 +16,10 @@ const PreviewCard= ({car , handleViewDetails})=>{
 
 
     const getImageUrl = (car) => {
+        if (!car.vehicle_image || car.vehicle_image.length === 0) {
+            return null;
+        }
+
         const sortedImages = [...car.vehicle_image].sort((a, b) =>
             +a.display_order - +b.display_order
         );
@@ -24,7 +28,7 @@ const PreviewCard= ({car , handleViewDetails})=>{
             return `${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`
         }
 
-        return "";
+        return null;
     }
     //
     return (
@@ -32,11 +36,11 @@ const PreviewCard= ({car , handleViewDetails})=>{
             {/* Car Image */}
             <div className="h-48 bg-gray-200 overflow-hidden">
                 <img
-                    src={getImageUrl(car)}
-                    alt= ""
+                    src={getImageUrl(car) || `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(car.vehicle.make)}+${encodeURIComponent(car.vehicle.model || 'Model')}`}
+                    alt={`${car.vehicle.make} ${car.vehicle.model}`}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
-                        e.target.src = `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${car.vehicle.make}+${car.vehicle.make.model.replace(' ', '+')}`;
+                        e.target.src = `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(car.vehicle.make)}+${encodeURIComponent(car.vehicle.model || 'Model')}`;
                     }}
                 />
             </div>

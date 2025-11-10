@@ -34,6 +34,9 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const minSwipeDistance = 50;
 
     const getAllImageUrls = (car) => {
+        if (!car.vehicle_image || car.vehicle_image.length === 0) {
+            return [];
+        }
         const images = [...car.vehicle_image];
         const sortedImages = images.sort((a, b) => a.display_order - b.display_order);
         return sortedImages.map(img => `${config.car_service.base_url}/vehicles/upload-image/${img.filename}`);
@@ -41,7 +44,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
 
     const getImageUrl = (car, index = 0) => {
         const allImages = getAllImageUrls(car);
-        return allImages[index] || "";
+        return allImages[index] || null;
     }
 
     const getStatusColor = (status) => {
@@ -352,7 +355,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                     onTouchEnd={onImageTouchEnd}
                                 >
                                     <img
-                                        src={getImageUrl(selectedCar, currentImageIndex)}
+                                        src={getImageUrl(selectedCar, currentImageIndex) || `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(editedData.vehicle?.make || vehicle.make || 'Car')}+${encodeURIComponent(editedData.vehicle?.model || vehicle.model || 'Model')}`}
                                         alt={`${editedData.vehicle?.make || vehicle.make} ${editedData.vehicle?.model || vehicle.model} - Image ${currentImageIndex + 1}`}
                                         className="w-full h-48 object-cover transition-opacity duration-300"
                                         onError={(e) => {

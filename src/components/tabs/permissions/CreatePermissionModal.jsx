@@ -48,22 +48,19 @@ const CreatePermissionModal = ({ onClose }) => {
         ACTIONS.WRITE,
         ACTIONS.DELETE,
         ACTIONS.VIEW,
-        ACTIONS.EDIT
+        ACTIONS.EDIT,
     ];
 
     // Common resource suggestions
     const commonResources = [
-        RESOURCES.USERS_TAB,
-        RESOURCES.ROLES_TAB,
-        RESOURCES.PERMISSIONS_TAB,
-        RESOURCES.CAR_TAB,
-        RESOURCES.ANALYTICS_TAB,
-        RESOURCES.SETTINGS_TAB,
-        RESOURCES.CAR_CARD_OPTIONS_INFO,
-        RESOURCES.CAR_CARD_OPTIONS_SHIPPING,
-        RESOURCES.CAR_CARD_OPTIONS_PURCHASE,
-        RESOURCES.CAR_CARD_OPTIONS_FINANCIAL,
-        RESOURCES.CAR_CARD_OPTIONS_SALES,
+        RESOURCES.USERS,
+        RESOURCES.ROLES,
+        RESOURCES.PERMISSIONS,
+        RESOURCES.CAR,
+        RESOURCES.ANALYTICS,
+        RESOURCES.SETTINGS,
+        RESOURCES.FINANCIAL,
+        RESOURCES.SALES,
     ];
 
     return (

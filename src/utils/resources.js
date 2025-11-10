@@ -1,17 +1,15 @@
 export const RESOURCES ={
-    CAR_TAB : 'vehicles',
-    DASHBOARD_TAB : 'dashboard',
-    USERS_TAB : 'users',
-    ROLES_TAB : 'roles',
-    PERMISSIONS_TAB : 'permissions',
-    ANALYTICS_TAB : 'analytics',
-    SETTINGS_TAB : 'settings',
-
-    CAR_CARD_OPTIONS_INFO : 'selected_card_info',
-    CAR_CARD_OPTIONS_SHIPPING : 'selected_card_settings',
-    CAR_CARD_OPTIONS_PURCHASE : 'selected_card_purchase',
-    CAR_CARD_OPTIONS_FINANCIAL : 'selected_card_financial',
-    CAR_CARD_OPTIONS_SALES : 'selected_card_sales',
+    CAR : 'vehicles',
+    DASHBOARD : 'dashboard',
+    USERS : 'users',
+    ROLES : 'roles',
+    PERMISSIONS : 'permissions',
+    ANALYTICS : 'analytics',
+    SETTINGS : 'settings',
+    FINANCIAL : "financial",
+    SALES : "sales",
+    SHIPPING : "shipping",
+    PURCHASE : "purchase",
 }
 
 
