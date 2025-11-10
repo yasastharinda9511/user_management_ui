@@ -5,6 +5,7 @@ import {
     createPermission,
     selectUpdating
 } from '../../../state/roleSlice.js';
+import {ACTIONS, RESOURCES} from "../../../utils/resources.js";
 
 const CreatePermissionModal = ({ onClose }) => {
     const dispatch = useDispatch();
@@ -40,10 +41,30 @@ const CreatePermissionModal = ({ onClose }) => {
     };
 
     // Common action suggestions
-    const commonActions = ['access','create', 'read', 'update', 'delete', 'list', 'manage', 'view', 'edit'];
+    const commonActions = [
+        ACTIONS.ACCESS,
+        ACTIONS.CREATE,
+        ACTIONS.READ,
+        ACTIONS.WRITE,
+        ACTIONS.DELETE,
+        ACTIONS.VIEW,
+        ACTIONS.EDIT
+    ];
 
     // Common resource suggestions
-    const commonResources = ['users', 'roles', 'permissions', 'vehicles', 'orders', 'reports','analytics', 'settings'];
+    const commonResources = [
+        RESOURCES.USERS_TAB,
+        RESOURCES.ROLES_TAB,
+        RESOURCES.PERMISSIONS_TAB,
+        RESOURCES.CAR_TAB,
+        RESOURCES.ANALYTICS_TAB,
+        RESOURCES.SETTINGS_TAB,
+        RESOURCES.CAR_CARD_OPTIONS_INFO,
+        RESOURCES.CAR_CARD_OPTIONS_SHIPPING,
+        RESOURCES.CAR_CARD_OPTIONS_PURCHASE,
+        RESOURCES.CAR_CARD_OPTIONS_FINANCIAL,
+        RESOURCES.CAR_CARD_OPTIONS_SALES,
+    ];
 
     return (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">

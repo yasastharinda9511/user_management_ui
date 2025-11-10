@@ -4,6 +4,8 @@ export const PERMISSIONS = {
     CAR_CREATE     : 'vehicles.create',
     CAR_UPDATE  : 'vehicles.update',
 
+
+
     USER_TAB_ACCESS : 'users.access',
 
     ROLE_TAB_ACCESS : 'roles.access',

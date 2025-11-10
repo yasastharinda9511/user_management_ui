@@ -11,8 +11,7 @@ import config from "../../../configs/config.json";
 import {hasPermission} from "../../../utils/permissionUtils.js";
 import {PERMISSIONS} from "../../../utils/permissions.js";
 import {selectPermissions} from "../../../state/authSlice.js";
-import {getVehicleSections} from "./vehicleSections.jsx";
-import EditableField from "./EditableField.jsx";
+import { VehicleSections} from "./vehicleSections.jsx";
 
 const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const dispatch = useDispatch();
@@ -220,7 +219,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     };
 
     // Define sections with editable fields using the extracted configuration
-    const sections = getVehicleSections({
+    const sections = VehicleSections({
         editedData,
         vehicle,
         shipping,
