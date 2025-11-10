@@ -122,21 +122,20 @@ const CreatePermissionModal = ({ onClose }) => {
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Action *
                                     </label>
-                                    <input
-                                        type="text"
+                                    <select
                                         name="action"
                                         value={formData.action}
                                         onChange={handleInputChange}
                                         required
-                                        list="actions-list"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        placeholder="e.g., create, read, update"
-                                    />
-                                    <datalist id="actions-list">
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                                    >
+                                        <option value="">Select an action</option>
                                         {commonActions.map(action => (
-                                            <option key={action} value={action} />
+                                            <option key={action} value={action}>
+                                                {action}
+                                            </option>
                                         ))}
-                                    </datalist>
+                                    </select>
                                     <p className="text-xs text-gray-500 mt-1">
                                         The action type (create, read, update, delete, etc.)
                                     </p>
@@ -146,21 +145,20 @@ const CreatePermissionModal = ({ onClose }) => {
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Resource *
                                     </label>
-                                    <input
-                                        type="text"
+                                    <select
                                         name="resource"
                                         value={formData.resource}
                                         onChange={handleInputChange}
                                         required
-                                        list="resources-list"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        placeholder="e.g., users, roles, vehicles"
-                                    />
-                                    <datalist id="resources-list">
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                                    >
+                                        <option value="">Select a resource</option>
                                         {commonResources.map(resource => (
-                                            <option key={resource} value={resource} />
+                                            <option key={resource} value={resource}>
+                                                {resource}
+                                            </option>
                                         ))}
-                                    </datalist>
+                                    </select>
                                     <p className="text-xs text-gray-500 mt-1">
                                         The resource this permission applies to
                                     </p>
