@@ -349,7 +349,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                             <div className="relative mb-4 group">
                                 <div
                                     ref={imageContainerRef}
-                                    className="relative overflow-hidden rounded-lg"
+                                    className="relative overflow-hidden rounded-lg bg-gray-100"
                                     onTouchStart={onImageTouchStart}
                                     onTouchMove={onImageTouchMove}
                                     onTouchEnd={onImageTouchEnd}
@@ -357,7 +357,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                     <img
                                         src={getImageUrl(selectedCar, currentImageIndex) || `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(editedData.vehicle?.make || vehicle.make || 'Car')}+${encodeURIComponent(editedData.vehicle?.model || vehicle.model || 'Model')}`}
                                         alt={`${editedData.vehicle?.make || vehicle.make} ${editedData.vehicle?.model || vehicle.model} - Image ${currentImageIndex + 1}`}
-                                        className="w-full h-48 object-cover transition-opacity duration-300"
+                                        className="w-full h-64 object-contain transition-opacity duration-300"
                                         onError={(e) => {
                                             e.target.src = `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(editedData.vehicle?.make || vehicle.make || 'Car')}+${encodeURIComponent(editedData.vehicle?.model || vehicle.model || 'Model')}`;
                                         }}
@@ -388,27 +388,38 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                             )}
                                         </>
                                     )}
+
+                                    {/* Image Counter */}
+                                    {getAllImageUrls(selectedCar).length > 1 && (
+                                        <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                                            {currentImageIndex + 1} / {getAllImageUrls(selectedCar).length}
+                                        </div>
+                                    )}
                                 </div>
 
-                                {/* Image Indicators */}
-                                {getAllImageUrls(selectedCar).length > 1 && (
-                                    <div className="flex justify-center mt-2 space-x-1">
-                                        {getAllImageUrls(selectedCar).map((_, index) => (
+                                {/* Thumbnail Bar */}
+                                {getAllImageUrls(selectedCar).length > 0 && (
+                                    <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
+                                        {getAllImageUrls(selectedCar).map((imageUrl, index) => (
                                             <button
                                                 key={index}
                                                 onClick={() => setCurrentImageIndex(index)}
-                                                className={`w-2 h-2 rounded-full transition-colors ${
-                                                    index === currentImageIndex ? 'bg-blue-600' : 'bg-gray-300'
+                                                className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                                                    index === currentImageIndex
+                                                        ? 'border-blue-600 ring-2 ring-blue-200'
+                                                        : 'border-gray-300 hover:border-gray-400'
                                                 }`}
-                                            />
+                                            >
+                                                <img
+                                                    src={imageUrl}
+                                                    alt={`Thumbnail ${index + 1}`}
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.target.src = `https://via.placeholder.com/64/f3f4f6/6b7280?text=${index + 1}`;
+                                                    }}
+                                                />
+                                            </button>
                                         ))}
-                                    </div>
-                                )}
-
-                                {/* Image Counter */}
-                                {getAllImageUrls(selectedCar).length > 1 && (
-                                    <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                                        {currentImageIndex + 1} / {getAllImageUrls(selectedCar).length}
                                     </div>
                                 )}
                             </div>
