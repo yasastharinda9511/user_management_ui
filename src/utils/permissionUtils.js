@@ -8,10 +8,7 @@ import { allTabs } from '../components/tabs/tabs.js';
  */
 export const hasPermission = (permissions, permissionName) => {
     if (!permissions || permissions.length === 0) return false;
-    return permissions.some(p =>
-        p.name === permissionName ||
-        `${p.resource}.${p.action}` === permissionName
-    );
+    return permissions.some(p => p === permissionName);
 };
 
 /**

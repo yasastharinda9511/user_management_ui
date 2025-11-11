@@ -26,6 +26,22 @@ export const imageServiceApi = axios.create({
     },
 });
 
+// Token refresh state
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+
+    failedQueue = [];
+};
+
 // Request interceptor - Add auth token to all requests
 const addAuthInterceptor = (apiInstance) => {
     apiInstance.interceptors.request.use(
@@ -42,26 +58,93 @@ const addAuthInterceptor = (apiInstance) => {
     );
 };
 
-// Response interceptor - Handle errors globally
+// Response interceptor - Handle errors globally with token refresh
 const addResponseInterceptor = (apiInstance) => {
     apiInstance.interceptors.response.use(
         (response) => {
             return response;
         },
-        (error) => {
+        async (error) => {
+            const originalRequest = error.config;
+
             // Handle specific error cases
             if (error.response) {
                 // Server responded with error status
                 switch (error.response.status) {
-                    case 401:
-                        // Unauthorized - clear token and redirect to login
-                        localStorage.removeItem('access_token');
-                        localStorage.removeItem('refresh_token');
-                        window.location.href = '/login';
-                        break;
                     case 403:
-                        console.error('Forbidden - Insufficient permissions');
-                        break;
+                        // Don't try to refresh on login, refresh, or if already retried
+                        if (originalRequest.url?.includes('/login') ||
+                            originalRequest.url?.includes('/refresh') ||
+                            originalRequest._retry) {
+                            // Clear tokens and redirect to login
+                            localStorage.removeItem('access_token');
+                            localStorage.removeItem('refresh_token');
+                            localStorage.removeItem('user_info');
+                            window.location.href = '/login';
+                            return Promise.reject(error);
+                        }
+
+                        // Try to refresh token
+                        if (isRefreshing) {
+                            // If already refreshing, queue this request
+                            return new Promise((resolve, reject) => {
+                                failedQueue.push({ resolve, reject });
+                            })
+                                .then(token => {
+                                    originalRequest.headers.Authorization = `Bearer ${token}`;
+                                    return apiInstance(originalRequest);
+                                })
+                                .catch(err => {
+                                    return Promise.reject(err);
+                                });
+                        }
+
+                        originalRequest._retry = true;
+                        isRefreshing = true;
+
+                        const refreshToken = localStorage.getItem('refresh_token');
+
+                        if (!refreshToken) {
+                            // No refresh token available
+                            localStorage.removeItem('access_token');
+                            localStorage.removeItem('user_info');
+                            window.location.href = '/login';
+                            return Promise.reject(error);
+                        }
+
+                        try {
+                            // Call refresh endpoint
+                            const response = await authApi.post('/refresh', {
+                                refresh_token: refreshToken
+                            });
+
+                            const { access_token, refresh_token: newRefreshToken } = response.data;
+
+                            // Update tokens in localStorage
+                            localStorage.setItem('access_token', access_token);
+                            if (newRefreshToken) {
+                                localStorage.setItem('refresh_token', newRefreshToken);
+                            }
+
+                            // Update authorization header
+                            originalRequest.headers.Authorization = `Bearer ${access_token}`;
+
+                            // Process queued requests
+                            processQueue(null, access_token);
+
+                            // Retry original request
+                            return apiInstance(originalRequest);
+                        } catch (refreshError) {
+                            // Refresh token failed - logout user
+                            processQueue(refreshError, null);
+                            localStorage.removeItem('access_token');
+                            localStorage.removeItem('refresh_token');
+                            localStorage.removeItem('user_info');
+                            window.location.href = '/login';
+                            return Promise.reject(refreshError);
+                        } finally {
+                            isRefreshing = false;
+                        }
                     case 404:
                         console.error('Resource not found');
                         break;
