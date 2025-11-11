@@ -106,6 +106,7 @@ const vehicleService = {
             const formData = new FormData();
             images.forEach(image => formData.append('images', image.file));
 
+            // The Authorization header will be added automatically by the interceptor
             await carServiceApi.post(`/vehicles/upload-image/${vehicle.data.id}`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });

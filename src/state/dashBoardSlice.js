@@ -1,6 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import config from "../configs/config.json";
-import {URLBuilder} from "../utils/URLUtil.js";
+import { carServiceApi } from '../api/axiosClient';
 import {
     financialStatusColors,
     shippingStatusColors,
@@ -8,25 +7,15 @@ import {
     vehicleSalesDataColors
 } from "../components/common/Costants.js";
 
-const API_BASE_URL = config.car_service.base_url;
-
 export const fetchShippingStatus = createAsyncThunk(
     'dashboard/fetchShippingStatus',
     async ({ filters }, { rejectWithValue }) => {
         try {
-
-            const queryParams = { ...filters };
-            const url = URLBuilder(`${API_BASE_URL}/analytics/shipping-status`, queryParams);
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return await response.json();
-
+            const response = await carServiceApi.get('/analytics/shipping-status', { params: filters });
+            return response.data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -35,19 +24,11 @@ export const fetchFinancialSummary = createAsyncThunk(
     'dashboard/fetchingFinancialSummary',
     async ({ filters }, { rejectWithValue }) => {
         try {
-
-            const queryParams = { ...filters };
-            const url = URLBuilder(`${API_BASE_URL}/analytics/financial-summary`, queryParams);
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return await response.json();
-
+            const response = await carServiceApi.get('/analytics/financial-summary', { params: filters });
+            return response.data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -56,19 +37,11 @@ export const fetchVehicleStats = createAsyncThunk(
     'dashboard/fetchingVehicleBrands',
     async ({ filters }, { rejectWithValue }) => {
         try {
-
-            const queryParams = { ...filters };
-            const url = URLBuilder(`${API_BASE_URL}/analytics/vehicle-brand-status`, queryParams);
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return await response.json();
-
+            const response = await carServiceApi.get('/analytics/vehicle-brand-status', { params: filters });
+            return response.data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -77,19 +50,11 @@ export const fetSalesStatusSummary = createAsyncThunk(
     'dashboard/fetchingVehicleSales',
     async ({ filters }, { rejectWithValue }) => {
         try {
-
-            const queryParams = { ...filters };
-            const url = URLBuilder(`${API_BASE_URL}/analytics/sales-status`, queryParams);
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return await response.json();
-
+            const response = await carServiceApi.get('/analytics/sales-status', { params: filters });
+            return response.data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );

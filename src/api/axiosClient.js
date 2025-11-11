@@ -48,7 +48,14 @@ const addAuthInterceptor = (apiInstance) => {
         (config) => {
             const token = localStorage.getItem('access_token');
             if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
+                // Ensure headers object exists
+                if (!config.headers) {
+                    config.headers = {};
+                }
+                // Only add Authorization if not already present
+                if (!config.headers.Authorization) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
             }
             return config;
         },

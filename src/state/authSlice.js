@@ -1,35 +1,22 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import  configs from '../configs/config.json';
 import { jwtDecode } from 'jwt-decode';
-
-const API_BASE_URL = configs.user_management_service.base_url;
+import { authApi } from '../api/axiosClient';
 
 export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async (loginData, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(loginData)
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                return rejectWithValue(data.message || 'Login failed. Please check your credentials.');
-            }
+            const response = await authApi.post('/login', loginData);
+            const data = response.data;
 
             // Store tokens in localStorage
             localStorage.setItem('access_token', data.auth.token);
             localStorage.setItem('user_info', JSON.stringify(data.auth.user));
 
             return data;
-            // eslint-disable-next-line no-unused-vars
         } catch (error) {
-            return rejectWithValue('Network error. Please try again.');
+            const message = error.response?.data?.message || 'Login failed. Please check your credentials.';
+            return rejectWithValue(message);
         }
     }
 );
@@ -38,58 +25,36 @@ export const updateUserProfile = createAsyncThunk(
     'auth/updateUserProfile',
     async (userData, { rejectWithValue }) => {
         try {
-            // Replace with your actual API endpoint
-            const response = await fetch(`${API_BASE_URL}/api/users/${userData.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add authorization header if needed
-                    // 'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    first_name: userData.first_name,
-                    last_name: userData.last_name,
-                    phone: userData.phone,
-                    email: userData.email
-                }),
+            const response = await authApi.put(`/api/users/${userData.id}`, {
+                first_name: userData.first_name,
+                last_name: userData.last_name,
+                phone: userData.phone,
+                email: userData.email
             });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to update profile');
-            }
-
-            const data = await response.json();
-            return data; // Should return updated user data
+            return response.data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || 'Failed to update profile';
+            return rejectWithValue(message);
         }
     }
 );
 
 export const introspectUser = createAsyncThunk(
     'auth/introspectUser',
-        async (accessToken, { rejectWithValue }) => {
-            try {
-                console.log("Introspect called !!!");
-                const response = await fetch(`${API_BASE_URL}/introspect`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to update profile');
+    async (accessToken, { rejectWithValue }) => {
+        try {
+            console.log("Introspect called !!!");
+            const response = await authApi.get('/introspect', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
                 }
-
-                const data = await response.json();
-                return data; // Should return updated user data
-            } catch (error) {
-                return rejectWithValue(error.message);
-            }
+            });
+            return response.data;
+        } catch (error) {
+            const message = error.response?.data?.message || 'Failed to introspect token';
+            return rejectWithValue(message);
         }
+    }
 );
 
 

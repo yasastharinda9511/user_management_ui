@@ -1,30 +1,17 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {URLBuilder} from "../utils/URLUtil.js";
-import config from "../configs/config.json";
-
-// API Base URL - adjust according to your setup
-const API_BASE_URL = config.car_service.base_url;
+import { carServiceApi } from '../api/axiosClient';
 
 // Fetch all vehicles with pagination
 export const fetchVehicles = createAsyncThunk(
     'vehicles/fetchVehicles',
     async ({ page = 1, limit = 10, filters } = {}, { rejectWithValue }) => {
         try {
-
-            const queryParams = { ...filters };
-            queryParams.page = page;
-            queryParams.limit = limit;
-
-            const url = URLBuilder(`${API_BASE_URL}/vehicles`, queryParams);
-            console.log(url);
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            return data;
+            const queryParams = { ...filters, page, limit };
+            const response = await carServiceApi.get('/vehicles', { params: queryParams });
+            return response.data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -34,14 +21,11 @@ export const fetchVehicleById = createAsyncThunk(
     'vehicles/fetchVehicleById',
     async (vehicleId, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vehicles/${vehicleId}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            return data.data;
+            const response = await carServiceApi.get(`/vehicles/${vehicleId}`);
+            return response.data.data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -51,20 +35,11 @@ export const createVehicle = createAsyncThunk(
     'vehicles/createVehicle',
     async (vehicleData, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vehicles`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(vehicleData),
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            return data.data;
+            const response = await carServiceApi.post('/vehicles', vehicleData);
+            return response.data.data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -75,21 +50,11 @@ export const updateVehicle = createAsyncThunk(
     async ({ vehicleId, updateData }, { rejectWithValue }) => {
         try {
             console.log(vehicleId);
-            const response = await fetch(`${API_BASE_URL}/vehicles/${vehicleId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updateData),
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            // Return the updated vehicle data along with the ID
+            const response = await carServiceApi.put(`/vehicles/${vehicleId}`, updateData);
             return { vehicleId, ...updateData };
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -99,19 +64,11 @@ export const updateVehiclePurchase = createAsyncThunk(
     'vehicles/updateVehiclePurchase',
     async ({ vehicleId, purchaseData }, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vehicles/${vehicleId}/purchase`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(purchaseData),
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            const response = await carServiceApi.put(`/vehicles/${vehicleId}/purchase`, purchaseData);
             return { vehicleId, purchaseData };
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -121,19 +78,11 @@ export const updateVehicleShipping = createAsyncThunk(
     'vehicles/updateVehicleShipping',
     async ({ vehicleId, shippingData }, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vehicles/${vehicleId}/shipping`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(shippingData),
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            const response = await carServiceApi.put(`/vehicles/${vehicleId}/shipping`, shippingData);
             return { vehicleId, shippingData };
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -143,19 +92,11 @@ export const updateVehicleFinancials = createAsyncThunk(
     'vehicles/updateVehicleFinancials',
     async ({ vehicleId, financialData }, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vehicles/${vehicleId}/financials`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(financialData),
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            const response = await carServiceApi.put(`/vehicles/${vehicleId}/financials`, financialData);
             return { vehicleId, financialData };
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -165,19 +106,11 @@ export const updateVehicleSales = createAsyncThunk(
     'vehicles/updateVehicleSales',
     async ({ vehicleId, salesData }, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vehicles/${vehicleId}/sales`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(salesData),
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            const response = await carServiceApi.put(`/vehicles/${vehicleId}/sales`, salesData);
             return { vehicleId, salesData };
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -186,36 +119,27 @@ export const createVehicleRecordWithImage = createAsyncThunk(
     'vehicles/create',
     async ({vehicleData, images }, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vehicles`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(vehicleData)
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const vehicle = await response.json();
+            const response = await carServiceApi.post('/vehicles', vehicleData);
+            const vehicle = response.data;
 
             if(images.length > 0){
                 const formData = new FormData();
                 images.forEach(image => formData.append('images', image.file));
 
-                const imageResponse = await fetch(`${API_BASE_URL}/vehicles/upload-image/${vehicle.data.id}`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!imageResponse.ok) {
+                try {
+                    await carServiceApi.post(`/vehicles/upload-image/${vehicle.data.id}`, formData, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+                } catch (imageError) {
                     // Vehicle was created but image upload failed
-                    // You might want to handle this scenario
                     console.warn('Vehicle created but image upload failed');
                 }
             }
 
-
-        }catch (error) {
-            return rejectWithValue(error.message);
+            return vehicle;
+        } catch (error) {
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );
@@ -226,17 +150,11 @@ export const fetchAllOptions = createAsyncThunk(
     'vehicles/fetchAllOptions',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vehicles/dropdown/options`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            return data.data || data;
+            const response = await carServiceApi.get('/vehicles/dropdown/options');
+            return response.data.data || response.data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
         }
     }
 );

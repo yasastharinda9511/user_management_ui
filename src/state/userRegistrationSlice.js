@@ -1,31 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import configs from  '../configs/config.json'
-
-const API_BASE_URL = configs.user_management_service.base_url;
+import { authApi } from '../api/axiosClient';
 
 // Async thunk for user registration
 export const registerUser = createAsyncThunk(
     'user/register',
     async (userData, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                return rejectWithValue(errorData);
-            }
-
-            const data = await response.json();
-            return data;
+            const response = await authApi.post('/register', userData);
+            return response.data;
         } catch (error) {
+            const message = error.response?.data?.message || error.message || 'Registration failed';
             return rejectWithValue({
-                message: error.message || 'Registration failed',
+                message: message,
+                ...error.response?.data
             });
         }
     }
