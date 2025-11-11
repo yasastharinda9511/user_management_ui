@@ -2,6 +2,7 @@ import React from "react";
 import { Car, Truck, Package, Eye, MapPin, Ship} from 'lucide-react';
 import {getStatusColor} from "../../common/CommonLogics.js";
 import config from "../../../configs/config.json";
+import AuthImage from "../../common/AuthImage.jsx";
 
 const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
 
@@ -38,13 +39,11 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
                 <div className="flex flex-col md:flex-row">
                     {/* Car Image */}
                     <div className="md:w-64 h-48 md:h-auto bg-gray-200 overflow-hidden flex-shrink-0">
-                        <img
-                            src={getImageUrl(car) || `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(car.vehicle.make)}+${encodeURIComponent(car.vehicle.model || 'Model')}`}
+                        <AuthImage
+                            src={getImageUrl(car)}
                             alt={`${car.vehicle.make} ${car.vehicle.model}`}
                             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                            onError={(e) => {
-                                e.target.src = `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(car.vehicle.make)}+${encodeURIComponent(car.vehicle.model || 'Model')}`;
-                            }}
+                            fallbackText={`${car.vehicle.make} ${car.vehicle.model || 'Model'}`}
                         />
                     </div>
 
@@ -128,13 +127,11 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
         <div key={car.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
             {/* Car Image */}
             <div className="h-48 bg-gray-200 overflow-hidden">
-                <img
-                    src={getImageUrl(car) || `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(car.vehicle.make)}+${encodeURIComponent(car.vehicle.model || 'Model')}`}
+                <AuthImage
+                    src={getImageUrl(car)}
                     alt={`${car.vehicle.make} ${car.vehicle.model}`}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    onError={(e) => {
-                        e.target.src = `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(car.vehicle.make)}+${encodeURIComponent(car.vehicle.model || 'Model')}`;
-                    }}
+                    fallbackText={`${car.vehicle.make} ${car.vehicle.model || 'Model'}`}
                 />
             </div>
 

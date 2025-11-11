@@ -12,6 +12,7 @@ import {hasPermission} from "../../../utils/permissionUtils.js";
 import {PERMISSIONS} from "../../../utils/permissions.js";
 import {selectPermissions} from "../../../state/authSlice.js";
 import { VehicleSections} from "./vehicleSections.jsx";
+import AuthImage from "../../common/AuthImage.jsx";
 
 const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const dispatch = useDispatch();
@@ -354,13 +355,11 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                     onTouchMove={onImageTouchMove}
                                     onTouchEnd={onImageTouchEnd}
                                 >
-                                    <img
-                                        src={getImageUrl(selectedCar, currentImageIndex) || `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(editedData.vehicle?.make || vehicle.make || 'Car')}+${encodeURIComponent(editedData.vehicle?.model || vehicle.model || 'Model')}`}
+                                    <AuthImage
+                                        src={getImageUrl(selectedCar, currentImageIndex)}
                                         alt={`${editedData.vehicle?.make || vehicle.make} ${editedData.vehicle?.model || vehicle.model} - Image ${currentImageIndex + 1}`}
                                         className="w-full h-64 object-contain transition-opacity duration-300"
-                                        onError={(e) => {
-                                            e.target.src = `https://via.placeholder.com/400x250/f3f4f6/6b7280?text=${encodeURIComponent(editedData.vehicle?.make || vehicle.make || 'Car')}+${encodeURIComponent(editedData.vehicle?.model || vehicle.model || 'Model')}`;
-                                        }}
+                                        fallbackText={`${editedData.vehicle?.make || vehicle.make || 'Car'} ${editedData.vehicle?.model || vehicle.model || 'Model'}`}
                                     />
 
                                     {/* Navigation Arrows */}
@@ -410,13 +409,11 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                                         : 'border-gray-300 hover:border-gray-400'
                                                 }`}
                                             >
-                                                <img
+                                                <AuthImage
                                                     src={imageUrl}
                                                     alt={`Thumbnail ${index + 1}`}
                                                     className="w-full h-full object-cover"
-                                                    onError={(e) => {
-                                                        e.target.src = `https://via.placeholder.com/64/f3f4f6/6b7280?text=${index + 1}`;
-                                                    }}
+                                                    fallbackText={`${index + 1}`}
                                                 />
                                             </button>
                                         ))}
