@@ -38,6 +38,16 @@ const OrderedCars = () => {
 
     const shouldRefresh = useSelector(selectShouldRefresh);
 
+    useEffect(() => {
+        setViewMode(localStorage.getItem("viewMode"));
+    }, []);
+
+    const toggleViewMode = (viewMode)=>{
+        setViewMode(viewMode);
+        localStorage.setItem("viewMode", viewMode);
+    }
+
+
     const {
         vehicles,
         loading,
@@ -172,7 +182,7 @@ const OrderedCars = () => {
                     {/* View Mode Toggle */}
                     <div className="flex items-center bg-gray-100 rounded-lg p-1">
                         <button
-                            onClick={() => setViewMode('grid')}
+                            onClick={() => toggleViewMode('grid')}
                             className={`p-2 rounded transition-colors ${
                                 viewMode === 'grid'
                                     ? 'bg-white text-blue-600 shadow-sm'
@@ -183,7 +193,7 @@ const OrderedCars = () => {
                             <Grid className="w-4 h-4" />
                         </button>
                         <button
-                            onClick={() => setViewMode('list')}
+                            onClick={() => toggleViewMode('list')}
                             className={`p-2 rounded transition-colors ${
                                 viewMode === 'list'
                                     ? 'bg-white text-blue-600 shadow-sm'
