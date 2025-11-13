@@ -123,6 +123,11 @@ const vehicleService = {
         const response = await carServiceApi.get('/vehicles/dropdown/options');
         return response.data;
     },
+
+    getVehicleImagePresignedUrl: async (filename) => {
+        const response = await carServiceApi.get(`/vehicles/download-image/${filename}`);
+        return response.data;
+    }
 };
 
 export default vehicleService;

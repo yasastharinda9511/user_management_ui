@@ -7,12 +7,11 @@ import {
 } from "../../../state/vehicleSlice.js";
 import Notification from "../../common/Notification.jsx"
 import {SELECTED_VEHICLE_CARD_OPTIONS} from "../../common/Costants.js";
-import config from "../../../configs/config.json";
 import {hasPermission} from "../../../utils/permissionUtils.js";
 import {PERMISSIONS} from "../../../utils/permissions.js";
 import {selectPermissions} from "../../../state/authSlice.js";
 import { VehicleSections} from "./vehicleSections.jsx";
-import AuthImage from "../../common/AuthImage.jsx";
+import {vehicleService} from "../../../api/index.js";
 
 const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const dispatch = useDispatch();
@@ -29,24 +28,43 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const imageContainerRef = useRef(null);
     const [notification, setNotification] = useState({ show: false, type: '', title: '', message: '' });
     const permissions = useSelector(selectPermissions);
+    const [imageUrls, setImageUrls] = useState([]);
 
 
     // Minimum swipe distance (in px)
     const minSwipeDistance = 50;
 
-    const getAllImageUrls = (car) => {
-        if (!car.vehicle_image || car.vehicle_image.length === 0) {
-            return [];
-        }
-        const images = [...car.vehicle_image];
-        const sortedImages = images.sort((a, b) => a.display_order - b.display_order);
-        return sortedImages.map(img => `${config.car_service.base_url}/vehicles/upload-image/${img.filename}`);
-    }
+    // Fetch all image URLs when component mounts or selectedCar changes
+    useEffect(() => {
+        const fetchAllImageUrls = async () => {
+            if (!selectedCar?.vehicle_image || selectedCar.vehicle_image.length === 0) {
+                setImageUrls([]);
+                return;
+            }
 
-    const getImageUrl = (car, index = 0) => {
-        const allImages = getAllImageUrls(car);
-        return allImages[index] || null;
-    }
+            const images = [...selectedCar.vehicle_image];
+            const sortedImages = images.sort((a, b) => a.display_order - b.display_order);
+
+            const urls = await Promise.all(
+                sortedImages.map(async (img) => {
+                    try {
+                        const response = await vehicleService.getVehicleImagePresignedUrl(img.filename);
+                        console.log('Fetched image URL:', response.data.presigned_url);
+                        return response.data?.presigned_url || null;
+                    } catch (error) {
+                        console.error('Error fetching vehicle image', img.filename, error);
+                        return null;
+                    }
+                })
+            );
+
+            // Filter out failed (null) results
+            setImageUrls(urls.filter(Boolean));
+        };
+
+        fetchAllImageUrls();
+        setCurrentImageIndex(0); // Reset image index when car changes
+    }, [selectedCar]);
 
     const getStatusColor = (status) => {
         const statusColors = {
@@ -298,9 +316,8 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
         const distance = imageTouchStart - imageTouchEnd;
         const isLeftSwipe = distance > minSwipeDistance;
         const isRightSwipe = distance < -minSwipeDistance;
-        const allImages = getAllImageUrls(selectedCar);
 
-        if (isLeftSwipe && currentImageIndex < allImages.length - 1) {
+        if (isLeftSwipe && currentImageIndex < imageUrls.length - 1) {
             setCurrentImageIndex(currentImageIndex + 1);
         }
         if (isRightSwipe && currentImageIndex > 0) {
@@ -309,8 +326,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     };
 
     const nextImage = () => {
-        const allImages = getAllImageUrls(selectedCar);
-        if (currentImageIndex < allImages.length - 1) {
+        if (currentImageIndex < imageUrls.length - 1) {
             setCurrentImageIndex(currentImageIndex + 1);
         }
     };
@@ -355,15 +371,14 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                     onTouchMove={onImageTouchMove}
                                     onTouchEnd={onImageTouchEnd}
                                 >
-                                    <AuthImage
-                                        src={getImageUrl(selectedCar, currentImageIndex)}
+                                    <img
+                                        src={imageUrls[currentImageIndex]}
                                         alt={`${editedData.vehicle?.make || vehicle.make} ${editedData.vehicle?.model || vehicle.model} - Image ${currentImageIndex + 1}`}
                                         className="w-full h-64 object-contain transition-opacity duration-300"
-                                        fallbackText={`${editedData.vehicle?.make || vehicle.make || 'Car'} ${editedData.vehicle?.model || vehicle.model || 'Model'}`}
                                     />
 
                                     {/* Navigation Arrows */}
-                                    {getAllImageUrls(selectedCar).length > 1 && (
+                                    {imageUrls.length > 1 && (
                                         <>
                                             {currentImageIndex > 0 && (
                                                 <button
@@ -375,7 +390,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                                     </svg>
                                                 </button>
                                             )}
-                                            {currentImageIndex < getAllImageUrls(selectedCar).length - 1 && (
+                                            {currentImageIndex < imageUrls.length - 1 && (
                                                 <button
                                                     onClick={nextImage}
                                                     className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
@@ -389,17 +404,17 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                     )}
 
                                     {/* Image Counter */}
-                                    {getAllImageUrls(selectedCar).length > 1 && (
+                                    {imageUrls.length > 1 && (
                                         <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                                            {currentImageIndex + 1} / {getAllImageUrls(selectedCar).length}
+                                            {currentImageIndex + 1} / {imageUrls.length}
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Thumbnail Bar */}
-                                {getAllImageUrls(selectedCar).length > 0 && (
+                                {imageUrls.length > 0 && (
                                     <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
-                                        {getAllImageUrls(selectedCar).map((imageUrl, index) => (
+                                        {imageUrls.map((imageUrl, index) => (
                                             <button
                                                 key={index}
                                                 onClick={() => setCurrentImageIndex(index)}
@@ -409,11 +424,10 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                                         : 'border-gray-300 hover:border-gray-400'
                                                 }`}
                                             >
-                                                <AuthImage
+                                                <img
                                                     src={imageUrl}
                                                     alt={`Thumbnail ${index + 1}`}
                                                     className="w-full h-full object-cover"
-                                                    fallbackText={`${index + 1}`}
                                                 />
                                             </button>
                                         ))}

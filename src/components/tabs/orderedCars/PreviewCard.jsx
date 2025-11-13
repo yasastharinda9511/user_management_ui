@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Car, Truck, Package, Eye, MapPin, Ship} from 'lucide-react';
 import {getStatusColor} from "../../common/CommonLogics.js";
 import config from "../../../configs/config.json";
 import AuthImage from "../../common/AuthImage.jsx";
+import {carServiceApi, vehicleService} from "../../../api/index.js";
 
 const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
+    const [imageUrl, setImageUrl] = useState(null);
 
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
@@ -15,22 +17,31 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
         });
     };
 
+    useEffect(() => {
+        const fetchImageUrl = async () => {
+            if (!car.vehicle_image || car.vehicle_image.length === 0) {
+                setImageUrl(null);
+                return;
+            }
 
-    const getImageUrl = (car) => {
-        if (!car.vehicle_image || car.vehicle_image.length === 0) {
-            return null;
-        }
+            const sortedImages = [...car.vehicle_image].sort((a, b) =>
+                +a.display_order - +b.display_order
+            );
 
-        const sortedImages = [...car.vehicle_image].sort((a, b) =>
-            +a.display_order - +b.display_order
-        );
+            if(sortedImages.length > 0){
+                try {
+                    const response = await vehicleService.getVehicleImagePresignedUrl(sortedImages[0].filename);
+                    console.log(response.data.presigned_url);
+                    setImageUrl(response.data.presigned_url);
+                } catch (error) {
+                    console.error('Error fetching image URL:', error);
+                    setImageUrl(null);
+                }
+            }
+        };
 
-        if(sortedImages.length > 0){
-            return `${config.car_service.base_url}/vehicles/upload-image/${sortedImages[0].filename}`
-        }
-
-        return null;
-    }
+        fetchImageUrl();
+    }, [car.vehicle_image]);
 
     // List View Layout
     if (viewMode === 'list') {
@@ -39,11 +50,10 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
                 <div className="flex flex-col md:flex-row">
                     {/* Car Image */}
                     <div className="md:w-64 h-48 md:h-auto bg-gray-200 overflow-hidden flex-shrink-0">
-                        <AuthImage
-                            src={getImageUrl(car)}
+                        <img
+                            src={imageUrl}
                             alt={`${car.vehicle.make} ${car.vehicle.model}`}
                             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                            fallbackText={`${car.vehicle.make} ${car.vehicle.model || 'Model'}`}
                         />
                     </div>
 
@@ -127,11 +137,10 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
         <div key={car.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
             {/* Car Image */}
             <div className="h-48 bg-gray-200 overflow-hidden">
-                <AuthImage
-                    src={getImageUrl(car)}
+                <img
+                    src={imageUrl}
                     alt={`${car.vehicle.make} ${car.vehicle.model}`}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    fallbackText={`${car.vehicle.make} ${car.vehicle.model || 'Model'}`}
                 />
             </div>
 

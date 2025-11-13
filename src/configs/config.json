@@ -5,7 +5,7 @@
     "api_key": "your-api-key"
   },
   "car_service": {
-    "base_url": "http://car-serivce-alb-915313262.us-east-1.elb.amazonaws.com/car-service/api/v1",
+    "base_url": "http://localhost:8080/car-service/api/v1",
     "timeout_seconds": 30
   },
   "image_service": {
