@@ -46,7 +46,7 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
     // List View Layout
     if (viewMode === 'list') {
         return (
-            <div key={car.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+            <div key={car.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow relative">
                 <div className="flex flex-col md:flex-row">
                     {/* Car Image */}
                     <div className="md:w-64 h-48 md:h-auto bg-gray-200 overflow-hidden flex-shrink-0">
@@ -109,25 +109,27 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
                                 </div>
                             </div>
 
-                            {/* Footer */}
+                            {/* Footer - Price Section */}
                             <div className="flex md:flex-col justify-between md:justify-start items-end md:items-end md:ml-6 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-gray-100 md:pl-6">
-                                <div className="text-sm mb-4">
+                                <div className="text-sm">
                                     <div className="text-lg font-bold text-blue-600">{car.vehicle.price}</div>
                                     {car.profit !== 'N/A' && (
                                         <div className="text-xs text-green-600">Profit: {car.vehicle.profit}</div>
                                     )}
                                 </div>
-                                <button
-                                    onClick={() => handleViewDetails(car)}
-                                    className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors whitespace-nowrap"
-                                >
-                                    <Eye className="w-4 h-4" />
-                                    <span>Details</span>
-                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Details Button - Bottom Right Corner */}
+                <button
+                    onClick={() => handleViewDetails(car)}
+                    className="absolute bottom-3 right-3 p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors"
+                    title="View Details"
+                >
+                    <Eye className="w-5 h-5" />
+                </button>
             </div>
         );
     }
