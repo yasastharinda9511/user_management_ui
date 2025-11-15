@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {useDispatch, useSelector} from "react-redux";
+import { Plus } from 'lucide-react';
 import {
     updateVehicle,
     updateVehicleFinancials, updateVehiclePurchase,
@@ -26,9 +27,11 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const [originalData, setOriginalData] = useState({});
     const containerRef = useRef(null);
     const imageContainerRef = useRef(null);
+    const fileInputRef = useRef(null);
     const [notification, setNotification] = useState({ show: false, type: '', title: '', message: '' });
     const permissions = useSelector(selectPermissions);
     const [imageUrls, setImageUrls] = useState([]);
+    const [uploading, setUploading] = useState(false);
 
 
     // Minimum swipe distance (in px)
@@ -65,6 +68,44 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
         fetchAllImageUrls();
         setCurrentImageIndex(0); // Reset image index when car changes
     }, [selectedCar]);
+
+    const handleImageUpload = async (event) => {
+        const files = event.target.files;
+        if (!files || files.length === 0) return;
+
+        setUploading(true);
+        try {
+            await vehicleService.uploadVehicleImages(vehicle.id, Array.from(files));
+            showNotification('success', 'Success', `${files.length} image(s) uploaded successfully`);
+
+            // Refresh images after upload
+            const images = [...selectedCar.vehicle_image];
+            const sortedImages = images.sort((a, b) => a.display_order - b.display_order);
+
+            const urls = await Promise.all(
+                sortedImages.map(async (img) => {
+                    try {
+                        const response = await vehicleService.getVehicleImagePresignedUrl(img.filename);
+                        return response.data?.presigned_url || null;
+                    } catch (error) {
+                        console.error('Error fetching vehicle image', img.filename, error);
+                        return null;
+                    }
+                })
+            );
+
+            setImageUrls(urls.filter(Boolean));
+        } catch (error) {
+            console.error('Error uploading images:', error);
+            showNotification('error', 'Error', 'Failed to upload images: ' + error.message);
+        } finally {
+            setUploading(false);
+            // Reset file input
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    };
 
     const getStatusColor = (status) => {
         const statusColors = {
@@ -412,27 +453,49 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
                                 </div>
 
                                 {/* Thumbnail Bar */}
-                                {imageUrls.length > 0 && (
-                                    <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
-                                        {imageUrls.map((imageUrl, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() => setCurrentImageIndex(index)}
-                                                className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                                                    index === currentImageIndex
-                                                        ? 'border-blue-600 ring-2 ring-blue-200'
-                                                        : 'border-gray-300 hover:border-gray-400'
-                                                }`}
-                                            >
-                                                <img
-                                                    src={imageUrl}
-                                                    alt={`Thumbnail ${index + 1}`}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
+                                <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
+                                    {imageUrls.length > 0 && imageUrls.map((imageUrl, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setCurrentImageIndex(index)}
+                                            className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                                                index === currentImageIndex
+                                                    ? 'border-blue-600 ring-2 ring-blue-200'
+                                                    : 'border-gray-300 hover:border-gray-400'
+                                            }`}
+                                        >
+                                            <img
+                                                src={imageUrl}
+                                                alt={`Thumbnail ${index + 1}`}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </button>
+                                    ))}
+
+                                    {/* Add Image Button */}
+                                    <button
+                                        onClick={() => fileInputRef.current?.click()}
+                                        disabled={uploading}
+                                        className="flex-shrink-0 w-16 h-16 rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-500 transition-all flex items-center justify-center bg-gray-50 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title="Add images"
+                                    >
+                                        {uploading ? (
+                                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                                        ) : (
+                                            <Plus className="w-6 h-6 text-gray-400" />
+                                        )}
+                                    </button>
+
+                                    {/* Hidden File Input */}
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        multiple
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        className="hidden"
+                                    />
+                                </div>
                             </div>
 
                             <div className="space-y-2">

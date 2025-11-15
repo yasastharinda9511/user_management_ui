@@ -127,6 +127,22 @@ const vehicleService = {
     getVehicleImagePresignedUrl: async (filename) => {
         const response = await carServiceApi.get(`/vehicles/download-image/${filename}`);
         return response.data;
+    },
+
+    /**
+     * Upload images for existing vehicle
+     * @param {number} vehicleId - Vehicle ID
+     * @param {Array} images - Array of image files
+     * @returns {Promise} - Upload response
+     */
+    uploadVehicleImages: async (vehicleId, images) => {
+        const formData = new FormData();
+        images.forEach(image => formData.append('images', image));
+
+        const response = await carServiceApi.post(`/vehicles/upload-image/${vehicleId}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        return response.data;
     }
 };
 
