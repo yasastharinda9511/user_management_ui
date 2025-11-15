@@ -5,18 +5,9 @@ import SelectedCarCard from "./SelectedCarCard.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {
     fetchVehicles,
-    fetchVehicleById,
     setCurrentPage,
     setPageLimit,
-    selectVehicles,
-    selectLoading,
-    selectError,
-    selectCurrentPage,
-    selectTotalPages,
-    selectTotalVehicles,
     selectPageLimit,
-    clearSelectedVehicle,
-    selectSelectedVehicle,
     selectShouldRefresh,
     selectFilters,
 } from '../../../state/vehicleSlice.js';
