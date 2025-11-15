@@ -38,10 +38,6 @@ const OrderedCars = () => {
 
     const shouldRefresh = useSelector(selectShouldRefresh);
 
-    useEffect(() => {
-        setViewMode(localStorage.getItem("viewMode"));
-    }, []);
-
     const toggleViewMode = (viewMode)=>{
         setViewMode(viewMode);
         localStorage.setItem("viewMode", viewMode);
@@ -59,6 +55,9 @@ const OrderedCars = () => {
     } = useSelector(state => state.vehicles);
 
     useEffect(() => {
+        if (localStorage.getItem("viewMode")){
+            setViewMode(localStorage.getItem("viewMode"));
+        }
         dispatch(fetchVehicles({
             page: currentPage,
             limit: pageLimit,

@@ -18,6 +18,7 @@ import Settings from "./components/tabs/settings/Settings.jsx";
 import Users from "./components/tabs/users/Users.jsx";
 import Roles from "./components/tabs/roles/Roles.jsx";
 import Permissions from "./components/tabs/permissions/Permissions.jsx";
+import ShippingTracking from "./components/tabs/shippingTracking/ShippingTracking.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -55,6 +56,7 @@ function App() {
                     <Route path="dashboard" element={<DashBoard />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="ordered-cars" element={<OrderedCars />} />
+                    <Route path="shipping-tracking" element={<ShippingTracking />} />
                     <Route path="users" element={<Users />} />
                     <Route path="roles" element={<Roles />} />
                     <Route path="permissions" element={<Permissions />} />

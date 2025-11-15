@@ -310,7 +310,10 @@ const vehicleSlice = createSlice({
                 state.vehicles = action.payload.data || [];
                 state.currentPage = action.payload.meta?.page || 1;
                 state.totalVehicles = action.payload.meta?.total || 0;
+                console.log(state.limit);
+                console.log(state.totalVehicles)
                 state.totalPages = Math.ceil(state.totalVehicles / state.limit);
+                console.log(state.totalPages)
             })
             .addCase(fetchVehicles.rejected, (state, action) => {
                 state.loading = false;
