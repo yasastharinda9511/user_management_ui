@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { Ship, Package, AlertCircle } from 'lucide-react';
+import { Ship, Package, AlertCircle, Eye } from 'lucide-react';
 import { vehicleService } from '../../../api/index.js';
 import { useDispatch } from 'react-redux';
 import { updateVehicleShipping } from '../../../state/vehicleSlice.js';
 import Notification from '../../common/Notification.jsx';
+import SelectedCarCard from '../orderedCars/SelectedCarCard.jsx';
 
 const SHIPPING_STATUSES = [
     { id: 'PROCESSING', label: 'Processing', color: 'bg-orange-100 border-orange-300', textColor: 'text-orange-800' },
@@ -19,6 +20,7 @@ const ShippingTracking = () => {
     const [columns, setColumns] = useState({});
     const [loading, setLoading] = useState(true);
     const [notification, setNotification] = useState({ show: false, type: '', title: '', message: '' });
+    const [selectedCar, setSelectedCar] = useState(null);
 
     useEffect(() => {
         fetchVehicles();
@@ -57,6 +59,14 @@ const ShippingTracking = () => {
 
     const hideNotification = () => {
         setNotification({ show: false, type: '', title: '', message: '' });
+    };
+
+    const handleViewDetails = (vehicle) => {
+        setSelectedCar(vehicle);
+    };
+
+    const closeModal = () => {
+        setSelectedCar(null);
     };
 
     const onDragEnd = async (result) => {
@@ -120,7 +130,7 @@ const ShippingTracking = () => {
                         }`}
                     >
                         <div className="flex items-start justify-between mb-2">
-                            <div>
+                            <div className="flex-1">
                                 <h4 className="font-semibold text-gray-900 text-sm">
                                     {vehicle.vehicle.make} {vehicle.vehicle.model}
                                 </h4>
@@ -128,7 +138,19 @@ const ShippingTracking = () => {
                                     {vehicle.vehicle.year_of_manufacture} • {vehicle.vehicle.color}
                                 </p>
                             </div>
-                            <Package className="w-4 h-4 text-gray-400" />
+                            <div className="flex items-center gap-1">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleViewDetails(vehicle);
+                                    }}
+                                    className="p-1 hover:bg-blue-50 rounded transition-colors"
+                                    title="View Details"
+                                >
+                                    <Eye className="w-4 h-4 text-blue-600" />
+                                </button>
+                                <Package className="w-4 h-4 text-gray-400" />
+                            </div>
                         </div>
 
                         <div className="space-y-1 text-xs text-gray-600">
@@ -240,6 +262,18 @@ const ShippingTracking = () => {
                     </div>
                 </DragDropContext>
             </div>
+
+            {/* Vehicle Details Modal */}
+            {selectedCar && (
+                <SelectedCarCard
+                    selectedCar={selectedCar}
+                    closeModal={closeModal}
+                    onSave={(updatedData) => {
+                        // Optionally refresh the data after saving
+                        fetchVehicles();
+                    }}
+                />
+            )}
         </>
     );
 };
