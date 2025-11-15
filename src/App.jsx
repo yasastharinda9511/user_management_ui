@@ -34,7 +34,6 @@ function App() {
 
     useEffect(()=>{
         if (accessToken) {
-            console.log("accessToken", accessToken);
             dispatch(introspectUser(accessToken));
         }
 
