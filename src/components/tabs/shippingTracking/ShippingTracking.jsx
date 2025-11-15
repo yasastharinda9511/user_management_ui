@@ -266,7 +266,7 @@ const ShippingTracking = () => {
             {/* Vehicle Details Modal */}
             {selectedCar && (
                 <SelectedCarCard
-                    selectedCar={selectedCar}
+                    id={selectedCar.vehicle.id}
                     closeModal={closeModal}
                     onSave={(updatedData) => {
                         // Optionally refresh the data after saving

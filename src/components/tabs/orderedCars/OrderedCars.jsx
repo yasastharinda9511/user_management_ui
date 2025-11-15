@@ -411,7 +411,7 @@ const OrderedCars = () => {
             )}
 
             {/* Modal for detailed view */}
-            {selectedCar && <SelectedCarCard selectedCar={selectedCar} closeModal={closeModal} />}
+            {selectedCar && <SelectedCarCard id={selectedCar.vehicle.id} closeModal={closeModal} />}
 
             {/* Create New Order Modal */}
             {showCreateOrder && (

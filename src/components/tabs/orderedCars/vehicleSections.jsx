@@ -23,6 +23,7 @@ import {selectPermissions} from "../../../state/authSlice.js";
  * @returns {Array} - Array of section configurations
  */
 export const VehicleSections = ({
+    permissions,
     editedData,
     vehicle,
     shipping,
@@ -34,8 +35,6 @@ export const VehicleSections = ({
     formatDate,
     formatCurrency
 }) => {
-
-    const permissions = useSelector(selectPermissions);
 
     const carInfoSection = [
         {

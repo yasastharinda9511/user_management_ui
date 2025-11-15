@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import {useDispatch, useSelector} from "react-redux";
 import { Plus } from 'lucide-react';
 import {
+    fetchVehicleById, selectSelectedCar,
     updateVehicle,
     updateVehicleFinancials, updateVehiclePurchase,
     updateVehicleShipping
@@ -14,7 +15,7 @@ import {selectPermissions} from "../../../state/authSlice.js";
 import { VehicleSections} from "./vehicleSections.jsx";
 import {vehicleService} from "../../../api/index.js";
 
-const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
+const SelectedCarCard = ({id, closeModal, onSave}) => {
     const dispatch = useDispatch();
     const [currentSection, setCurrentSection] = useState(0);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -32,7 +33,20 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     const permissions = useSelector(selectPermissions);
     const [imageUrls, setImageUrls] = useState([]);
     const [uploading, setUploading] = useState(false);
+    const [sections, setSections] = useState([]);
 
+    const selectedCar = useSelector(selectSelectedCar);
+
+    let vehicle = useRef({});
+    let shipping = useRef({});
+    let financials = useRef({});
+    let sales = useRef({})
+    let purchase = useRef({});
+    let images = useRef({});
+
+    useEffect(() => {
+        dispatch(fetchVehicleById(id));
+    }, [dispatch, id])
 
     // Minimum swipe distance (in px)
     const minSwipeDistance = 50;
@@ -75,7 +89,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
 
         setUploading(true);
         try {
-            await vehicleService.uploadVehicleImages(vehicle.id, Array.from(files));
+            await vehicleService.uploadVehicleImages(vehicle.current.id, Array.from(files));
             showNotification('success', 'Success', `${files.length} image(s) uploaded successfully`);
 
             // Refresh images after upload
@@ -104,6 +118,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
+            dispatch(fetchVehicleById(id));
         }
     };
 
@@ -144,18 +159,46 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
         return `${currency} ${amount.toLocaleString()}`;
     };
 
-    // Safety check
-    if (!selectedCar) return null;
-
-    const vehicle = selectedCar.vehicle || {};
-    const shipping = selectedCar.vehicle_shipping || {};
-    const financials = selectedCar.vehicle_financials || {};
-    const sales = selectedCar.vehicle_sales || {};
-    const purchase = selectedCar.vehicle_purchase || {};
-    const images = selectedCar.vehicle_image || {};
-
+    useEffect(()=>{
+        setSections(VehicleSections({
+            permissions,
+            editedData,
+            vehicle :vehicle.current,
+            shipping : shipping.current,
+            financials :financials.current,
+            sales : sales.current,
+            purchase :purchase.current,
+            editingSection,
+            updateField,
+            formatDate,
+            formatCurrency
+        }));
+    }, [editingSection])
     // Initialize edited data
     useEffect(() => {
+
+        if (!selectedCar) return;
+        vehicle.current = selectedCar.vehicle;
+        shipping.current =selectedCar.vehicle_shipping;
+        financials.current = selectedCar.vehicle_financials;
+        sales.current = selectedCar.vehicle_sales;
+        purchase.current = selectedCar.vehicle_purchase;
+
+
+        setSections(VehicleSections({
+            permissions,
+            editedData,
+            vehicle :vehicle.current,
+            shipping : shipping.current,
+            financials :financials.current,
+            sales : sales.current,
+            purchase :purchase.current,
+            editingSection,
+            updateField,
+            formatDate,
+            formatCurrency
+        }));
+
         setEditedData({
             vehicle: { ...vehicle },
             shipping: { ...shipping },
@@ -190,7 +233,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
             switch (sections[currentSection].title) {
                 case SELECTED_VEHICLE_CARD_OPTIONS.VEHICLE_INFORMATION:
                     await dispatch(updateVehicle({
-                        vehicleId: vehicle.id,
+                        vehicleId: vehicle.current.id,
                         updateData: editedData.vehicle,
                     })).unwrap();
                     showNotification('success', 'Success', `${SELECTED_VEHICLE_CARD_OPTIONS.VEHICLE_INFORMATION} Updated Successfully`);
@@ -202,7 +245,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
 
                 case SELECTED_VEHICLE_CARD_OPTIONS.SHIPPING_DETAILS:
                     await dispatch(updateVehicleShipping({
-                        vehicleId: vehicle.id,
+                        vehicleId: vehicle.current.id,
                         shippingData: editedData.shipping,
                     })).unwrap();
                     showNotification('success', 'Success', `${SELECTED_VEHICLE_CARD_OPTIONS.SHIPPING_DETAILS} Updated Successfully`);
@@ -214,7 +257,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
 
                 case SELECTED_VEHICLE_CARD_OPTIONS.PURCHASE_DETAILS:
                     await dispatch(updateVehiclePurchase({
-                        vehicleId: vehicle.id,
+                        vehicleId: vehicle.current.id,
                         purchaseData: editedData.purchase,
                     })).unwrap();
                     setOriginalData(prev =>({
@@ -226,7 +269,7 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
 
                 case SELECTED_VEHICLE_CARD_OPTIONS.FINANCIAL_SUMMARY:
                     await dispatch(updateVehicleFinancials({
-                        vehicleId: vehicle.id,
+                        vehicleId: vehicle.current.id,
                         financialData: editedData.financials,
                     })).unwrap();
                     setOriginalData(prev =>({
@@ -282,18 +325,6 @@ const SelectedCarCard = ({selectedCar, closeModal, onSave}) => {
     };
 
     // Define sections with editable fields using the extracted configuration
-    const sections = VehicleSections({
-        editedData,
-        vehicle,
-        shipping,
-        financials,
-        sales,
-        purchase,
-        editingSection,
-        updateField,
-        formatDate,
-        formatCurrency
-    });
 
     const onTouchStart = (e) => {
         if (editingSection !== null) return; // Disable swipe while editing

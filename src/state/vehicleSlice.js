@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import { carServiceApi } from '../api/axiosClient';
+import { carServiceApi } from '../api/index.js';
 
 // Fetch all vehicles with pagination
 export const fetchVehicles = createAsyncThunk(
@@ -534,6 +534,7 @@ export const selectSorting = (state) => ({
 export const selectFilterOptions = (state) => state.vehicles.filterOptions;
 export const selectLoadingOptions = (state) => state.vehicles.loadingOptions;
 export const selectOptionsError = (state) => state.vehicles.optionsError;
+export const selectSelectedCar = (state) => state.vehicles.selectedVehicle;
 
 export const selectVehiclesByStatus = (state) => {
     const vehicles = selectVehicles(state);
