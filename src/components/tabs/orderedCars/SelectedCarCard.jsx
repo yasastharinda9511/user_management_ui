@@ -33,6 +33,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     const permissions = useSelector(selectPermissions);
     const [imageUrls, setImageUrls] = useState([]);
     const [uploading, setUploading] = useState(false);
+    const [loadingImages, setLoadingImages] = useState(true);
     const [sections, setSections] = useState([]);
 
     const selectedCar = useSelector(selectSelectedCar);
@@ -54,8 +55,10 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     // Fetch all image URLs when component mounts or selectedCar changes
     useEffect(() => {
         const fetchAllImageUrls = async () => {
+            setLoadingImages(true);
             if (!selectedCar?.vehicle_image || selectedCar.vehicle_image.length === 0) {
                 setImageUrls([]);
+                setLoadingImages(false);
                 return;
             }
 
@@ -77,6 +80,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
 
             // Filter out failed (null) results
             setImageUrls(urls.filter(Boolean));
+            setLoadingImages(false);
         };
 
         fetchAllImageUrls();
@@ -88,6 +92,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         if (!files || files.length === 0) return;
 
         setUploading(true);
+        setLoadingImages(true);
         try {
             await vehicleService.uploadVehicleImages(vehicle.current.id, Array.from(files));
             showNotification('success', 'Success', `${files.length} image(s) uploaded successfully`);
@@ -114,6 +119,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             showNotification('error', 'Error', 'Failed to upload images: ' + error.message);
         } finally {
             setUploading(false);
+            setLoadingImages(false);
             // Reset file input
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
@@ -443,43 +449,51 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                     onTouchMove={onImageTouchMove}
                                     onTouchEnd={onImageTouchEnd}
                                 >
-                                    <img
-                                        src={imageUrls[currentImageIndex]}
-                                        alt={`${editedData.vehicle?.make || vehicle.make} ${editedData.vehicle?.model || vehicle.model} - Image ${currentImageIndex + 1}`}
-                                        className="w-full h-64 object-contain transition-opacity duration-300"
-                                    />
-
-                                    {/* Navigation Arrows */}
-                                    {imageUrls.length > 1 && (
+                                    {loadingImages ? (
+                                        <div className="w-full h-64 flex items-center justify-center">
+                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                                        </div>
+                                    ) : (
                                         <>
-                                            {currentImageIndex > 0 && (
-                                                <button
-                                                    onClick={prevImage}
-                                                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                                >
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                                    </svg>
-                                                </button>
+                                            <img
+                                                src={imageUrls[currentImageIndex]}
+                                                alt={`${editedData.vehicle?.make || vehicle.current.make} ${editedData.vehicle?.model || vehicle.current.model} - Image ${currentImageIndex + 1}`}
+                                                className="w-full h-64 object-contain transition-opacity duration-300"
+                                            />
+
+                                            {/* Navigation Arrows */}
+                                            {imageUrls.length > 1 && (
+                                                <>
+                                                    {currentImageIndex > 0 && (
+                                                        <button
+                                                            onClick={prevImage}
+                                                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        >
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                                            </svg>
+                                                        </button>
+                                                    )}
+                                                    {currentImageIndex < imageUrls.length - 1 && (
+                                                        <button
+                                                            onClick={nextImage}
+                                                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        >
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                            </svg>
+                                                        </button>
+                                                    )}
+                                                </>
                                             )}
-                                            {currentImageIndex < imageUrls.length - 1 && (
-                                                <button
-                                                    onClick={nextImage}
-                                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                                >
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                    </svg>
-                                                </button>
+
+                                            {/* Image Counter */}
+                                            {imageUrls.length > 1 && (
+                                                <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                                                    {currentImageIndex + 1} / {imageUrls.length}
+                                                </div>
                                             )}
                                         </>
-                                    )}
-
-                                    {/* Image Counter */}
-                                    {imageUrls.length > 1 && (
-                                        <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                                            {currentImageIndex + 1} / {imageUrls.length}
-                                        </div>
                                     )}
                                 </div>
 
@@ -531,10 +545,10 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
 
                             <div className="space-y-2">
                                 <h3 className="text-xl font-semibold text-gray-900">
-                                    {editedData.vehicle?.make || vehicle.make} {editedData.vehicle?.model || vehicle.model}
+                                    {editedData.vehicle?.make || vehicle.current.make} {editedData.vehicle?.model || vehicle.current.model}
                                 </h3>
-                                <span className={`px-3 py-1 text-sm font-medium rounded-full border ${getStatusColor(editedData.shipping?.shipping_status || shipping.shipping_status)}`}>
-                                    {editedData.shipping?.shipping_status || shipping.shipping_status || 'PROCESSING'}
+                                <span className={`px-3 py-1 text-sm font-medium rounded-full border ${getStatusColor(editedData.shipping?.shipping_status || shipping.current.shipping_status)}`}>
+                                    {editedData.shipping?.shipping_status || shipping.current.shipping_status || 'PROCESSING'}
                                 </span>
                             </div>
                         </div>
