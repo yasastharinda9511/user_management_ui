@@ -34,7 +34,6 @@ const LoginPage = () => {
 
     // Register form state
     const [registerForm, setRegisterForm] = useState({
-        username: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -77,7 +76,7 @@ const LoginPage = () => {
         if (e?.preventDefault) e.preventDefault();
 
         const result = await dispatch(registerUser({
-            username: registerForm.username,
+            username: registerForm.email, // Use email as username
             email: registerForm.email,
             password:registerForm.password,
             first_name: registerForm.firstName,
@@ -94,6 +93,16 @@ const LoginPage = () => {
 
     const closeConfirmation = ()=>{
         setShowConfirmation(false);
+        setIsLogin(true); // Switch to login form
+        // Reset register form
+        setRegisterForm({
+            email: '',
+            password: '',
+            confirmPassword: '',
+            firstName: '',
+            lastName: '',
+            phone: ''
+        });
     }
 
     return (
@@ -119,7 +128,7 @@ const LoginPage = () => {
                             </h2>
 
                             <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                                Welcome <span className="font-semibold text-gray-900">{user?.username || 'to our platform'}</span>!
+                                Welcome <span className="font-semibold text-gray-900">{user?.email || 'to our platform'}</span>!
                                 Your account has been created successfully.
                             </p>
 
@@ -265,25 +274,6 @@ const LoginPage = () => {
                         ) : (
                             /* Register Form */
                             <div className="space-y-6">
-                                {/* Username Field */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Username
-                                    </label>
-                                    <div className="relative">
-                                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                        <input
-                                            type="text"
-                                            name="username"
-                                            value={registerForm.username}
-                                            onChange={handleRegisterChange}
-                                            required
-                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
-                                            placeholder="Choose a username"
-                                        />
-                                    </div>
-                                </div>
-
                                 {/* Name Fields */}
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>

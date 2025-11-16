@@ -67,7 +67,7 @@ const EditableField = React.memo(({ label, value, section, field, type = "text",
                     <input
                         type="text"
                         value={currentValue}
-                        onChange={(e) => updateField(section, field, e.target.value)}
+                        onChange={(e) => updateField(section, field, field === 'code' ? e.target.value.toUpperCase() : e.target.value)}
                         className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 )}

@@ -144,7 +144,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
         try{
             const vehicleData = {
                 ...vehicleForm,
-                code: parseInt(vehicleForm.code),
+                code: vehicleForm.code, // Keep as text
                 year_of_manufacture: parseInt(vehicleForm.year_of_manufacture),
                 mileage_km: vehicleForm.mileage_km ? parseInt(vehicleForm.mileage_km) : 0,
                 cif_value: parseFloat(vehicleForm.cif_value) || 0
@@ -208,11 +208,11 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Vehicle Code *</label>
                                         <input
-                                            type="number"
+                                            type="text"
                                             value={vehicleForm.code}
-                                            onChange={(e) => handleFormChange('code', e.target.value)}
+                                            onChange={(e) => handleFormChange('code', e.target.value.toUpperCase())}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="e.g., 20"
+                                            placeholder="e.g., VEH001"
                                         />
                                     </div>
 
