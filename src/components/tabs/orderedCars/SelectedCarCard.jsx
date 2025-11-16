@@ -7,6 +7,7 @@ import {
     updateVehicleFinancials, updateVehiclePurchase,
     updateVehicleShipping
 } from "../../../state/vehicleSlice.js";
+import { fetchCustomerById, selectSelectedCustomer, selectLoadingCustomer, clearSelectedCustomer } from "../../../state/customerSlice.js";
 import Notification from "../../common/Notification.jsx"
 import {SELECTED_VEHICLE_CARD_OPTIONS} from "../../common/Costants.js";
 import {hasPermission} from "../../../utils/permissionUtils.js";
@@ -14,6 +15,8 @@ import {PERMISSIONS} from "../../../utils/permissions.js";
 import {selectPermissions} from "../../../state/authSlice.js";
 import { VehicleSections} from "./vehicleSections.jsx";
 import {vehicleService} from "../../../api/index.js";
+import SelectCustomerModal from "./SelectCustomerModal.jsx";
+import ViewCustomerModal from "./ViewCustomerModal.jsx";
 
 const SelectedCarCard = ({id, closeModal, onSave}) => {
     const dispatch = useDispatch();
@@ -35,8 +38,12 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     const [uploading, setUploading] = useState(false);
     const [loadingImages, setLoadingImages] = useState(true);
     const [sections, setSections] = useState([]);
+    const [showSelectCustomerModal, setShowSelectCustomerModal] = useState(false);
+    const [showViewCustomerModal, setShowViewCustomerModal] = useState(false);
 
     const selectedCar = useSelector(selectSelectedCar);
+    const selectedCustomer = useSelector(selectSelectedCustomer);
+    const loadingCustomer = useSelector(selectLoadingCustomer);
 
     let vehicle = useRef({});
     let shipping = useRef({});
@@ -48,6 +55,46 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     useEffect(() => {
         dispatch(fetchVehicleById(id));
     }, [dispatch, id])
+
+    // Handle viewing customer details (view mode - not editing)
+    const handleViewCustomer = async (customerId) => {
+        if (!customerId) {
+            showNotification('warning', 'No Customer', 'No customer assigned to this sale');
+            return;
+        }
+
+        try {
+            console.log('Fetching customer with ID:', customerId);
+            await dispatch(fetchCustomerById(customerId)).unwrap();
+            setShowViewCustomerModal(true);
+        } catch (error) {
+            console.error('Failed to load customer:', error);
+            showNotification('error', 'Error', 'Failed to load customer details: ' + error);
+        }
+    };
+
+    // Handle opening customer selection modal (edit mode)
+    const handleSelectChangeCustomer = () => {
+        setShowSelectCustomerModal(true);
+    };
+
+    const handleCloseViewCustomerModal = () => {
+        setShowViewCustomerModal(false);
+        dispatch(clearSelectedCustomer());
+    };
+
+    const handleCloseSelectCustomerModal = () => {
+        setShowSelectCustomerModal(false);
+        dispatch(clearSelectedCustomer());
+    };
+
+    // Handle customer selection - update the sales data with new customer_id
+    const handleSelectCustomer = (customerId) => {
+        console.log('Customer selected:', customerId);
+        // Update the editedData with the new customer_id
+        updateField('sales', 'customer_id', customerId);
+        showNotification('success', 'Customer Updated', 'Customer has been assigned to this sale');
+    };
 
     // Minimum swipe distance (in px)
     const minSwipeDistance = 50;
@@ -177,7 +224,9 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             editingSection,
             updateField,
             formatDate,
-            formatCurrency
+            formatCurrency,
+            onViewCustomer: handleViewCustomer,
+            onSelectChangeCustomer: handleSelectChangeCustomer
         }));
     }, [editingSection])
     // Initialize edited data
@@ -202,7 +251,9 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             editingSection,
             updateField,
             formatDate,
-            formatCurrency
+            formatCurrency,
+            onViewCustomer: handleViewCustomer,
+            onSelectChangeCustomer: handleSelectChangeCustomer
         }));
 
         setEditedData({
@@ -667,6 +718,34 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                 </div>
             </div>
         </div>
+
+        {/* View Customer Modal (View Mode) */}
+        {showViewCustomerModal && (
+            loadingCustomer ? (
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-lg p-6">
+                        <div className="flex items-center space-x-3">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            <span className="text-gray-700">Loading customer details...</span>
+                        </div>
+                    </div>
+                </div>
+            ) : selectedCustomer ? (
+                <ViewCustomerModal
+                    customer={selectedCustomer}
+                    onClose={handleCloseViewCustomerModal}
+                />
+            ) : null
+        )}
+
+        {/* Select Customer Modal (Edit Mode) */}
+        {showSelectCustomerModal && (
+            <SelectCustomerModal
+                currentCustomerId={editedData.sales?.customer_id || sales.current.customer_id}
+                onSelect={handleSelectCustomer}
+                onClose={handleCloseSelectCustomerModal}
+            />
+        )}
         </>
     );
 };

@@ -259,10 +259,8 @@ const EditCustomerModal = ({ customer, onClose }) => {
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     >
                                         <option value="">Select type</option>
-                                        <option value="Individual">Individual</option>
-                                        <option value="Corporate">Corporate</option>
-                                        <option value="Dealer">Dealer</option>
-                                        <option value="Government">Government</option>
+                                        <option value="INDIVIDUAL">Individual</option>
+                                        <option value="BUSSINESS">Corporate</option>
                                     </select>
                                 </div>
 

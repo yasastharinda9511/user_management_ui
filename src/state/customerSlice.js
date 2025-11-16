@@ -130,7 +130,7 @@ const customerSlice = createSlice({
             })
             .addCase(fetchCustomerById.fulfilled, (state, action) => {
                 state.loadingCustomer = false;
-                state.selectedCustomer = action.payload;
+                state.selectedCustomer = action.payload.data || action.payload;
             })
             .addCase(fetchCustomerById.rejected, (state, action) => {
                 state.loadingCustomer = false;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Eye } from 'lucide-react';
 import { SELECTED_VEHICLE_CARD_OPTIONS } from "../../common/Costants.js";
 import EditableField from "./EditableField.jsx";
 import {PERMISSIONS} from "../../../utils/permissions.js";
@@ -33,7 +34,9 @@ export const VehicleSections = ({
     editingSection,
     updateField,
     formatDate,
-    formatCurrency
+    formatCurrency,
+    onViewCustomer,
+    onSelectChangeCustomer
 }) => {
 
     const carInfoSection = [
@@ -380,44 +383,68 @@ export const VehicleSections = ({
                         currentValue={editedData.sales?.profit || sales.profit || 0}
                         updateField={updateField}
                     />
-                    <EditableField
-                        label="Customer Title"
-                        value={editedData.sales?.sold_to_title || sales.sold_to_title}
-                        section="sales"
-                        field="sold_to_title"
-                        options={['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.']}
-                        isEditing={editingSection !== null}
-                        currentValue={editedData.sales?.sold_to_title || sales.sold_to_title || 'Mr.'}
-                        updateField={updateField}
-                    />
-                    <EditableField
-                        label="Customer Name"
-                        value={editedData.sales?.sold_to_name || sales.sold_to_name}
-                        section="sales"
-                        field="sold_to_name"
-                        isEditing={editingSection !== null}
-                        currentValue={editedData.sales?.sold_to_name || sales.sold_to_name || ''}
-                        updateField={updateField}
-                    />
-                    <EditableField
-                        label="Contact Number"
-                        value={editedData.sales?.contact_number || sales.contact_number}
-                        section="sales"
-                        field="contact_number"
-                        isEditing={editingSection !== null}
-                        currentValue={editedData.sales?.contact_number || sales.contact_number || ''}
-                        updateField={updateField}
-                    />
-                    <EditableField
-                        label="Customer Address"
-                        value={editedData.sales?.customer_address || sales.customer_address}
-                        section="sales"
-                        field="customer_address"
-                        type="textarea"
-                        isEditing={editingSection !== null}
-                        currentValue={editedData.sales?.customer_address || sales.customer_address || ''}
-                        updateField={updateField}
-                    />
+
+                    {/* Customer Information */}
+                    <div className="border-t pt-3 mt-3">
+                        <div className="flex justify-between items-start mb-2">
+                            <span className="text-sm font-medium text-gray-700">Customer Information</span>
+                            {(editedData.sales?.customer_id || sales.customer_id) && (
+                                editingSection !== null ? (
+                                    // Edit mode - show select/change button
+                                    onSelectChangeCustomer && (
+                                        <button
+                                            onClick={onSelectChangeCustomer}
+                                            className="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                            type="button"
+                                        >
+                                            Select/Change Customer
+                                        </button>
+                                    )
+                                ) : (
+                                    // View mode - show eye icon to view details
+                                    onViewCustomer && (
+                                        <button
+                                            onClick={() => onViewCustomer(editedData.sales?.customer_id || sales.customer_id)}
+                                            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                                            type="button"
+                                            title="View customer details"
+                                        >
+                                            <Eye className="w-4 h-4" />
+                                        </button>
+                                    )
+                                )
+                            )}
+                            {!(editedData.sales?.customer_id || sales.customer_id) && editingSection !== null && onSelectChangeCustomer && (
+                                <button
+                                    onClick={onSelectChangeCustomer}
+                                    className="text-xs px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                    type="button"
+                                >
+                                    Assign Customer
+                                </button>
+                            )}
+                        </div>
+                        <EditableField
+                            label="Customer ID"
+                            value={editedData.sales?.customer_id || sales.customer_id || 'Not assigned'}
+                            section="sales"
+                            field="customer_id"
+                            type="number"
+                            isEditing={editingSection !== null}
+                            currentValue={editedData.sales?.customer_id || sales.customer_id || ''}
+                            updateField={updateField}
+                        />
+                        {(editedData.sales?.customer_id || sales.customer_id) ? (
+                            <p className="text-xs text-gray-500 mt-1">
+                                {editingSection !== null ? 'Click the button above to change the customer' : 'Click the eye icon to view customer details'}
+                            </p>
+                        ) : editingSection !== null && (
+                            <p className="text-xs text-gray-500 mt-1">
+                                Click "Assign Customer" to select a customer for this sale
+                            </p>
+                        )}
+                    </div>
+
                     <EditableField
                         label="Sale Remarks"
                         value={editedData.sales?.sale_remarks || sales.sale_remarks}
