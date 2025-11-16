@@ -162,6 +162,26 @@ const vehicleService = {
     getModels: async (makeId) => {
         const response = await carServiceApi.get(`/models?make_id=${makeId}`);
         return response.data;
+    },
+
+    /**
+     * Create a new vehicle make
+     * @param {string} makeName - Name of the make
+     * @returns {Promise} - Created make data
+     */
+    createMake: async (makeName) => {
+        const response = await carServiceApi.post('/makes', { make_name: makeName });
+        return response.data;
+    },
+
+    /**
+     * Create a new vehicle model
+     * @param {Object} modelData - Model data including make_id, model_name, body_type, fuel_type, transmission_type, engine_size_cc
+     * @returns {Promise} - Created model data
+     */
+    createModel: async (modelData) => {
+        const response = await carServiceApi.post('/models', modelData);
+        return response.data;
     }
 };
 

@@ -41,10 +41,23 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
     const [loadingMakes, setLoadingMakes] = useState(true);
     const [loadingModels, setLoadingModels] = useState(false);
     const [modelsCache, setModelsCache] = useState({}); // Cache for models by make_id
+    const [showAddMake, setShowAddMake] = useState(false);
+    const [newMakeName, setNewMakeName] = useState('');
+    const [showAddModel, setShowAddModel] = useState(false);
+    const [newModelData, setNewModelData] = useState({
+        model_name: '',
+        body_type: '',
+        fuel_type: '',
+        transmission_type: '',
+        engine_size_cc: ''
+    });
 
     const carColors = ['Pearl White', 'Silver', 'Black', 'Blue', 'Red', 'Gray', 'White', 'Dark Blue', 'Metallic Blue', 'Gun Metallic'];
     const auctionGrades = ['4/B', '4.5/B', '5/A', '5AA', '6AA', 'A/B', 'R/A'];
     const currencies = ['LKR', 'JPY', 'USD'];
+    const bodyTypes = ['Sedan', 'SUV', 'Hatchback', 'Wagon', 'Coupe', 'Van', 'Truck', 'Convertible'];
+    const fuelTypes = ['Petrol', 'Diesel', 'Hybrid', 'Electric', 'CNG', 'LPG'];
+    const transmissionTypes = ['Automatic', 'Manual', 'CVT', 'Semi-Automatic'];
 
     useEffect(() => {
         const fetchMakes = async () => {
@@ -119,6 +132,94 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
             ...prev,
             [field]: value
         }));
+    };
+
+    const handleAddMake = async () => {
+        if (!newMakeName.trim()) {
+            showNotification('error', 'Error', 'Please enter a make name');
+            return;
+        }
+
+        try {
+            const response = await vehicleService.createMake(newMakeName.trim());
+            const createdMake = response.data;
+
+            // Add the new make to the list
+            setAvailableCars(prev => [...prev, {
+                makeId: createdMake.id,
+                make: createdMake.make_name
+            }]);
+
+            // Select the newly created make
+            handleFormChange('make', createdMake.make_name);
+
+            // Close the add make form
+            setShowAddMake(false);
+            setNewMakeName('');
+
+            showNotification('success', 'Success', `Make "${createdMake.make_name}" added successfully`);
+        } catch (error) {
+            console.error('Error creating make:', error);
+            showNotification('error', 'Error', 'Failed to create make: ' + error.message);
+        }
+    };
+
+    const handleAddModel = async () => {
+        if (!newModelData.model_name.trim()) {
+            showNotification('error', 'Error', 'Please enter a model name');
+            return;
+        }
+
+        if (!vehicleForm.make) {
+            showNotification('error', 'Error', 'Please select a make first');
+            return;
+        }
+
+        try {
+            const selectedMake = availableCars.find(car => car.make === vehicleForm.make);
+            if (!selectedMake) return;
+
+            const modelData = {
+                make_id: selectedMake.makeId,
+                model_name: newModelData.model_name.trim(),
+                body_type: newModelData.body_type || null,
+                fuel_type: newModelData.fuel_type || null,
+                transmission_type: newModelData.transmission_type || null,
+                engine_size_cc: newModelData.engine_size_cc ? parseInt(newModelData.engine_size_cc) : null
+            };
+
+            const response = await vehicleService.createModel(modelData);
+            const createdModel = response.data;
+
+            // Add the new model to the list and cache
+            const makeId = selectedMake.makeId;
+            const updatedModels = [...models, createdModel];
+            setModels(updatedModels);
+
+            // Update cache
+            setModelsCache(prev => ({
+                ...prev,
+                [makeId]: updatedModels
+            }));
+
+            // Select the newly created model
+            handleFormChange('model', createdModel.model_name);
+
+            // Close the add model form
+            setShowAddModel(false);
+            setNewModelData({
+                model_name: '',
+                body_type: '',
+                fuel_type: '',
+                transmission_type: '',
+                engine_size_cc: ''
+            });
+
+            showNotification('success', 'Success', `Model "${createdModel.model_name}" added successfully`);
+        } catch (error) {
+            console.error('Error creating model:', error);
+            showNotification('error', 'Error', 'Failed to create model: ' + error.message);
+        }
     };
 
     // Image upload handlers
@@ -284,39 +385,190 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Make *</label>
-                                        <select
-                                            value={vehicleForm.make}
-                                            onChange={(e) => {
-                                                handleFormChange('make', e.target.value);
-                                                handleFormChange('model', '');
-                                            }}
-                                            disabled={loadingMakes}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-                                        >
-                                            <option value="">{loadingMakes ? 'Loading makes...' : 'Select Make'}</option>
-                                            {availableCars.map((car) => (
-                                                <option key={car.makeId} value={car.make}>{car.make}</option>
-                                            ))}
-                                        </select>
+                                        <div className="flex gap-2">
+                                            <select
+                                                value={vehicleForm.make}
+                                                onChange={(e) => {
+                                                    handleFormChange('make', e.target.value);
+                                                    handleFormChange('model', '');
+                                                }}
+                                                disabled={loadingMakes}
+                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                            >
+                                                <option value="">{loadingMakes ? 'Loading makes...' : 'Select Make'}</option>
+                                                {availableCars.map((car) => (
+                                                    <option key={car.makeId} value={car.make}>{car.make}</option>
+                                                ))}
+                                            </select>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowAddMake(!showAddMake)}
+                                                className="text-blue-600 hover:text-blue-700 transition-colors flex items-center justify-center"
+                                                title="Add New Make"
+                                            >
+                                                <Plus className="w-5 h-5" />
+                                            </button>
+                                        </div>
+
+                                        {/* Inline Add Make Form */}
+                                        {showAddMake && (
+                                            <div className="mt-2 p-3 bg-white border border-blue-200 rounded-lg">
+                                                <label className="block text-xs font-medium text-gray-700 mb-1">New Make Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={newMakeName}
+                                                    onChange={(e) => setNewMakeName(e.target.value)}
+                                                    onKeyPress={(e) => {
+                                                        if (e.key === 'Enter') {
+                                                            handleAddMake();
+                                                        }
+                                                    }}
+                                                    placeholder="e.g., Tesla"
+                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-2"
+                                                />
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleAddMake}
+                                                        className="flex-1 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                                                    >
+                                                        Add
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setShowAddMake(false);
+                                                            setNewMakeName('');
+                                                        }}
+                                                        className="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Model *</label>
-                                        <select
-                                            value={vehicleForm.model}
-                                            onChange={(e) => handleFormChange('model', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-                                            disabled={!vehicleForm.make || loadingModels}
-                                        >
-                                            <option value="">
-                                                {loadingModels ? 'Loading models...' : !vehicleForm.make ? 'Select Make First' : 'Select Model'}
-                                            </option>
-                                            {models.map((model) => (
-                                                <option key={model.id} value={model.model_name}>
-                                                    {model.model_name}
+                                        <div className="flex gap-2">
+                                            <select
+                                                value={vehicleForm.model}
+                                                onChange={(e) => handleFormChange('model', e.target.value)}
+                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                                disabled={!vehicleForm.make || loadingModels}
+                                            >
+                                                <option value="">
+                                                    {loadingModels ? 'Loading models...' : !vehicleForm.make ? 'Select Make First' : 'Select Model'}
                                                 </option>
-                                            ))}
-                                        </select>
+                                                {models.map((model) => (
+                                                    <option key={model.id} value={model.model_name}>
+                                                        {model.model_name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowAddModel(!showAddModel)}
+                                                disabled={!vehicleForm.make}
+                                                className="text-blue-600 hover:text-blue-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                                title="Add New Model"
+                                            >
+                                                <Plus className="w-5 h-5" />
+                                            </button>
+                                        </div>
+
+                                        {/* Inline Add Model Form */}
+                                        {showAddModel && (
+                                            <div className="mt-2 p-3 bg-white border border-blue-200 rounded-lg space-y-3">
+                                                <div className="grid grid-cols-2 gap-2">
+                                                    <div>
+                                                        <label className="block text-xs font-medium text-gray-700 mb-1">Model Name *</label>
+                                                        <input
+                                                            type="text"
+                                                            value={newModelData.model_name}
+                                                            onChange={(e) => setNewModelData(prev => ({...prev, model_name: e.target.value}))}
+                                                            placeholder="e.g., Camry"
+                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-medium text-gray-700 mb-1">Body Type</label>
+                                                        <select
+                                                            value={newModelData.body_type}
+                                                            onChange={(e) => setNewModelData(prev => ({...prev, body_type: e.target.value}))}
+                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                        >
+                                                            <option value="">Select</option>
+                                                            {bodyTypes.map(type => (
+                                                                <option key={type} value={type}>{type}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-medium text-gray-700 mb-1">Fuel Type</label>
+                                                        <select
+                                                            value={newModelData.fuel_type}
+                                                            onChange={(e) => setNewModelData(prev => ({...prev, fuel_type: e.target.value}))}
+                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                        >
+                                                            <option value="">Select</option>
+                                                            {fuelTypes.map(type => (
+                                                                <option key={type} value={type}>{type}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-medium text-gray-700 mb-1">Transmission</label>
+                                                        <select
+                                                            value={newModelData.transmission_type}
+                                                            onChange={(e) => setNewModelData(prev => ({...prev, transmission_type: e.target.value}))}
+                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                        >
+                                                            <option value="">Select</option>
+                                                            {transmissionTypes.map(type => (
+                                                                <option key={type} value={type}>{type}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <label className="block text-xs font-medium text-gray-700 mb-1">Engine Size (CC)</label>
+                                                        <input
+                                                            type="number"
+                                                            value={newModelData.engine_size_cc}
+                                                            onChange={(e) => setNewModelData(prev => ({...prev, engine_size_cc: e.target.value}))}
+                                                            placeholder="e.g., 2500"
+                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleAddModel}
+                                                        className="flex-1 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                                                    >
+                                                        Add Model
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setShowAddModel(false);
+                                                            setNewModelData({
+                                                                model_name: '',
+                                                                body_type: '',
+                                                                fuel_type: '',
+                                                                transmission_type: '',
+                                                                engine_size_cc: ''
+                                                            });
+                                                        }}
+                                                        className="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div>
