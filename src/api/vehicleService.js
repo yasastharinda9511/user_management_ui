@@ -143,6 +143,25 @@ const vehicleService = {
             headers: { 'Content-Type': 'multipart/form-data' }
         });
         return response.data;
+    },
+
+    /**
+     * Get all vehicle makes with their models
+     * @returns {Promise} - List of makes with models
+     */
+    getMakes: async () => {
+        const response = await carServiceApi.get('/makes');
+        return response.data;
+    },
+
+    /**
+     * Get models for a specific make
+     * @param {number} makeId - Make ID
+     * @returns {Promise} - List of models for the make
+     */
+    getModels: async (makeId) => {
+        const response = await carServiceApi.get(`/models?make_id=${makeId}`);
+        return response.data;
     }
 };
 

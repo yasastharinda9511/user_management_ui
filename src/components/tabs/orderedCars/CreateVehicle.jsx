@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Car, Upload, X, Save, Plus, Trash2 } from 'lucide-react';
 
 import {
     createVehicleRecordWithImage,
 } from "../../../state/vehicleSlice.js";
 import {useDispatch} from "react-redux";
-import Notification from "../../common/Notification.jsx"
+import Notification from "../../common/Notification.jsx";
+import { vehicleService } from "../../../api/index.js";
 
 const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
     const dispatch = useDispatch();
@@ -35,18 +36,83 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
     })
 
-    // Available options
-    const availableCars = [
-        { brand: 'Toyota', models: ['Aqua', 'Prius', 'Vitz', 'Axio', 'Fielder', 'Allion', 'Corolla', 'Camry'] },
-        { brand: 'Honda', models: ['Fit', 'Vezel', 'Grace', 'Freed', 'Shuttle', 'CR-V', 'Civic', 'Accord'] },
-        { brand: 'Nissan', models: ['Note', 'March', 'Tiida', 'X-Trail', 'Leaf', 'Sylphy', 'Altima'] },
-        { brand: 'Mazda', models: ['Demio', 'Axela', 'Atenza', 'CX-3', 'CX-5', 'Premacy', 'MX-5'] },
-        { brand: 'Suzuki', models: ['Swift', 'Wagon R', 'Alto', 'Spacia', 'Hustler', 'SX4', 'Vitara'] }
-    ];
+    const [availableCars, setAvailableCars] = useState([]);
+    const [models, setModels] = useState([]);
+    const [loadingMakes, setLoadingMakes] = useState(true);
+    const [loadingModels, setLoadingModels] = useState(false);
+    const [modelsCache, setModelsCache] = useState({}); // Cache for models by make_id
 
     const carColors = ['Pearl White', 'Silver', 'Black', 'Blue', 'Red', 'Gray', 'White', 'Dark Blue', 'Metallic Blue', 'Gun Metallic'];
     const auctionGrades = ['4/B', '4.5/B', '5/A', '5AA', '6AA', 'A/B', 'R/A'];
     const currencies = ['LKR', 'JPY', 'USD'];
+
+    useEffect(() => {
+        const fetchMakes = async () => {
+            try {
+                setLoadingMakes(true);
+                const response = await vehicleService.getMakes();
+                const transformedMakes = response.data?.map(make => ({
+                    makeId: make.id,
+                    make: make.make_name,
+                }));
+                setAvailableCars(transformedMakes);
+            } catch (error) {
+                console.error('Error fetching makes:', error);
+                showNotification('error', 'Error', 'Failed to load vehicle makes');
+                setAvailableCars([]);
+            } finally {
+                setLoadingMakes(false);
+            }
+        };
+        if (isOpen) {
+            fetchMakes();
+        }
+    }, [isOpen]);
+
+    // Fetch models when make is selected
+    useEffect(() => {
+        const fetchModels = async () => {
+            if (!vehicleForm.make) {
+                setModels([]);
+                return;
+            }
+
+            // Find the selected make to get its ID
+            const selectedMake = availableCars.find(car => car.make === vehicleForm.make);
+            if (!selectedMake) return;
+
+            const makeId = selectedMake.makeId;
+
+            // Check if models are already cached
+            if (modelsCache[makeId]) {
+                setModels(modelsCache[makeId]);
+                return;
+            }
+
+            // Fetch models from API
+            try {
+                setLoadingModels(true);
+                const response = await vehicleService.getModels(makeId);
+                const fetchedModels = response.data || [];
+
+                // Cache the models
+                setModelsCache(prev => ({
+                    ...prev,
+                    [makeId]: fetchedModels
+                }));
+
+                setModels(fetchedModels);
+            } catch (error) {
+                console.error('Error fetching models:', error);
+                showNotification('error', 'Error', 'Failed to load vehicle models');
+                setModels([]);
+            } finally {
+                setLoadingModels(false);
+            }
+        };
+
+        fetchModels();
+    }, [vehicleForm.make, availableCars]);
 
     const handleFormChange = (field, value) => {
         setVehicleForm(prev => ({
@@ -224,11 +290,12 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                 handleFormChange('make', e.target.value);
                                                 handleFormChange('model', '');
                                             }}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            disabled={loadingMakes}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                                         >
-                                            <option value="">Select Make</option>
+                                            <option value="">{loadingMakes ? 'Loading makes...' : 'Select Make'}</option>
                                             {availableCars.map((car) => (
-                                                <option key={car.brand} value={car.brand}>{car.brand}</option>
+                                                <option key={car.makeId} value={car.make}>{car.make}</option>
                                             ))}
                                         </select>
                                     </div>
@@ -238,17 +305,17 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                         <select
                                             value={vehicleForm.model}
                                             onChange={(e) => handleFormChange('model', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                            disabled={!vehicleForm.make}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                            disabled={!vehicleForm.make || loadingModels}
                                         >
-                                            <option value="">Select Model</option>
-                                            {vehicleForm.make &&
-                                                availableCars
-                                                    .find(car => car.brand === vehicleForm.make)
-                                                    ?.models.map((model) => (
-                                                    <option key={model} value={model}>{model}</option>
-                                                ))
-                                            }
+                                            <option value="">
+                                                {loadingModels ? 'Loading models...' : !vehicleForm.make ? 'Select Make First' : 'Select Model'}
+                                            </option>
+                                            {models.map((model) => (
+                                                <option key={model.id} value={model.model_name}>
+                                                    {model.model_name}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
 
