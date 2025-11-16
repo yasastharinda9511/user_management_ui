@@ -5,7 +5,8 @@ import {
     fetchVehicleById, selectSelectedCar,
     updateVehicle,
     updateVehicleFinancials, updateVehiclePurchase,
-    updateVehicleShipping
+    updateVehicleShipping,
+    updateVehicleSales
 } from "../../../state/vehicleSlice.js";
 import { fetchCustomerById, selectSelectedCustomer, selectLoadingCustomer, clearSelectedCustomer } from "../../../state/customerSlice.js";
 import Notification from "../../common/Notification.jsx"
@@ -228,7 +229,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             onViewCustomer: handleViewCustomer,
             onSelectChangeCustomer: handleSelectChangeCustomer
         }));
-    }, [editingSection])
+    }, [editingSection, editedData.sales?.customer_id])
     // Initialize edited data
     useEffect(() => {
 
@@ -257,22 +258,22 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         }));
 
         setEditedData({
-            vehicle: { ...vehicle },
-            shipping: { ...shipping },
-            financials: { ...financials },
-            sales: { ...sales },
-            purchase: { ...purchase }
+            vehicle: { ...vehicle.current },
+            shipping: { ...shipping.current },
+            financials: { ...financials.current },
+            sales: { ...sales.current },
+            purchase: { ...purchase.current }
         });
     }, [selectedCar]);
 
     const startEdit = (sectionIndex) => {
         setEditingSection(sectionIndex);
         setOriginalData({
-            vehicle: { ...vehicle },
-            shipping: { ...shipping },
-            financials: { ...financials },
-            sales: { ...sales },
-            purchase: { ...purchase }
+            vehicle: { ...vehicle.current },
+            shipping: { ...shipping.current },
+            financials: { ...financials.current },
+            sales: { ...sales.current },
+            purchase: { ...purchase.current }
         });
     };
 
@@ -334,6 +335,18 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                         ["financials"]: editedData.financials,
                     }));
                     showNotification('success', 'Success', `${SELECTED_VEHICLE_CARD_OPTIONS.FINANCIAL_SUMMARY} Updated Successfully`);
+                    break;
+
+                case SELECTED_VEHICLE_CARD_OPTIONS.SALES_INFORMATION:
+                    await dispatch(updateVehicleSales({
+                        vehicleId: vehicle.current.id,
+                        salesData: editedData.sales,
+                    })).unwrap();
+                    setOriginalData(prev =>({
+                        ...prev,
+                        ["sales"]: editedData.sales,
+                    }));
+                    showNotification('success', 'Success', `${SELECTED_VEHICLE_CARD_OPTIONS.SALES_INFORMATION} Updated Successfully`);
                     break;
 
                 default:
