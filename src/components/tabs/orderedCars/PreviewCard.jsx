@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Car, Truck, Package, Eye, MapPin, Ship} from 'lucide-react';
+import { Car, Truck, Package, Eye, MapPin, Ship, History} from 'lucide-react';
 import {getStatusColor} from "../../common/CommonLogics.js";
 import config from "../../../configs/config.json";
 import AuthImage from "../../common/AuthImage.jsx";
 import {carServiceApi, vehicleService} from "../../../api/index.js";
+import ShippingHistory from "./ShippingHistory.jsx";
 
 const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
     const [imageUrl, setImageUrl] = useState(null);
+    const [showShippingHistory, setShowShippingHistory] = useState(false);
 
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
@@ -68,9 +70,21 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
                                         <p className="text-sm text-gray-600">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
                                         <p className="text-xs text-gray-500">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
                                     </div>
-                                    <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
-                                        {car.vehicle_shipping.shipping_status}
-                                    </span>
+                                    <div className="flex items-center space-x-2">
+                                        <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
+                                            {car.vehicle_shipping.shipping_status}
+                                        </span>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setShowShippingHistory(true);
+                                            }}
+                                            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                                            title="View shipping history"
+                                        >
+                                            <History className="w-4 h-4" />
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* Details Grid */}
@@ -130,6 +144,14 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
                 >
                     <Eye className="w-5 h-5" />
                 </button>
+
+                {/* Shipping History Modal */}
+                {showShippingHistory && (
+                    <ShippingHistory
+                        vehicleId={car.vehicle.id}
+                        onClose={() => setShowShippingHistory(false)}
+                    />
+                )}
             </div>
         );
     }
@@ -155,9 +177,21 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
                         <p className="text-sm text-gray-600">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
                         <p className="text-xs text-gray-500">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
                     </div>
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
-                                    {car.vehicle_shipping.shipping_status}
-                    </span>
+                    <div className="flex items-center space-x-2">
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
+                            {car.vehicle_shipping.shipping_status}
+                        </span>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowShippingHistory(true);
+                            }}
+                            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                            title="View shipping history"
+                        >
+                            <History className="w-4 h-4" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Details Grid */}
@@ -212,6 +246,14 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
                     </button>
                 </div>
             </div>
+
+            {/* Shipping History Modal */}
+            {showShippingHistory && (
+                <ShippingHistory
+                    vehicleId={car.vehicle.id}
+                    onClose={() => setShowShippingHistory(false)}
+                />
+            )}
         </div>
     );
 }

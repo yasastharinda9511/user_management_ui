@@ -6,6 +6,7 @@ export const SELECTED_VEHICLE_CARD_OPTIONS = {
     PURCHASE_DETAILS:"Purchase Details",
     FINANCIAL_SUMMARY:"Financial Summary",
     SALES_INFORMATION:"Sales Information",
+    DOCUMENTS:"Documents & Attachments",
 }
 
 export const SHIPPING_STATUS = {

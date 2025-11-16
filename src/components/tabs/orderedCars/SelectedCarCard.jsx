@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {useDispatch, useSelector} from "react-redux";
-import { Plus } from 'lucide-react';
+import { Plus, History } from 'lucide-react';
 import {
     fetchVehicleById, selectSelectedCar,
     updateVehicle,
@@ -18,6 +18,7 @@ import { VehicleSections} from "./vehicleSections.jsx";
 import {vehicleService} from "../../../api/index.js";
 import SelectCustomerModal from "./SelectCustomerModal.jsx";
 import ViewCustomerModal from "./ViewCustomerModal.jsx";
+import ShippingHistory from "./ShippingHistory.jsx";
 
 const SelectedCarCard = ({id, closeModal, onSave}) => {
     const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     const [sections, setSections] = useState([]);
     const [showSelectCustomerModal, setShowSelectCustomerModal] = useState(false);
     const [showViewCustomerModal, setShowViewCustomerModal] = useState(false);
+    const [showShippingHistory, setShowShippingHistory] = useState(false);
 
     const selectedCar = useSelector(selectSelectedCar);
     const selectedCustomer = useSelector(selectSelectedCustomer);
@@ -227,7 +229,8 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             formatDate,
             formatCurrency,
             onViewCustomer: handleViewCustomer,
-            onSelectChangeCustomer: handleSelectChangeCustomer
+            onSelectChangeCustomer: handleSelectChangeCustomer,
+            vehicleId: id
         }));
     }, [editingSection, editedData.sales?.customer_id])
     // Initialize edited data
@@ -254,7 +257,8 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             formatDate,
             formatCurrency,
             onViewCustomer: handleViewCustomer,
-            onSelectChangeCustomer: handleSelectChangeCustomer
+            onSelectChangeCustomer: handleSelectChangeCustomer,
+            vehicleId: id
         }));
 
         setEditedData({
@@ -492,7 +496,17 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
                 <div className="p-6">
                     <div className="flex justify-between items-start mb-6">
-                        <h2 className="text-2xl font-bold text-gray-900">Deal Details</h2>
+                        <div className="flex items-center space-x-3">
+                            <h2 className="text-2xl font-bold text-gray-900">Deal Details</h2>
+                            <button
+                                onClick={() => setShowShippingHistory(true)}
+                                className="flex items-center space-x-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                                title="View shipping history"
+                            >
+                                <History className="w-4 h-4" />
+                                <span>Shipping History</span>
+                            </button>
+                        </div>
                         <button
                             onClick={closeModal}
                             className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
@@ -757,6 +771,14 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                 currentCustomerId={editedData.sales?.customer_id || sales.current.customer_id}
                 onSelect={handleSelectCustomer}
                 onClose={handleCloseSelectCustomerModal}
+            />
+        )}
+
+        {/* Shipping History Modal */}
+        {showShippingHistory && (
+            <ShippingHistory
+                vehicleId={id}
+                onClose={() => setShowShippingHistory(false)}
             />
         )}
         </>

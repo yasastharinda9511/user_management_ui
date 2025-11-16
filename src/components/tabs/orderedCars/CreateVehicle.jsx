@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Car, Upload, X, Save, Plus, Trash2 } from 'lucide-react';
+import { Car, Upload, X, Save, Plus, Trash2, FileText } from 'lucide-react';
 
 import {
     createVehicleRecordWithImage,
@@ -29,6 +29,9 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
     // Image upload state
     const [vehicleImages, setVehicleImages] = useState([]);
     const [dragActive, setDragActive] = useState(false);
+
+    // Document upload state
+    const [vehicleDocuments, setVehicleDocuments] = useState([]);
     const [notification, setNotification] = useState({
         type:"",
         title:"",
@@ -263,12 +266,37 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
     const removeImage = (imageId) => {
         setVehicleImages(prev => {
-            const imageToRemove = prev.find(img => img.id === imageId);
+            const imageToRemove = prev.find(img => img.id !== imageId);
             if (imageToRemove) {
                 URL.revokeObjectURL(imageToRemove.preview);
             }
             return prev.filter(img => img.id !== imageId);
         });
+    };
+
+    // Document handling functions
+    const handleDocumentUpload = (event) => {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            const newDocuments = Array.from(files).map((file, index) => ({
+                id: Date.now() + index,
+                file: file,
+                documentType: 'LC_DOCUMENT', // Default type
+                name: file.name,
+                size: file.size
+            }));
+            setVehicleDocuments(prev => [...prev, ...newDocuments]);
+        }
+    };
+
+    const removeDocument = (docId) => {
+        setVehicleDocuments(prev => prev.filter(doc => doc.id !== docId));
+    };
+
+    const updateDocumentType = (docId, newType) => {
+        setVehicleDocuments(prev =>
+            prev.map(doc => doc.id === docId ? { ...doc, documentType: newType } : doc)
+        );
     };
 
     const showNotification = (type, title, message) => {
@@ -298,6 +326,9 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
         // Clean up image previews
         vehicleImages.forEach(img => URL.revokeObjectURL(img.preview));
         setVehicleImages([]);
+
+        // Clear documents
+        setVehicleDocuments([]);
     };
 
     const handleClose = () => {
@@ -319,12 +350,34 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
             console.log('Vehicle data to submit:', vehicleData);
             console.log('Images to upload:', vehicleImages);
+            console.log('Documents to upload:', vehicleDocuments);
 
-            await dispatch(createVehicleRecordWithImage(
+            const result = await dispatch(createVehicleRecordWithImage(
                 {vehicleData: vehicleData,
                     images: vehicleImages}
             )).unwrap();
-            showNotification('success', 'Success', `Vehicle Created Successfully`);
+
+            // Get the created vehicle ID
+            const createdVehicleId = result?.id || result?.data?.id || result?.vehicle?.id;
+
+            // Upload documents if any
+            if (vehicleDocuments.length > 0 && createdVehicleId) {
+                console.log('Uploading documents for vehicle:', createdVehicleId);
+                for (const doc of vehicleDocuments) {
+                    try {
+                        await vehicleService.uploadVehicleDocument(
+                            createdVehicleId,
+                            doc.file,
+                            doc.documentType
+                        );
+                    } catch (docError) {
+                        console.error('Failed to upload document:', doc.name, docError);
+                        showNotification('warning', 'Warning', `Vehicle created but failed to upload ${doc.name}`);
+                    }
+                }
+            }
+
+            showNotification('success', 'Success', `Vehicle Created Successfully${vehicleDocuments.length > 0 ? ' with documents' : ''}`);
         }catch (error) {
             showNotification('error', 'Fail', `Vehicle Created failed: ${error}`);
         }
@@ -738,6 +791,76 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                         </button>
                                                     </div>
                                                     <p className="mt-1 text-xs text-gray-500 truncate">{image.name}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Document Upload Section */}
+                            <div className="bg-blue-50 rounded-lg p-6">
+                                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                    <FileText className="w-5 h-5 mr-2 text-blue-600" />
+                                    Vehicle Documents (LC, Invoices, etc.)
+                                </h3>
+
+                                {/* Upload Area */}
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                                    <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                                    <p className="text-lg text-gray-600 mb-2">
+                                        <label className="text-blue-600 hover:text-blue-700 cursor-pointer">
+                                            Click to upload documents
+                                            <input
+                                                type="file"
+                                                multiple
+                                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                                onChange={handleDocumentUpload}
+                                                className="hidden"
+                                            />
+                                        </label>
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                        Support for PDF, DOC, DOCX, JPG, PNG up to 10MB each
+                                    </p>
+                                </div>
+
+                                {/* Document List */}
+                                {vehicleDocuments.length > 0 && (
+                                    <div className="mt-6">
+                                        <h4 className="text-sm font-medium text-gray-700 mb-3">
+                                            Documents to Upload ({vehicleDocuments.length})
+                                        </h4>
+                                        <div className="space-y-2">
+                                            {vehicleDocuments.map((doc) => (
+                                                <div key={doc.id} className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                                                    <div className="flex items-center space-x-3 flex-1 min-w-0">
+                                                        <FileText className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
+                                                            <p className="text-xs text-gray-500">
+                                                                {(doc.size / 1024 / 1024).toFixed(2)} MB
+                                                            </p>
+                                                        </div>
+                                                        <select
+                                                            value={doc.documentType}
+                                                            onChange={(e) => updateDocumentType(doc.id, e.target.value)}
+                                                            className="text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                        >
+                                                            <option value="LC_DOCUMENT">LC Document</option>
+                                                            <option value="INVOICE">Invoice</option>
+                                                            <option value="RECEIPT">Receipt</option>
+                                                            <option value="CONTRACT">Contract</option>
+                                                            <option value="OTHER">Other</option>
+                                                        </select>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeDocument(doc.id)}
+                                                        className="ml-3 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
                                                 </div>
                                             ))}
                                         </div>

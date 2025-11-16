@@ -182,6 +182,68 @@ const vehicleService = {
     createModel: async (modelData) => {
         const response = await carServiceApi.post('/models', modelData);
         return response.data;
+    },
+
+    /**
+     * Get shipping history for a vehicle
+     * @param {number} vehicleId - Vehicle ID
+     * @returns {Promise} - Shipping history data
+     */
+    getVehicleShippingHistory: async (vehicleId) => {
+        const response = await carServiceApi.get(`/vehicles/shipping/history/${vehicleId}`);
+        return response.data;
+    },
+
+    /**
+     * Upload LC document for a vehicle
+     * @param {number} vehicleId - Vehicle ID
+     * @param {File} file - LC document file
+     * @param {string} documentType - Type of document (LC_DOCUMENT, INVOICE, etc.)
+     * @returns {Promise} - Upload response
+     */
+    uploadVehicleDocument: async (vehicleId, file, documentType) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('document_type', documentType);
+
+        const response = await carServiceApi.post(`/vehicles/${vehicleId}/documents`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response.data;
+    },
+
+    /**
+     * Get all documents for a vehicle
+     * @param {number} vehicleId - Vehicle ID
+     * @returns {Promise} - Documents data
+     */
+    getVehicleDocuments: async (vehicleId) => {
+        const response = await carServiceApi.get(`/vehicles/${vehicleId}/documents`);
+        return response.data;
+    },
+
+    /**
+     * Delete a vehicle document
+     * @param {number} vehicleId - Vehicle ID
+     * @param {number} documentId - Document ID
+     * @returns {Promise} - Delete response
+     */
+    deleteVehicleDocument: async (vehicleId, documentId) => {
+        const response = await carServiceApi.delete(`/vehicles/${vehicleId}/documents/${documentId}`);
+        return response.data;
+    },
+
+    /**
+     * Download/Get presigned URL for a vehicle document
+     * @param {number} vehicleId - Vehicle ID
+     * @param {number} documentId - Document ID
+     * @returns {Promise} - Presigned URL
+     */
+    getVehicleDocumentUrl: async (vehicleId, documentId) => {
+        const response = await carServiceApi.get(`/vehicles/${vehicleId}/documents/${documentId}/download`);
+        return response.data;
     }
 };
 

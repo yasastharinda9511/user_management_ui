@@ -7,6 +7,7 @@ import {RESOURCES, ACTIONS} from "../../../utils/resources.js";
 import {hasPermission} from "../../../utils/permissionUtils.js";
 import {useSelector} from "react-redux";
 import {selectPermissions} from "../../../state/authSlice.js";
+import DocumentsSection from "./DocumentsSection.jsx";
 
 /**
  * Get vehicle sections configuration for SelectedCarCard
@@ -36,7 +37,8 @@ export const VehicleSections = ({
     formatDate,
     formatCurrency,
     onViewCustomer,
-    onSelectChangeCustomer
+    onSelectChangeCustomer,
+    vehicleId
 }) => {
 
     const carInfoSection = [
@@ -454,6 +456,20 @@ export const VehicleSections = ({
                         isEditing={editingSection !== null}
                         currentValue={editedData.sales?.sale_remarks || sales.sale_remarks || ''}
                         updateField={updateField}
+                    />
+                </div>
+            )
+        },
+        {
+            title: SELECTED_VEHICLE_CARD_OPTIONS.DOCUMENTS,
+            color: "bg-indigo-50",
+            sectionKey: "documents",
+            requiredPermission: `${RESOURCES.CAR}.${ACTIONS.ACCESS}`,
+            content: (
+                <div className="space-y-3">
+                    <DocumentsSection
+                        vehicleId={vehicleId}
+                        isEditing={editingSection !== null}
                     />
                 </div>
             )
