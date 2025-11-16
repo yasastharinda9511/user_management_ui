@@ -3,6 +3,7 @@ export const PERMISSIONS = {
     CAR_TAB_ACCESS : 'vehicles.access',
     CAR_CREATE     : 'vehicles.create',
     CAR_UPDATE  : 'vehicles.update',
+    CUSTOMER_TAB_ACCESS : 'customers.access',
     USER_TAB_ACCESS : 'users.access',
     ROLE_TAB_ACCESS : 'roles.access',
     PERMISSIONS_TAB_ACCESS : 'permissions.access',
