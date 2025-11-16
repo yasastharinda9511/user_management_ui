@@ -335,7 +335,6 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
         return vehicleForm.code &&
             vehicleForm.make &&
             vehicleForm.model &&
-            vehicleForm.chassis_id &&
             vehicleForm.color &&
             vehicleForm.cif_value;
     };
@@ -597,16 +596,13 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Color *</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             value={vehicleForm.color}
                                             onChange={(e) => handleFormChange('color', e.target.value)}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        >
-                                            <option value="">Select Color</option>
-                                            {carColors.map((color) => (
-                                                <option key={color} value={color}>{color}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="e.g., Pearl White, Silver, Black"
+                                        />
                                     </div>
 
                                     <div>
@@ -621,11 +617,11 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Chassis ID *</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Chassis ID (REF17)</label>
                                         <input
                                             type="text"
                                             value={vehicleForm.chassis_id}
-                                            onChange={(e) => handleFormChange('chassis_id', e.target.value)}
+                                            onChange={(e) => handleFormChange('chassis_id', e.target.value.toUpperCase())}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., JTDEPRAE5NJ123458"
                                         />
@@ -645,16 +641,13 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Auction Grade</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             value={vehicleForm.auction_grade}
-                                            onChange={(e) => handleFormChange('auction_grade', e.target.value)}
+                                            onChange={(e) => handleFormChange('auction_grade', e.target.value.toUpperCase())}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        >
-                                            <option value="">Select Grade</option>
-                                            {auctionGrades.map((grade) => (
-                                                <option key={grade} value={grade}>{grade}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="e.g., 4/B, 4.5/B, 5/A, 5AA, 6AA"
+                                        />
                                     </div>
 
                                     <div>
