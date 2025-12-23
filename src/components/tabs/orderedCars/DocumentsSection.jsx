@@ -1,31 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Upload, FileText, Download, Trash2, Eye, X, File } from 'lucide-react';
 import { vehicleService } from '../../../api/index.js';
 
-const DocumentsSection = ({ vehicleId, isEditing }) => {
-    const [documents, setDocuments] = useState([]);
-    const [loading, setLoading] = useState(true);
+const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
     const [uploading, setUploading] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [documentType, setDocumentType] = useState('LC_DOCUMENT');
     const [notification, setNotification] = useState({ show: false, type: '', message: '' });
-
-    useEffect(() => {
-        fetchDocuments();
-    }, [vehicleId]);
-
-    const fetchDocuments = async () => {
-        try {
-            setLoading(true);
-            const response = await vehicleService.getVehicleDocuments(vehicleId);
-            setDocuments(response.data || []);
-        } catch (error) {
-            console.error('Failed to fetch documents:', error);
-            showNotification('error', 'Failed to load documents');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const showNotification = (type, message) => {
         setNotification({ show: true, type, message });
@@ -60,7 +41,6 @@ const DocumentsSection = ({ vehicleId, isEditing }) => {
             setDocumentType('LC_DOCUMENT');
             // Reset file input
             document.getElementById('document-upload').value = '';
-            fetchDocuments();
         } catch (error) {
             console.error('Upload failed:', error);
             showNotification('error', 'Failed to upload document');
@@ -77,7 +57,6 @@ const DocumentsSection = ({ vehicleId, isEditing }) => {
         try {
             await vehicleService.deleteVehicleDocument(vehicleId, documentId);
             showNotification('success', 'Document deleted successfully');
-            fetchDocuments();
         } catch (error) {
             console.error('Delete failed:', error);
             showNotification('error', 'Failed to delete document');
@@ -90,8 +69,21 @@ const DocumentsSection = ({ vehicleId, isEditing }) => {
             const url = response.data?.presigned_url || response.presigned_url;
 
             if (url) {
-                // Open in new tab
-                window.open(url, '_blank');
+                // Fetch the file as blob
+                const fileResponse = await fetch(url);
+                const blob = await fileResponse.blob();
+
+                // Create blob URL and download
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename || 'document.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Clean up
+                window.URL.revokeObjectURL(blobUrl);
             } else {
                 showNotification('error', 'Failed to get download URL');
             }
@@ -231,16 +223,12 @@ const DocumentsSection = ({ vehicleId, isEditing }) => {
             {/* Documents List */}
             <div>
                 <h4 className="text-sm font-medium text-gray-700 mb-3">
-                    Uploaded Documents ({documents.length})
+                    <h4>Uploaded Documents ({allDocuments?.length || 0})</h4>
                 </h4>
 
-                {loading ? (
-                    <div className="flex items-center justify-center py-8">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                    </div>
-                ) : documents.length === 0 ? (
+                {allDocuments?.length === 0 ? (
                     <div className="text-center py-8 bg-gray-50 rounded-lg border border-gray-200">
-                        <FileText className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                        <FileText className="w-12 h-12 text-gray-400 mx-auto mb-2"/>
                         <p className="text-sm text-gray-600">No documents uploaded yet</p>
                         {!isEditing && (
                             <p className="text-xs text-gray-500 mt-1">Click Edit to upload documents</p>
@@ -248,7 +236,7 @@ const DocumentsSection = ({ vehicleId, isEditing }) => {
                     </div>
                 ) : (
                     <div className="space-y-2">
-                        {documents.map((doc) => (
+                        {allDocuments?.map((doc) => (
                             <div
                                 key={doc.id}
                                 className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
@@ -262,7 +250,8 @@ const DocumentsSection = ({ vehicleId, isEditing }) => {
                                             {doc.filename || 'Document'}
                                         </p>
                                         <div className="flex items-center space-x-3 mt-1">
-                                            <span className={`text-xs px-2 py-0.5 rounded-full border ${getDocumentColor(doc.document_type)}`}>
+                                            <span
+                                                className={`text-xs px-2 py-0.5 rounded-full border ${getDocumentColor(doc.document_type)}`}>
                                                 {doc.document_type.replace('_', ' ')}
                                             </span>
                                             {doc.file_size && (
@@ -284,7 +273,7 @@ const DocumentsSection = ({ vehicleId, isEditing }) => {
                                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                         title="Download/View"
                                     >
-                                        <Download className="w-4 h-4" />
+                                        <Download className="w-4 h-4"/>
                                     </button>
                                     {isEditing && (
                                         <button
@@ -293,7 +282,7 @@ const DocumentsSection = ({ vehicleId, isEditing }) => {
                                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                             title="Delete"
                                         >
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="w-4 h-4"/>
                                         </button>
                                     )}
                                 </div>

@@ -32,6 +32,7 @@ export const VehicleSections = ({
     financials,
     sales,
     purchase,
+    documents,
     editingSection,
     updateField,
     formatDate,
@@ -469,6 +470,7 @@ export const VehicleSections = ({
                 <div className="space-y-3">
                     <DocumentsSection
                         vehicleId={vehicleId}
+                        allDocuments={documents}
                         isEditing={editingSection !== null}
                     />
                 </div>

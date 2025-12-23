@@ -54,6 +54,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     let sales = useRef({})
     let purchase = useRef({});
     let images = useRef({});
+    let documents = useRef({});
 
     useEffect(() => {
         dispatch(fetchVehicleById(id));
@@ -242,6 +243,8 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         financials.current = selectedCar.vehicle_financials;
         sales.current = selectedCar.vehicle_sales;
         purchase.current = selectedCar.vehicle_purchase;
+        images.current = selectedCar.vehicle_image;
+        documents.current = selectedCar.vehicle_documents;
 
 
         setSections(VehicleSections({
@@ -252,6 +255,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             financials :financials.current,
             sales : sales.current,
             purchase :purchase.current,
+            documents :documents.current,
             editingSection,
             updateField,
             formatDate,

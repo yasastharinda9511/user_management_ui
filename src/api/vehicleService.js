@@ -244,7 +244,7 @@ const vehicleService = {
      * @returns {Promise} - Presigned URL
      */
     getVehicleDocumentUrl: async (vehicleId, documentId) => {
-        const response = await carServiceApi.get(`/vehicles/${vehicleId}/documents/${documentId}/download`);
+        const response = await carServiceApi.get(`/vehicles/download-document/${documentId}`);
         return response.data;
     }
 };
