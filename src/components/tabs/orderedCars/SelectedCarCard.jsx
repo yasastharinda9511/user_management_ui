@@ -225,6 +225,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             financials :financials.current,
             sales : sales.current,
             purchase :purchase.current,
+            documents :documents.current,
             editingSection,
             updateField,
             formatDate,
@@ -270,7 +271,9 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             shipping: { ...shipping.current },
             financials: { ...financials.current },
             sales: { ...sales.current },
-            purchase: { ...purchase.current }
+            purchase: { ...purchase.current },
+            images:{...images.current},
+            documents: { ...documents.current },
         });
     }, [selectedCar]);
 
@@ -281,7 +284,9 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             shipping: { ...shipping.current },
             financials: { ...financials.current },
             sales: { ...sales.current },
-            purchase: { ...purchase.current }
+            purchase: { ...purchase.current },
+            images:{...images.current},
+            documents: { ...documents.current },
         });
     };
 
