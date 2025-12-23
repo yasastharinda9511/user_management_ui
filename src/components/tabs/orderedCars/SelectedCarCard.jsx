@@ -118,7 +118,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             const urls = await Promise.all(
                 sortedImages.map(async (img) => {
                     try {
-                        const response = await vehicleService.getVehicleImagePresignedUrl(img.filename);
+                        const response = await vehicleService.getVehicleImagePresignedUrl(img.vehicle_id, img.filename);
                         console.log('Fetched image URL:', response.data.presigned_url);
                         return response.data?.presigned_url || null;
                     } catch (error) {
