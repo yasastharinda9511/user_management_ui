@@ -199,14 +199,16 @@ const vehicleService = {
      * @param {number} vehicleId - Vehicle ID
      * @param {File} file - LC document file
      * @param {string} documentType - Type of document (LC_DOCUMENT, INVOICE, etc.)
+     * @param name
      * @returns {Promise} - Upload response
      */
-    uploadVehicleDocument: async (vehicleId, file, documentType) => {
+    uploadVehicleDocument: async (vehicleId, file, documentType, name) => {
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('documents', file);
         formData.append('document_type', documentType);
+        formData.append('document_name', name);
 
-        const response = await carServiceApi.post(`/vehicles/${vehicleId}/documents`, formData, {
+        const response = await carServiceApi.post(`/vehicles/upload-document/${vehicleId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

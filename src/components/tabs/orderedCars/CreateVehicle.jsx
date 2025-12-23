@@ -368,7 +368,8 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                         await vehicleService.uploadVehicleDocument(
                             createdVehicleId,
                             doc.file,
-                            doc.documentType
+                            doc.documentType,
+                            doc.name
                         );
                     } catch (docError) {
                         console.error('Failed to upload document:', doc.name, docError);
@@ -849,9 +850,10 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                         >
                                                             <option value="LC_DOCUMENT">LC Document</option>
                                                             <option value="INVOICE">Invoice</option>
-                                                            <option value="RECEIPT">Receipt</option>
-                                                            <option value="CONTRACT">Contract</option>
-                                                            <option value="OTHER">Other</option>
+                                                            <option value="SHIPPING">Receipt</option>
+                                                            <option value="CUSTOMS">Contract</option>
+                                                            <option value="REGISTRATION">Other</option>
+                                                            <option value="INSPECTION">Other</option>
                                                         </select>
                                                     </div>
                                                     <button
