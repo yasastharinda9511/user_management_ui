@@ -8,6 +8,8 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
     const [documentType, setDocumentType] = useState('LC_DOCUMENT');
     const [notification, setNotification] = useState({ show: false, type: '', message: '' });
 
+    const documents = Array.isArray(allDocuments) ? allDocuments : [];
+
     const showNotification = (type, message) => {
         setNotification({ show: true, type, message });
         setTimeout(() => {
@@ -223,10 +225,10 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
             {/* Documents List */}
             <div>
                 <h4 className="text-sm font-medium text-gray-700 mb-3">
-                    <h4>Uploaded Documents ({allDocuments?.length || 0})</h4>
+                    Uploaded Documents ({documents.length})
                 </h4>
 
-                {allDocuments?.length === 0 ? (
+                {documents.length === 0 ? (
                     <div className="text-center py-8 bg-gray-50 rounded-lg border border-gray-200">
                         <FileText className="w-12 h-12 text-gray-400 mx-auto mb-2"/>
                         <p className="text-sm text-gray-600">No documents uploaded yet</p>
@@ -236,7 +238,7 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
                     </div>
                 ) : (
                     <div className="space-y-2">
-                        {allDocuments?.map((doc) => (
+                        {documents.map((doc) => (
                             <div
                                 key={doc.id}
                                 className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
