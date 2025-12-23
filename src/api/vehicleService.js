@@ -124,8 +124,8 @@ const vehicleService = {
         return response.data;
     },
 
-    getVehicleImagePresignedUrl: async (filename) => {
-        const response = await carServiceApi.get(`/vehicles/download-image/${filename}`);
+    getVehicleImagePresignedUrl: async (vehicleId,filename) => {
+        const response = await carServiceApi.get(`/vehicles/download-image/${vehicleId}/${filename}`);
         return response.data;
     },
 

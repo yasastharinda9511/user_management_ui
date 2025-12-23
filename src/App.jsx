@@ -2,7 +2,7 @@ import './App.css'
 import LoginPage from "./components/LoginPage.jsx";
 import MainScreen from "./components/MainScreen.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {use, useEffect} from "react";
+import {useEffect} from "react";
 import {
     loadUserFromStorage,
     introspectUser

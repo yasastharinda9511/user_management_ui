@@ -32,7 +32,7 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
 
             if(sortedImages.length > 0){
                 try {
-                    const response = await vehicleService.getVehicleImagePresignedUrl(sortedImages[0].filename);
+                    const response = await vehicleService.getVehicleImagePresignedUrl(sortedImages[0].vehicle_id, sortedImages[0].filename);
                     console.log(response.data.presigned_url);
                     setImageUrl(response.data.presigned_url);
                 } catch (error) {
