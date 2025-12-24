@@ -11,6 +11,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {logout, selectPermissions, selectUser} from '../state/authSlice.js';
 import { getAccessibleTabs } from '../utils/permissionUtils.js';
+import ConfirmationModal from './common/ConfirmationModal.jsx';
 
 const MainScreen = () => {
     const navigate = useNavigate();
@@ -19,8 +20,13 @@ const MainScreen = () => {
     const permissions = useSelector(selectPermissions);
     const user = useSelector(selectUser);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-    const handleLogout = () => {
+    const handleLogoutClick = () => {
+        setShowLogoutModal(true);
+    };
+
+    const confirmLogout = () => {
         dispatch(logout());
         navigate('/login');
     };
@@ -101,7 +107,7 @@ const MainScreen = () => {
                                 </div>
                             </div>
                             <button
-                                onClick={handleLogout}
+                                onClick={handleLogoutClick}
                                 className="w-full flex items-center space-x-3 px-4 py-2 text-left text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
                             >
                                 <LogOut className="w-4 h-4" />
@@ -114,7 +120,7 @@ const MainScreen = () => {
                                 <span className="text-sm font-medium text-blue-600">{getAvatarNameFromUsername(user)}</span>
                             </div>
                             <button
-                                onClick={handleLogout}
+                                onClick={handleLogoutClick}
                                 className="p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
                                 title="Sign out"
                             >
@@ -164,6 +170,18 @@ const MainScreen = () => {
                     <Outlet />
                 </div>
             </div>
+
+            {/* Logout Confirmation Modal */}
+            <ConfirmationModal
+                isOpen={showLogoutModal}
+                onClose={() => setShowLogoutModal(false)}
+                onConfirm={confirmLogout}
+                title="Sign Out"
+                message="Are you sure you want to sign out?"
+                confirmText="Sign Out"
+                cancelText="Cancel"
+                type="default"
+            />
         </div>
     );
 };
