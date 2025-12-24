@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { Upload, FileText, Download, Trash2, Eye, X, File } from 'lucide-react';
 import { vehicleService } from '../../../api/index.js';
 import {getAllDocumentTypes, getDocumentColor, getDocumentIcon} from "../../../utils/documetsUtil.jsx";
+import PDFViewer from '../../common/PDFViewer.jsx';
 
 const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
     const [uploading, setUploading] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [documentType, setDocumentType] = useState('LC_DOCUMENT');
     const [notification, setNotification] = useState({ show: false, type: '', message: '' });
+    const [viewingPdf, setViewingPdf] = useState(null);
 
     const documents = Array.isArray(allDocuments) ? allDocuments : [];
 
@@ -63,6 +66,27 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
         } catch (error) {
             console.error('Delete failed:', error);
             showNotification('error', 'Failed to delete document');
+        }
+    };
+
+    const handleView = async (documentId, filename) => {
+        console.log('handleView called with:', { documentId, filename, vehicleId });
+        try {
+            const response = await vehicleService.getVehicleDocumentUrl(vehicleId, documentId);
+            console.log('API response:', response);
+            const url = response.data?.presigned_url || response.presigned_url;
+            console.log('Extracted URL:', url);
+
+            if (url) {
+                console.log('Setting viewingPdf state:', { url, filename });
+                setViewingPdf({ url, filename });
+            } else {
+                console.error('No URL found in response');
+                showNotification('error', 'Failed to get document URL');
+            }
+        } catch (error) {
+            console.error('View failed:', error);
+            showNotification('error', 'Failed to view document');
         }
     };
 
@@ -247,9 +271,17 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
                                 <div className="flex items-center space-x-2 ml-4">
                                     <button
                                         type="button"
+                                        onClick={() => handleView(doc.id, doc.document_name)}
+                                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                        title="View"
+                                    >
+                                        <Eye className="w-4 h-4"/>
+                                    </button>
+                                    <button
+                                        type="button"
                                         onClick={() => handleDownload(doc.id, doc.filename)}
                                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                        title="Download/View"
+                                        title="Download"
                                     >
                                         <Download className="w-4 h-4"/>
                                     </button>
@@ -269,6 +301,19 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
                     </div>
                 )}
             </div>
+
+            {/* PDF Viewer - Rendered via Portal */}
+            {viewingPdf && ReactDOM.createPortal(
+                <>
+                    {console.log('Rendering PDFViewer with:', viewingPdf)}
+                    <PDFViewer
+                        pdfUrl={viewingPdf.url}
+                        fileName={viewingPdf.filename}
+                        onClose={() => setViewingPdf(null)}
+                    />
+                </>,
+                document.body
+            )}
         </div>
     );
 };
