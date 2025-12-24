@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Car, Truck, Package, Eye, MapPin, Ship, History, ChevronLeft, ChevronRight} from 'lucide-react';
+import { Car, Truck, Package, Eye, MapPin, Ship, History, ChevronLeft, ChevronRight, Trash2} from 'lucide-react';
+import { useSelector } from 'react-redux';
 import {getStatusColor} from "../../common/CommonLogics.js";
 import config from "../../../configs/config.json";
 import AuthImage from "../../common/AuthImage.jsx";
 import {carServiceApi, vehicleService} from "../../../api/index.js";
 import ShippingHistory from "./ShippingHistory.jsx";
+import ConfirmationModal from "../../common/ConfirmationModal.jsx";
+import { selectPermissions } from "../../../state/authSlice.js";
+import { hasPermission } from "../../../utils/permissionUtils.js";
+import { PERMISSIONS } from "../../../utils/permissions.js";
 
-const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
+const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     const [imageUrls, setImageUrls] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showShippingHistory, setShowShippingHistory] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const permissions = useSelector(selectPermissions);
 
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
@@ -59,6 +66,23 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
     const handleNextImage = (e) => {
         e.stopPropagation();
         setCurrentImageIndex((prev) => (prev === imageUrls.length - 1 ? 0 : prev + 1));
+    };
+
+    const handleDeleteClick = (e) => {
+        e.stopPropagation();
+        setShowDeleteModal(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        try {
+            await vehicleService.deleteVehicle(car.vehicle.id);
+            if (onDelete) {
+                onDelete(car.vehicle.id);
+            }
+        } catch (error) {
+            console.error('Failed to delete vehicle:', error);
+            alert('Failed to delete vehicle. Please try again.');
+        }
     };
 
     // List View Layout
@@ -180,14 +204,22 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
                             <div className="flex md:flex-col justify-between md:justify-start items-end md:items-end md:ml-6 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-gray-100 md:pl-6">
                                 <div className="text-sm">
                                     <div className="text-lg font-bold text-blue-600">{car.vehicle.price}</div>
-                                    {car.profit !== 'N/A' && (
-                                        <div className="text-xs text-green-600">Profit: {car.vehicle.profit}</div>
-                                    )}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Delete Button - Top Right Corner */}
+                {hasPermission(permissions, PERMISSIONS.CAR_DELETE) && (
+                    <button
+                        onClick={handleDeleteClick}
+                        className="absolute top-3 right-3 p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors z-10"
+                        title="Delete Vehicle"
+                    >
+                        <Trash2 className="w-5 h-5" />
+                    </button>
+                )}
 
                 {/* Details Button - Bottom Right Corner */}
                 <button
@@ -205,6 +237,18 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
                         onClose={() => setShowShippingHistory(false)}
                     />
                 )}
+
+                {/* Delete Confirmation Modal */}
+                <ConfirmationModal
+                    isOpen={showDeleteModal}
+                    onClose={() => setShowDeleteModal(false)}
+                    onConfirm={handleDeleteConfirm}
+                    title="Delete Vehicle"
+                    message={`Are you sure you want to delete ${car.vehicle.make} ${car.vehicle.model}? This action cannot be undone.`}
+                    confirmText="Delete"
+                    cancelText="Cancel"
+                    type="danger"
+                />
             </div>
         );
     }
@@ -321,10 +365,18 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
 
                 {/* Footer */}
                 <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                    <div className="text-sm">
-                        <div className="text-lg font-bold text-blue-600">{car.vehicle.price}</div>
-                        {car.profit !== 'N/A' && (
-                            <div className="text-xs text-green-600">Profit: {car.vehicle.profit}</div>
+                    <div className="flex items-center space-x-3">
+                        <div className="text-sm">
+                            <div className="text-lg font-bold text-blue-600">{car.vehicle.price}</div>
+                        </div>
+                        {hasPermission(permissions, PERMISSIONS.CAR_DELETE) && (
+                            <button
+                                onClick={handleDeleteClick}
+                                className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                <span>Delete</span>
+                            </button>
                         )}
                     </div>
                     <button
@@ -344,6 +396,18 @@ const PreviewCard= ({car , handleViewDetails, viewMode = 'grid'})=>{
                     onClose={() => setShowShippingHistory(false)}
                 />
             )}
+
+            {/* Delete Confirmation Modal */}
+            <ConfirmationModal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onConfirm={handleDeleteConfirm}
+                title="Delete Vehicle"
+                message={`Are you sure you want to delete ${car.vehicle.make} ${car.vehicle.model}? This action cannot be undone.`}
+                confirmText="Delete"
+                cancelText="Cancel"
+                type="danger"
+            />
         </div>
     );
 }

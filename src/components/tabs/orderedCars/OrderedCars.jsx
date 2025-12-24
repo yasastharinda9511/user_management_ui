@@ -137,6 +137,15 @@ const OrderedCars = () => {
         setSelectedCar(car);
     };
 
+    const handleDelete = (vehicleId) => {
+        // Refresh the vehicles list after deletion
+        dispatch(fetchVehicles({
+            page: currentPage,
+            limit: pageLimit,
+            filters: filters
+        }));
+    };
+
     const closeModal = () => {
         setSelectedCar(null);
     };
@@ -262,7 +271,7 @@ const OrderedCars = () => {
                     {viewMode === 'grid' && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {vehicles.map((car) => (
-                                <PreviewCard car={car} key={car.id} handleViewDetails={handleViewDetails} />
+                                <PreviewCard car={car} key={car.id} handleViewDetails={handleViewDetails} onDelete={handleDelete} />
                             ))}
                         </div>
                     )}
@@ -271,7 +280,7 @@ const OrderedCars = () => {
                     {viewMode === 'list' && (
                         <div className="space-y-4">
                             {vehicles.map((car) => (
-                                <PreviewCard car={car} key={car.id} handleViewDetails={handleViewDetails} viewMode="list" />
+                                <PreviewCard car={car} key={car.id} handleViewDetails={handleViewDetails} onDelete={handleDelete} viewMode="list" />
                             ))}
                         </div>
                     )}

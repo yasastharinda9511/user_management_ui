@@ -246,6 +246,16 @@ const vehicleService = {
     getVehicleDocumentUrl: async (vehicleId, documentId) => {
         const response = await carServiceApi.get(`/vehicles/download-document/${documentId}`);
         return response.data;
+    },
+
+    /**
+     * Delete a vehicle
+     * @param {number} vehicleId - Vehicle ID
+     * @returns {Promise} - Delete response
+     */
+    deleteVehicle: async (vehicleId) => {
+        const response = await carServiceApi.delete(`/vehicles/${vehicleId}`);
+        return response.data;
     }
 };
 
