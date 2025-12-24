@@ -236,7 +236,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             onSelectChangeCustomer: handleSelectChangeCustomer,
             vehicleId: id
         }));
-    }, [editingSection, editedData.sales?.customer_id])
+    }, [editingSection, editedData])
     // Initialize edited data
     useEffect(() => {
 
@@ -297,6 +297,31 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         setEditingSection(null);
     };
 
+    // Helper function to convert date to RFC3339 format
+    const convertToRFC3339 = (dateString) => {
+        if (!dateString || dateString === 'N/A' || dateString === '') return null;
+
+        // If already in ISO format, return as is
+        if (dateString.includes('T')) return dateString;
+
+        // Convert YYYY-MM-DD to RFC3339 format
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return null;
+
+        return date.toISOString();
+    };
+
+    // Helper function to convert date fields in an object
+    const convertDateFields = (data, dateFields) => {
+        const converted = { ...data };
+        dateFields.forEach(field => {
+            if (converted[field]) {
+                converted[field] = convertToRFC3339(converted[field]);
+            }
+        });
+        return converted;
+    };
+
     const saveEdit = async () => {
         if (onSave) {
             onSave(editedData);
@@ -317,9 +342,10 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                     break;
 
                 case SELECTED_VEHICLE_CARD_OPTIONS.SHIPPING_DETAILS:
+                    const shippingData = convertDateFields(editedData.shipping, ['shipment_date', 'arrival_date', 'clearing_date']);
                     await dispatch(updateVehicleShipping({
                         vehicleId: vehicle.current.id,
-                        shippingData: editedData.shipping,
+                        shippingData: shippingData,
                     })).unwrap();
                     showNotification('success', 'Success', `${SELECTED_VEHICLE_CARD_OPTIONS.SHIPPING_DETAILS} Updated Successfully`);
                     setOriginalData(prev =>({
@@ -329,9 +355,10 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                     break;
 
                 case SELECTED_VEHICLE_CARD_OPTIONS.PURCHASE_DETAILS:
+                    const purchaseData = convertDateFields(editedData.purchase, ['purchase_date']);
                     await dispatch(updateVehiclePurchase({
                         vehicleId: vehicle.current.id,
-                        purchaseData: editedData.purchase,
+                        purchaseData: purchaseData,
                     })).unwrap();
                     setOriginalData(prev =>({
                         ...prev,
@@ -353,9 +380,10 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                     break;
 
                 case SELECTED_VEHICLE_CARD_OPTIONS.SALES_INFORMATION:
+                    const salesData = convertDateFields(editedData.sales, ['sold_date']);
                     await dispatch(updateVehicleSales({
                         vehicleId: vehicle.current.id,
-                        salesData: editedData.sales,
+                        salesData: salesData,
                     })).unwrap();
                     setOriginalData(prev =>({
                         ...prev,

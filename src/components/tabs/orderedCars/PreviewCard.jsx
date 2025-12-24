@@ -27,6 +27,19 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
         });
     };
 
+    const getSaleStatusColor = (status) => {
+        switch (status) {
+            case 'SOLD':
+                return 'bg-green-50 text-green-700 border-green-200';
+            case 'RESERVED':
+                return 'bg-yellow-50 text-yellow-700 border-yellow-200';
+            case 'AVAILABLE':
+                return 'bg-blue-50 text-blue-700 border-blue-200';
+            default:
+                return 'bg-gray-50 text-gray-700 border-gray-200';
+        }
+    };
+
     useEffect(() => {
         const fetchImageUrls = async () => {
             if (!car.vehicle_image || car.vehicle_image.length === 0) {
@@ -151,6 +164,11 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                         <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
                                             {car.vehicle_shipping.shipping_status}
                                         </span>
+                                        {car.vehicle_sale?.sale_status && (
+                                            <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getSaleStatusColor(car.vehicle_sale.sale_status)}`}>
+                                                {car.vehicle_sale.sale_status}
+                                            </span>
+                                        )}
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
@@ -315,6 +333,11 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                         <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
                             {car.vehicle_shipping.shipping_status}
                         </span>
+                        {car.vehicle_sale?.sale_status && (
+                            <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getSaleStatusColor(car.vehicle_sale.sale_status)}`}>
+                                {car.vehicle_sale.sale_status}
+                            </span>
+                        )}
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
