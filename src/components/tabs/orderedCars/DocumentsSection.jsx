@@ -249,20 +249,20 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-sm font-medium text-gray-900 truncate">
-                                            {doc.filename || 'Document'}
+                                            {doc.document_name || 'Document'}
                                         </p>
                                         <div className="flex items-center space-x-3 mt-1">
                                             <span
                                                 className={`text-xs px-2 py-0.5 rounded-full border ${getDocumentColor(doc.document_type)}`}>
                                                 {doc.document_type.replace('_', ' ')}
                                             </span>
-                                            {doc.file_size && (
+                                            {doc.file_size_bytes && (
                                                 <span className="text-xs text-gray-500">
-                                                    {formatFileSize(doc.file_size)}
+                                                    {formatFileSize(doc.file_size_bytes)}
                                                 </span>
                                             )}
                                             <span className="text-xs text-gray-500">
-                                                {formatDate(doc.uploaded_at || doc.created_at)}
+                                                {formatDate(doc.upload_date || 'N/A')}
                                             </span>
                                         </div>
                                     </div>
