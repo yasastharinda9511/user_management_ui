@@ -7,7 +7,7 @@ import {
 import {useDispatch} from "react-redux";
 import Notification from "../../common/Notification.jsx";
 import { vehicleService } from "../../../api/index.js";
-import {getAllDocumentTypes} from "../../../utils/documetsUtil.js";
+import {getAllDocumentTypes} from "../../../utils/documetsUtil.jsx";
 
 const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
     const dispatch = useDispatch();

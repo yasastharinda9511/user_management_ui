@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, FileText, Download, Trash2, Eye, X, File } from 'lucide-react';
 import { vehicleService } from '../../../api/index.js';
-import {getAllDocumentTypes, getDocumentColor, getDocumentIcon} from "../../../utils/documetsUtil.js";
+import {getAllDocumentTypes, getDocumentColor, getDocumentIcon} from "../../../utils/documetsUtil.jsx";
 
 const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
     const [uploading, setUploading] = useState(false);
