@@ -733,18 +733,28 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                             {/* Section Title and Edit Button */}
                             <div className="flex justify-between items-center mb-4">
                                 <div className="text-center flex-1">
-                                    <h4 className="font-semibold text-gray-900 text-lg">
+                                    <h4 className={`font-semibold text-lg transition-all ${
+                                        editingSection === currentSection
+                                            ? 'text-blue-600 bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent'
+                                            : 'text-gray-900'
+                                    }`}>
+                                        {editingSection === currentSection && '✏️ '}
                                         {sections[currentSection]?.title}
                                     </h4>
-                                    <p className="text-sm text-gray-500">
-                                        {currentSection + 1} of {sections.length}
+                                    <p className={`text-sm transition-colors ${
+                                        editingSection === currentSection ? 'text-blue-500 font-medium' : 'text-gray-500'
+                                    }`}>
+                                        {editingSection === currentSection ? 'Editing Mode' : `${currentSection + 1} of ${sections.length}`}
                                     </p>
                                 </div>
                                 {editingSection === null && hasPermission(permissions, PERMISSIONS.CAR_UPDATE) &&
                                     (<button
                                         onClick={() => startEdit(currentSection)}
-                                        className="ml-2 p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                        className="ml-2 p-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
                                         title="Edit section"
+                                        style={{
+                                            boxShadow: '0 4px 6px -1px rgba(59, 130, 246, 0.3), 0 2px 4px -1px rgba(59, 130, 246, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.3)'
+                                        }}
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -755,18 +765,24 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
 
                             {/* Save/Cancel Buttons */}
                             {editingSection === currentSection && (
-                                <div className="flex justify-center space-x-2 mb-4">
+                                <div className="flex justify-center space-x-3 mb-6">
                                     <button
                                         onClick={saveEdit}
-                                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium"
+                                        className="px-6 py-2.5 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 text-sm font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+                                        style={{
+                                            boxShadow: '0 4px 6px -1px rgba(34, 197, 94, 0.4), 0 2px 4px -1px rgba(34, 197, 94, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.4)'
+                                        }}
                                     >
-                                        Save Changes
+                                        💾 Save Changes
                                     </button>
                                     <button
                                         onClick={cancelEdit}
-                                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm font-medium"
+                                        className="px-6 py-2.5 bg-gradient-to-br from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 text-sm font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+                                        style={{
+                                            boxShadow: '0 4px 6px -1px rgba(107, 114, 128, 0.4), 0 2px 4px -1px rgba(107, 114, 128, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.4)'
+                                        }}
                                     >
-                                        Cancel
+                                        ✕ Cancel
                                     </button>
                                 </div>
                             )}
@@ -785,7 +801,17 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                 >
                                     {sections.map((section, index) => (
                                         <div key={index} className="w-full flex-shrink-0">
-                                            <div className={`${section.color} rounded-lg p-4 min-h-[300px]`}>
+                                            <div
+                                                className={`${section.color} rounded-lg p-4 min-h-[300px] transition-all duration-300 ${
+                                                    editingSection === index
+                                                        ? 'ring-2 ring-blue-400 shadow-2xl'
+                                                        : 'shadow-md'
+                                                }`}
+                                                style={editingSection === index ? {
+                                                    background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(249,250,251,0.95) 100%)',
+                                                    boxShadow: '0 20px 25px -5px rgba(59, 130, 246, 0.15), 0 10px 10px -5px rgba(59, 130, 246, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.05)'
+                                                } : {}}
+                                            >
                                                 {section.content}
                                             </div>
                                         </div>

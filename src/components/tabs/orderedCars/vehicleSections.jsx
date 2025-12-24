@@ -251,6 +251,43 @@ export const VehicleSections = ({
                         updateField={updateField}
                     />
                     <EditableField
+                        label="Bought From"
+                        value={editedData.purchase?.bought_from_name || purchase.bought_from_name}
+                        section="purchase"
+                        field="bought_from_name"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.purchase?.bought_from_name || purchase.bought_from_name || ''}
+                        updateField={updateField}
+                    />
+                    <EditableField
+                        label="Purchase Status"
+                        value={editedData.purchase?.purchase_status || purchase.purchase_status || 'PENDING'}
+                        section="purchase"
+                        field="purchase_status"
+                        options={['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED']}
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.purchase?.purchase_status || purchase.purchase_status || 'PENDING'}
+                        updateField={updateField}
+                    />
+                    <EditableField
+                        label="LC Bank"
+                        value={editedData.purchase?.lc_bank || purchase.lc_bank}
+                        section="purchase"
+                        field="lc_bank"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.purchase?.lc_bank || purchase.lc_bank || ''}
+                        updateField={updateField}
+                    />
+                    <EditableField
+                        label="LC Number"
+                        value={editedData.purchase?.lc_number || purchase.lc_number}
+                        section="purchase"
+                        field="lc_number"
+                        isEditing={editingSection !== null}
+                        currentValue={editedData.purchase?.lc_number || purchase.lc_number || ''}
+                        updateField={updateField}
+                    />
+                    <EditableField
                         label="LC Cost (JPY)"
                         value={formatCurrency(editedData.purchase?.lc_cost_jpy || purchase.lc_cost_jpy, 'JPY')}
                         section="purchase"
