@@ -261,12 +261,12 @@ export const VehicleSections = ({
                     />
                     <EditableField
                         label="Purchase Status"
-                        value={editedData.purchase?.purchase_status || purchase.purchase_status || 'PENDING'}
+                        value={editedData.purchase?.purchase_status || purchase.purchase_status || 'LC_PENDING'}
                         section="purchase"
                         field="purchase_status"
-                        options={['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED']}
+                        options={['LC_PENDING', 'LC_OPENED', 'LC_RECEIVED', 'CANCELLED']}
                         isEditing={editingSection !== null}
-                        currentValue={editedData.purchase?.purchase_status || purchase.purchase_status || 'PENDING'}
+                        currentValue={editedData.purchase?.purchase_status || purchase.purchase_status || 'LC_PENDING'}
                         updateField={updateField}
                     />
                     <EditableField

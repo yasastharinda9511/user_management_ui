@@ -9,7 +9,6 @@ import {
 } from "../../../state/vehicleSlice.js";
 import React, {useEffect, useState, useRef} from "react";
 import {X, Search, Car, ChevronLeft} from 'lucide-react';
-import PreviewCard from "./PreviewCard.jsx";
 
 
 const Filter = ({closeModal}) => {
