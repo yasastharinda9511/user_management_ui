@@ -21,6 +21,7 @@ import Permissions from "./components/tabs/permissions/Permissions.jsx";
 import ShippingTracking from "./components/tabs/shippingTracking/ShippingTracking.jsx";
 import Makes from "./components/tabs/makes/Makes.jsx";
 import Customers from "./components/tabs/customers/Customers.jsx";
+import PurchaseTracking from "./components/tabs/purchaseTracking/PurchaseTracking.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -58,6 +59,7 @@ function App() {
                     <Route path="profile" element={<Profile />} />
                     <Route path="ordered-cars" element={<OrderedCars />} />
                     <Route path="shipping-tracking" element={<ShippingTracking />} />
+                    <Route path="purchase-tracking" element={<PurchaseTracking />} />
                     <Route path="makes" element={<Makes />} />
                     <Route path="customers" element={<Customers />} />
                     <Route path="users" element={<Users />} />
