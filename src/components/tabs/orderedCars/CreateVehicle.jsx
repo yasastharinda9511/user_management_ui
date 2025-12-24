@@ -7,6 +7,7 @@ import {
 import {useDispatch} from "react-redux";
 import Notification from "../../common/Notification.jsx";
 import { vehicleService } from "../../../api/index.js";
+import {getAllDocumentTypes} from "../../../utils/documetsUtil.js";
 
 const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
     const dispatch = useDispatch();
@@ -848,12 +849,9 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                             onChange={(e) => updateDocumentType(doc.id, e.target.value)}
                                                             className="text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                         >
-                                                            <option value="LC_DOCUMENT">LC Document</option>
-                                                            <option value="INVOICE">Invoice</option>
-                                                            <option value="SHIPPING">Receipt</option>
-                                                            <option value="CUSTOMS">Contract</option>
-                                                            <option value="REGISTRATION">Other</option>
-                                                            <option value="INSPECTION">Other</option>
+                                                            {getAllDocumentTypes().map(docType => (
+                                                                <option key={docType} value={docType}>{docType}</option>
+                                                            ))}
                                                         </select>
                                                     </div>
                                                     <button

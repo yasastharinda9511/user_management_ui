@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, FileText, Download, Trash2, Eye, X, File } from 'lucide-react';
 import { vehicleService } from '../../../api/index.js';
+import {getAllDocumentTypes, getDocumentColor, getDocumentIcon} from "../../../utils/documetsUtil.js";
 
 const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
     const [uploading, setUploading] = useState(false);
@@ -37,7 +38,7 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
 
         try {
             setUploading(true);
-            await vehicleService.uploadVehicleDocument(vehicleId, selectedFile, documentType);
+            await vehicleService.uploadVehicleDocument(vehicleId, selectedFile, documentType, selectedFile.name);
             showNotification('success', 'Document uploaded successfully');
             setSelectedFile(null);
             setDocumentType('LC_DOCUMENT');
@@ -95,29 +96,6 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
         }
     };
 
-    const getDocumentIcon = (type) => {
-        const iconMap = {
-            'LC_DOCUMENT': FileText,
-            'INVOICE': FileText,
-            'RECEIPT': FileText,
-            'CONTRACT': FileText,
-            'OTHER': File
-        };
-        const Icon = iconMap[type] || File;
-        return <Icon className="w-5 h-5" />;
-    };
-
-    const getDocumentColor = (type) => {
-        const colorMap = {
-            'LC_DOCUMENT': 'bg-blue-100 text-blue-700 border-blue-200',
-            'INVOICE': 'bg-green-100 text-green-700 border-green-200',
-            'RECEIPT': 'bg-purple-100 text-purple-700 border-purple-200',
-            'CONTRACT': 'bg-orange-100 text-orange-700 border-orange-200',
-            'OTHER': 'bg-gray-100 text-gray-700 border-gray-200'
-        };
-        return colorMap[type] || colorMap['OTHER'];
-    };
-
     const formatFileSize = (bytes) => {
         if (!bytes) return 'N/A';
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -165,11 +143,9 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
                                     onChange={(e) => setDocumentType(e.target.value)}
                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 >
-                                    <option value="LC_DOCUMENT">LC Document</option>
-                                    <option value="INVOICE">Invoice</option>
-                                    <option value="RECEIPT">Receipt</option>
-                                    <option value="CONTRACT">Contract</option>
-                                    <option value="OTHER">Other</option>
+                                    {getAllDocumentTypes().map(docType => (
+                                        <option key={docType} value={docType}>{docType}</option>
+                                    ))}
                                 </select>
                             </div>
 
