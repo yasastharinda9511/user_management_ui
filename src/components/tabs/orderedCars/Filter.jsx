@@ -175,7 +175,7 @@ const Filter = ({closeModal}) => {
                                     {loadingOptions ? (
                                         <option disabled>Loading...</option>
                                     ) : (
-                                        filterOptions.transmissions?.map(transmission => (
+                                        filterOptions.transmission_types?.map(transmission => (
                                             <option key={transmission} value={transmission}>{transmission}</option>
                                         ))
                                     )}
@@ -194,18 +194,18 @@ const Filter = ({closeModal}) => {
                                     {loadingOptions ? (
                                         <option disabled>Loading...</option>
                                     ) : (
-                                        filterOptions.fuelTypes?.map(fuelType => (
+                                        filterOptions.fuel_types?.map(fuelType => (
                                             <option key={fuelType} value={fuelType}>{fuelType}</option>
                                         ))
                                     )}
                                 </select>
                             </div>
 
-                            {/* Status */}
+                            {/* Shipping Status */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Shipping Status</label>
                                 <select
-                                    value={pendingFilters.status}
+                                    value={pendingFilters.shipping_status}
                                     onChange={(e) => handleFilterChange('shipping_status', e.target.value)}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
@@ -213,7 +213,26 @@ const Filter = ({closeModal}) => {
                                     {loadingOptions ? (
                                         <option disabled>Loading...</option>
                                     ) : (
-                                        filterOptions.statuses?.map(status => (
+                                        filterOptions.shipping_statuses?.map(status => (
+                                            <option key={status} value={status}>{status}</option>
+                                        ))
+                                    )}
+                                </select>
+                            </div>
+
+                            {/* Sale Status */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Sale Status</label>
+                                <select
+                                    value={pendingFilters.sale_status}
+                                    onChange={(e) => handleFilterChange('sale_status', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Statuses</option>
+                                    {loadingOptions ? (
+                                        <option disabled>Loading...</option>
+                                    ) : (
+                                        filterOptions.sale_statuses?.map(status => (
                                             <option key={status} value={status}>{status}</option>
                                         ))
                                     )}

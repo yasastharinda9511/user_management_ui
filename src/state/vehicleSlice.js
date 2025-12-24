@@ -192,6 +192,7 @@ const initialState = {
         model: '',
         year: '',
         shipping_status: '',
+        sale_status: '',
         priceRangeMin: '',
         priceRangeMax: '',
         dateRangeStart: '',
