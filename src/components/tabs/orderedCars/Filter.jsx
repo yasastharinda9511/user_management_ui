@@ -1,10 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
 import {
     applyFilters,
-    clearFilters,
     selectFilters,
     setCurrentPage,
-    setFilters,
     fetchAllOptions,
     selectFilterOptions,
     selectLoadingOptions

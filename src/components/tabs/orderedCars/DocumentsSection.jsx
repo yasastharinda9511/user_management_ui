@@ -70,15 +70,11 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
     };
 
     const handleView = async (documentId, filename) => {
-        console.log('handleView called with:', { documentId, filename, vehicleId });
         try {
             const response = await vehicleService.getVehicleDocumentUrl(vehicleId, documentId);
-            console.log('API response:', response);
             const url = response.data?.presigned_url || response.presigned_url;
-            console.log('Extracted URL:', url);
 
             if (url) {
-                console.log('Setting viewingPdf state:', { url, filename });
                 setViewingPdf({ url, filename });
             } else {
                 console.error('No URL found in response');
@@ -305,7 +301,6 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
             {/* PDF Viewer - Rendered via Portal */}
             {viewingPdf && ReactDOM.createPortal(
                 <>
-                    {console.log('Rendering PDFViewer with:', viewingPdf)}
                     <PDFViewer
                         pdfUrl={viewingPdf.url}
                         fileName={viewingPdf.filename}
