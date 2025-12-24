@@ -258,6 +258,8 @@ const vehicleSlice = createSlice({
                 model: '',
                 year: '',
                 shipping_status: '',
+                sale_status: '',
+                purchase_status: '',
                 priceRangeMin: '',
                 priceRangeMax: '',
                 dateRangeStart: '',
