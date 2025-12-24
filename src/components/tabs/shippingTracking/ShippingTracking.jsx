@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { Ship, Package, AlertCircle, Eye } from 'lucide-react';
+import { Ship, Package, AlertCircle, Eye, Filter as FilterIcon } from 'lucide-react';
 import { vehicleService } from '../../../api/index.js';
-import { useDispatch } from 'react-redux';
-import { updateVehicleShipping } from '../../../state/vehicleSlice.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateVehicleShipping, selectFilters } from '../../../state/vehicleSlice.js';
 import Notification from '../../common/Notification.jsx';
 import SelectedCarCard from '../orderedCars/SelectedCarCard.jsx';
+import Filter from '../orderedCars/Filter.jsx';
 
 const SHIPPING_STATUSES = [
     { id: 'PROCESSING', label: 'Processing', color: 'bg-orange-100 border-orange-300', textColor: 'text-orange-800' },
@@ -21,15 +22,21 @@ const ShippingTracking = () => {
     const [loading, setLoading] = useState(true);
     const [notification, setNotification] = useState({ show: false, type: '', title: '', message: '' });
     const [selectedCar, setSelectedCar] = useState(null);
+    const [showFilters, setShowFilters] = useState(false);
+    const filters = useSelector(selectFilters);
 
     useEffect(() => {
         fetchVehicles();
-    }, []);
+    }, [filters]);
 
     const fetchVehicles = async () => {
         try {
             setLoading(true);
-            const response = await vehicleService.getAllVehicles({ page: 1, limit: 1000 });
+            const response = await vehicleService.getAllVehicles({
+                page: 1,
+                limit: 1000,
+                filters: filters
+            });
 
             // Group vehicles by shipping status
             const grouped = SHIPPING_STATUSES.reduce((acc, status) => {
@@ -209,12 +216,23 @@ const ShippingTracking = () => {
                             </h1>
                             <p className="text-gray-600 mt-1">Drag and drop vehicles to update shipping status</p>
                         </div>
-                        <button
-                            onClick={fetchVehicles}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                            Refresh
-                        </button>
+                        <div className="flex items-center gap-2 relative">
+                            <button
+                                onClick={() => setShowFilters(!showFilters)}
+                                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+                            >
+                                <FilterIcon className="w-4 h-4" />
+                                Filters
+                            </button>
+                            <button
+                                onClick={fetchVehicles}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                                Refresh
+                            </button>
+                            {/* Filter Component */}
+                            {showFilters && <Filter closeModal={() => setShowFilters(false)} />}
+                        </div>
                     </div>
                 </div>
 

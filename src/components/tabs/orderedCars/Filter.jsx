@@ -87,14 +87,16 @@ const Filter = ({closeModal}) => {
 
     }
     return(
-        <div ref={filterRef} className="absolute right-0 top-full mt-2 w-full max-w-4xl z-50">
-            <div className="bg-white p-6 rounded-lg shadow-xl border max-h-[80vh] overflow-y-auto">
-                <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900">Filter Options</h3>
+        <div ref={filterRef} className="absolute right-0 top-full mt-2 w-[60vw] max-w-4xl z-50">
+            <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-2xl border border-gray-200 max-h-[80vh] overflow-y-auto backdrop-blur-sm" style={{
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.5)'
+            }}>
+                <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h3 className="text-xl font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">Filter Options</h3>
                     <div className="flex items-center gap-2">
                         <button
                             onClick={closeModal}
-                            className="text-gray-400 hover:text-gray-600 transition-colors"
+                            className="text-gray-400 hover:text-gray-600 transition-all hover:rotate-90 duration-300 p-2 rounded-lg hover:bg-gray-100"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -118,8 +120,11 @@ const Filter = ({closeModal}) => {
                     </div>
 
                     {/* Vehicle Details */}
-                    <div>
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Vehicle Details</h4>
+                    <div className="bg-white/50 p-4 rounded-lg shadow-sm border border-gray-100">
+                        <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                            <span className="w-1 h-4 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></span>
+                            Vehicle Details
+                        </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                             {/* Brand */}
                             <div>
@@ -250,8 +255,11 @@ const Filter = ({closeModal}) => {
                     </div>
 
                     {/* Price and Date Range */}
-                    <div>
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Price & Date Range</h4>
+                    <div className="bg-white/50 p-4 rounded-lg shadow-sm border border-gray-100">
+                        <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                            <span className="w-1 h-4 bg-gradient-to-b from-green-500 to-green-600 rounded-full"></span>
+                            Price & Date Range
+                        </h4>
                         <div className="space-y-4">
                             {/* Price Range */}
                             <div>
@@ -298,8 +306,11 @@ const Filter = ({closeModal}) => {
                     </div>
 
                     {/* Sorting */}
-                    <div>
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Sorting</h4>
+                    <div className="bg-white/50 p-4 rounded-lg shadow-sm border border-gray-100">
+                        <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                            <span className="w-1 h-4 bg-gradient-to-b from-purple-500 to-purple-600 rounded-full"></span>
+                            Sorting
+                        </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Order By */}
                             <div>
@@ -337,15 +348,20 @@ const Filter = ({closeModal}) => {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
+                <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-200">
                         <button
                             onClick={handleApplyFilters}
                             disabled={!hasChanges && !hasPendingActiveFilters}
-                            className={`px-6 py-2 text-sm font-medium rounded-lg transition-colors ${
+                            className={`px-8 py-3 text-sm font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg ${
                                 hasChanges || hasPendingActiveFilters
-                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600 shadow-blue-500/50'
+                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-gray-300/50'
                             }`}
+                            style={{
+                                boxShadow: hasChanges || hasPendingActiveFilters
+                                    ? '0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.05)'
+                                    : '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                            }}
                         >
                             {hasChanges ? 'Apply Filters' : 'Apply'}
                         </button>
@@ -353,7 +369,7 @@ const Filter = ({closeModal}) => {
 
                 <div className="flex items-center justify-between pt-4 mt-4 ">
                     {hasActiveFilters && (
-                        <div className="flex flex-wrap items-center gap-2 p-4 bg-blue-50 rounded-lg">
+                        <div className="flex flex-wrap items-center gap-2 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl shadow-inner border border-blue-100">
                             <span className="text-sm font-medium text-blue-800">Active Filters:</span>
                             {Object.entries(pendingFilters).map(([key, value]) => {
                                 if (typeof value === 'string' && value) {
@@ -375,7 +391,7 @@ const Filter = ({closeModal}) => {
                             })}
                             <button
                                 onClick={handlerClearFilters}
-                                className="text-sm text-red-600 hover:text-red-800 bg-red-100 font-medium ml-2 px-4 py-2 rounded-full transition-colors hover:bg-red-200"
+                                className="text-sm text-white font-bold ml-2 px-5 py-2 rounded-full transition-all transform hover:scale-105 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-lg shadow-red-500/30"
                             >
                                 Clear All
                             </button>
