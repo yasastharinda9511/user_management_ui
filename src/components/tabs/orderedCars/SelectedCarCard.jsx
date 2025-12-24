@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {useDispatch, useSelector} from "react-redux";
-import { Plus, History } from 'lucide-react';
+import { Plus, History, Download } from 'lucide-react';
 import {
     fetchVehicleById, selectSelectedCar,
     updateVehicle,
@@ -18,6 +18,7 @@ import { VehicleSections} from "./vehicleSections.jsx";
 import {vehicleService} from "../../../api/index.js";
 import SelectCustomerModal from "./SelectCustomerModal.jsx";
 import ViewCustomerModal from "./ViewCustomerModal.jsx";
+import ImageViewer from "../../common/ImageViewer.jsx";
 import ShippingHistory from "./ShippingHistory.jsx";
 
 const SelectedCarCard = ({id, closeModal, onSave}) => {
@@ -43,6 +44,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     const [showSelectCustomerModal, setShowSelectCustomerModal] = useState(false);
     const [showViewCustomerModal, setShowViewCustomerModal] = useState(false);
     const [showShippingHistory, setShowShippingHistory] = useState(false);
+    const [showImageViewer, setShowImageViewer] = useState(false);
 
     const selectedCar = useSelector(selectSelectedCar);
     const selectedCustomer = useSelector(selectSelectedCustomer);
@@ -492,6 +494,26 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         }
     };
 
+    const handleDownloadImage = async (imageIndex = null) => {
+        try {
+            const index = imageIndex !== null ? imageIndex : currentImageIndex;
+            const image = imageUrls[index];
+            const response = await fetch(image);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `vehicle-image-${index + 1}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error downloading image:', error);
+            showNotification('error', 'Download Failed', 'Failed to download image');
+        }
+    };
+
     return (
         <>
         <Notification
@@ -545,8 +567,19 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                             <img
                                                 src={imageUrls[currentImageIndex]}
                                                 alt={`${editedData.vehicle?.make || vehicle.current.make} ${editedData.vehicle?.model || vehicle.current.model} - Image ${currentImageIndex + 1}`}
-                                                className="w-full h-64 object-contain transition-opacity duration-300"
+                                                className="w-full h-64 object-contain transition-opacity duration-300 cursor-pointer hover:opacity-90"
+                                                onClick={() => setShowImageViewer(true)}
+                                                title="Click to view fullscreen"
                                             />
+
+                                            {/* Download Button */}
+                                            <button
+                                                onClick={handleDownloadImage}
+                                                className="absolute top-2 left-2 bg-white/80 hover:bg-white text-blue-600 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                                                title="Download Image"
+                                            >
+                                                <Download className="w-4 h-4" />
+                                            </button>
 
                                             {/* Navigation Arrows */}
                                             {imageUrls.length > 1 && (
@@ -587,21 +620,34 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                 {/* Thumbnail Bar */}
                                 <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
                                     {imageUrls.length > 0 && imageUrls.map((imageUrl, index) => (
-                                        <button
+                                        <div
                                             key={index}
-                                            onClick={() => setCurrentImageIndex(index)}
-                                            className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                                            className={`group relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
                                                 index === currentImageIndex
                                                     ? 'border-blue-600 ring-2 ring-blue-200'
                                                     : 'border-gray-300 hover:border-gray-400'
                                             }`}
+                                            onClick={() => setCurrentImageIndex(index)}
                                         >
                                             <img
                                                 src={imageUrl}
                                                 alt={`Thumbnail ${index + 1}`}
                                                 className="w-full h-full object-cover"
                                             />
-                                        </button>
+                                            {/* Download Overlay */}
+                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDownloadImage(index);
+                                                    }}
+                                                    className="p-2 bg-white/90 hover:bg-white rounded-full text-blue-600 transition-all transform hover:scale-110 shadow-lg"
+                                                    title="Download this image"
+                                                >
+                                                    <Download className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </div>
                                     ))}
 
                                     {/* Add Image Button */}
@@ -788,6 +834,15 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             <ShippingHistory
                 vehicleId={id}
                 onClose={() => setShowShippingHistory(false)}
+            />
+        )}
+
+        {/* Image Viewer */}
+        {showImageViewer && (
+            <ImageViewer
+                images={imageUrls}
+                initialIndex={currentImageIndex}
+                onClose={() => setShowImageViewer(false)}
             />
         )}
         </>
