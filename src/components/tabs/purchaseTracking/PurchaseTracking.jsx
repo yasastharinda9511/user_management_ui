@@ -37,7 +37,7 @@ const PurchaseTracking = () => {
                 filters: filters
             });
 
-            // Group vehicles by shipping status
+            // Group vehicles by purchase status
             const grouped = PURCHASE_STATUSES.reduce((acc, status) => {
                 acc[status.id] = [];
                 return acc;

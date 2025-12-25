@@ -16,7 +16,9 @@ import {
     Key,
     Ship,
     Car,
-    UserCircle, ShoppingCart
+    UserCircle,
+    ShoppingCart,
+    Building2
 } from 'lucide-react';
 import {PERMISSIONS} from "../../utils/permissions.js";
 
@@ -26,6 +28,7 @@ export const allTabs = [
     { path: '/purchase-tracking', label: 'Purchase Tracking', icon: ShoppingCart , requiredPermission: PERMISSIONS.CAR_TAB_ACCESS },
     { path: '/makes', label: 'Makes', icon: Car, requiredPermission: PERMISSIONS.CAR_TAB_ACCESS },
     { path: '/customers', label: 'Customers', icon: UserCircle, requiredPermission: PERMISSIONS.CUSTOMER_TAB_ACCESS },
+    { path: '/suppliers', label: 'Suppliers', icon: Building2, requiredPermission: PERMISSIONS.SUPPLIER_TAB_ACCESS },
     { path: '/dashboard', label: 'Dashboard', icon: Home, requiredPermission: PERMISSIONS.CAR_TAB_ACCESS },
     { path: '/users', label: 'Users', icon: Users , requiredPermission: PERMISSIONS.USER_TAB_ACCESS},
     { path: '/roles', label: 'Roles', icon: Shield , requiredPermission: PERMISSIONS.ROLE_TAB_ACCESS },

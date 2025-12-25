@@ -21,6 +21,7 @@ import Permissions from "./components/tabs/permissions/Permissions.jsx";
 import ShippingTracking from "./components/tabs/shippingTracking/ShippingTracking.jsx";
 import Makes from "./components/tabs/makes/Makes.jsx";
 import Customers from "./components/tabs/customers/Customers.jsx";
+import Suppliers from "./components/tabs/suppliers/Suppliers.jsx";
 import PurchaseTracking from "./components/tabs/purchaseTracking/PurchaseTracking.jsx";
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
                     <Route path="purchase-tracking" element={<PurchaseTracking />} />
                     <Route path="makes" element={<Makes />} />
                     <Route path="customers" element={<Customers />} />
+                    <Route path="suppliers" element={<Suppliers />} />
                     <Route path="users" element={<Users />} />
                     <Route path="roles" element={<Roles />} />
                     <Route path="permissions" element={<Permissions />} />

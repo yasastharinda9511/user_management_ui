@@ -12,6 +12,7 @@ export const RESOURCES ={
     PURCHASE : "purchase",
     CUSTOMERS : "customers",
     DOCUMENTS : "documents",
+    SUPPLIERS : "suppliers",
 }
 
 
