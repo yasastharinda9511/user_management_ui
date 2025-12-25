@@ -7,6 +7,7 @@ import { updateVehicleShipping, selectFilters } from '../../../state/vehicleSlic
 import Notification from '../../common/Notification.jsx';
 import SelectedCarCard from '../orderedCars/SelectedCarCard/SelectedCarCard.jsx';
 import Filter from '../orderedCars/Filter.jsx';
+import VehicleTrackerCard from "../../common/VehcleTrackerCard.jsx";
 
 const SHIPPING_STATUSES = [
     { id: 'PROCESSING', label: 'Processing', color: 'bg-orange-100 border-orange-300', textColor: 'text-orange-800' },
@@ -263,7 +264,7 @@ const ShippingTracking = () => {
                                         >
                                             {columns[status.id]?.length > 0 ? (
                                                 columns[status.id].map((vehicle, index) => (
-                                                    <VehicleCard key={vehicle.vehicle.id} vehicle={vehicle} index={index} />
+                                                    <VehicleTrackerCard key={vehicle.vehicle.id} vehicle={vehicle} index={index} handleViewDetails={() =>handleViewDetails(vehicle)} />
                                                 ))
                                             ) : (
                                                 <div className="flex flex-col items-center justify-center h-32 text-gray-400">
