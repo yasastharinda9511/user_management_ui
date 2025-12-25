@@ -200,6 +200,7 @@ const initialState = {
         color: '',
         transmission: '',
         fuelType: '',
+        supplier_id:'',
         order_by: 'id',
         sort: 'ASC'
     },
@@ -267,6 +268,7 @@ const vehicleSlice = createSlice({
                 color: '',
                 transmission: '',
                 fuelType: '',
+                supplier_id: '',
                 order_by: 'id',
                 sort: 'ASC'
             };

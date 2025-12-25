@@ -9,6 +9,7 @@ import {
 } from "../../../state/vehicleSlice.js";
 import React, {useEffect, useState, useRef} from "react";
 import {X, Search, Car, ChevronLeft} from 'lucide-react';
+import {selectSuppliers, selectLoading, fetchSuppliers} from "../../../state/supplierSlice.js";
 
 
 const Filter = ({closeModal}) => {
@@ -16,6 +17,8 @@ const Filter = ({closeModal}) => {
     const appliedFilters = useSelector(selectFilters);
     const filterOptions = useSelector(selectFilterOptions);
     const loadingOptions = useSelector(selectLoadingOptions);
+    const loadingSuppliers = useSelector(selectLoading);
+    const suppliers = useSelector(selectSuppliers);
     const filterRef = useRef(null);
 
     const [pendingFilters, setPendingFilters] = useState(appliedFilters);
@@ -24,6 +27,7 @@ const Filter = ({closeModal}) => {
     // Fetch filter options on mount
     useEffect(() => {
         dispatch(fetchAllOptions());
+        dispatch(fetchSuppliers({ page :1, limit : 100, search :'' }));
     }, [dispatch]);
 
     // Handle ESC key to close filter
@@ -238,6 +242,7 @@ const Filter = ({closeModal}) => {
                                 </select>
                             </div>
 
+                            {/* Purchase Status */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Purchase Status</label>
                                 <select
@@ -256,36 +261,64 @@ const Filter = ({closeModal}) => {
                                 </select>
                             </div>
 
+                            {/* Suppliers */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
+                                <select
+                                    value={pendingFilters.supplier_id}
+                                    onChange={(e) => handleFilterChange('supplier_id', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Suppliers</option>
+                                    {loadingSuppliers ? (
+                                        <option disabled>Loading...</option>
+                                    ) : (
+                                        suppliers?.map(supplier => (
+                                            <option key={supplier.id} value={supplier.id}>{supplier.supplier_name}</option>
+                                        ))
+                                    )}
+                                </select>
+                            </div>
+
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
-                            <select
-                                value={pendingFilters.year}
-                                onChange={(e) => handleFilterChange('year', e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="">All Years</option>
-                                {filterOptions.years.map(year => (
-                                    <option key={year} value={year}>{year}</option>
-                                ))}
-                            </select>
-                        </div>
 
-                        {/* Color */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
-                            <select
-                                value={pendingFilters.color}
-                                onChange={(e) => handleFilterChange('color', e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="">All Colors</option>
-                                {filterOptions.colors.map(color => (
-                                    <option key={color} value={color}>{color}</option>
-                                ))}
-                            </select>
+                    {/* Year & Color */}
+                    <div className="bg-white/50 p-4 rounded-lg shadow-sm border border-gray-100">
+                        <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                            <span className="w-1 h-4 bg-gradient-to-b from-yellow-500 to-yellow-600 rounded-full"></span>
+                            Year & Color
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Year */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                                <select
+                                    value={pendingFilters.year}
+                                    onChange={(e) => handleFilterChange('year', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Years</option>
+                                    {filterOptions.years.map(year => (
+                                        <option key={year} value={year}>{year}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Color */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                                <select
+                                    value={pendingFilters.color}
+                                    onChange={(e) => handleFilterChange('color', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">All Colors</option>
+                                    {filterOptions.colors.map(color => (
+                                        <option key={color} value={color}>{color}</option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
                     </div>
 
