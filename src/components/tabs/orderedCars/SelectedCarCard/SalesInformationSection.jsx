@@ -1,6 +1,6 @@
 import EditableField from "../EditableField.jsx";
 import {formatDate, formatCurrency} from "../../../../utils/common.js";
-import {fetchCustomerById, selectLoadingCustomer, selectSelectedCustomer} from "../../../../state/customerSlice.js";
+import {fetchCustomerById, selectLoadingCustomer, selectSelectedCustomer, clearSelectedCustomer} from "../../../../state/customerSlice.js";
 import {useDispatch, useSelector} from "react-redux";
 import {useState, useEffect} from "react";
 
@@ -14,11 +14,16 @@ const SalesInformationSection = ({editedData, editingSection, sales, updateField
     // Fetch customer details when customer_id changes
     useEffect(() => {
         const customerId = editedData.sales?.customer_id;
+
         if (customerId && (!customer || customer.customer_id !== customerId)) {
-            console.log("called api call customer id is :" + customerId);
+            console.log("Fetching customer with ID:", customerId);
             dispatch(fetchCustomerById(customerId));
+        } else if (!customerId) {
+            // Clear customer state when no customer_id exists
+            console.log("No customer_id, clearing customer state");
+            dispatch(clearSelectedCustomer());
         }
-    }, [editedData.sales?.customer_id]);
+    }, [editedData.sales?.customer_id, dispatch]);
 
     return (
         <div className="space-y-3">

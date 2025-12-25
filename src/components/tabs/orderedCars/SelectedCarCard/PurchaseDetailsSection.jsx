@@ -1,10 +1,16 @@
 import {useEffect} from "react";
 import EditableField from "../EditableField.jsx";
 import {formatCurrency, formatDate} from "../../../../utils/common.js";
-import {fetchSupplierById, selectLoadingSupplier, selectSelectedSupplier} from "../../../../state/supplierSlice.js";
+import {
+    clearSelectedSupplier,
+    fetchSupplierById,
+    selectLoadingSupplier,
+    selectSelectedSupplier
+} from "../../../../state/supplierSlice.js";
 import {useDispatch, useSelector} from "react-redux";
+import {History} from "lucide-react";
 
-const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateField, onSelectChangeSupplier })=>{
+const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateField, onSelectChangeSupplier, onShowPurchaseHistory })=>{
 
     const dispatch = useDispatch();
     const loadingSupplier = useSelector(selectLoadingSupplier);
@@ -13,14 +19,30 @@ const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateFie
     // Fetch supplier details when supplier_id changes
     useEffect(() => {
         const supplierId = editedData.purchase?.supplier_id;
+
         if (supplierId && (!supplier || supplier.supplier_id !== supplierId)) {
-            console.log("called api call supplier id is :" + supplierId);
             dispatch(fetchSupplierById(supplierId));
+        } else if (!supplierId) {
+            dispatch(clearSelectedSupplier());
         }
-    }, [editedData.purchase?.supplier_id]);
+    }, [editedData.purchase?.supplier_id, dispatch]);
 
     return (
         <div className="space-y-3">
+            {/* Purchase History Button */}
+            {onShowPurchaseHistory && (
+                <div className="flex justify-end mb-2">
+                    <button
+                        onClick={onShowPurchaseHistory}
+                        className="inline-flex items-center px-3 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
+                        type="button"
+                    >
+                        <History className="w-4 h-4 mr-2" />
+                        View Purchase History
+                    </button>
+                </div>
+            )}
+
             <EditableField
                 label="Purchase Date"
                 value={formatDate(editedData.purchase?.purchase_date || purchase.purchase_date)}
@@ -113,37 +135,33 @@ const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateFie
                 {/* Display supplier details (read-only) */}
                 {loadingSupplier ? (
                     <p className="text-sm text-gray-500">Loading supplier details...</p>
-                ) : supplier ? (
+                ) : (
                     <div className="space-y-2 bg-gray-50 p-3 rounded border border-gray-200">
                         <div className="flex justify-between">
                             <span className="text-sm text-gray-600">Name:</span>
                             <span className="text-sm font-medium text-gray-900">
-                                {supplier.supplier_name}
+                                {supplier?.supplier_name || "N/A"}
                             </span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-sm text-gray-600">Email:</span>
                             <span className="text-sm font-medium text-gray-900">
-                                {supplier.email || 'N/A'}
+                                {supplier?.email || 'N/A'}
                             </span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-sm text-gray-600">Phone:</span>
                             <span className="text-sm font-medium text-gray-900">
-                                {supplier.contact_number || 'N/A'}
+                                {supplier?.contact_number || 'N/A'}
                             </span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-sm text-gray-600">Country:</span>
                             <span className="text-sm font-medium text-gray-900">
-                                {supplier.country || 'N/A'}
+                                {supplier?.country || 'N/A'}
                             </span>
                         </div>
                     </div>
-                ) : (
-                    <p className="text-sm text-gray-500">
-                        {editingSection !== null ? 'Click "Assign Supplier" to select a supplier for this purchase' : 'No supplier assigned'}
-                    </p>
                 )}
             </div>
         </div>

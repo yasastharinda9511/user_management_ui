@@ -22,6 +22,7 @@ import SelectSupplierModal from "../SelectSupplierModal.jsx";
 import ViewCustomerModal from "../ViewCustomerModal.jsx";
 import ImageViewer from "../../../common/ImageViewer.jsx";
 import ShippingHistory from "../ShippingHistory.jsx";
+import PurchaseHistory from "../PurchaseHistory.jsx";
 
 const SelectedCarCard = ({id, closeModal, onSave}) => {
     const dispatch = useDispatch();
@@ -47,6 +48,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     const [showViewCustomerModal, setShowViewCustomerModal] = useState(false);
     const [showSelectSupplierModal, setShowSelectSupplierModal] = useState(false);
     const [showShippingHistory, setShowShippingHistory] = useState(false);
+    const [showPurchaseHistory, setShowPurchaseHistory] = useState(false);
     const [showImageViewer, setShowImageViewer] = useState(false);
 
     const selectedCar = useSelector(selectSelectedCar);
@@ -109,6 +111,11 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         // Update the editedData with the new supplier_id
         updateField('purchase', 'supplier_id', supplierId);
         showNotification('success', 'Supplier Updated', 'Supplier has been assigned to this purchase');
+    };
+
+    // Handle opening purchase history modal
+    const handleShowPurchaseHistory = () => {
+        setShowPurchaseHistory(true);
     };
 
     // Minimum swipe distance (in px)
@@ -224,6 +231,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             showNotification,
             onSelectChangeCustomer: handleSelectChangeCustomer,
             onSelectChangeSupplier: handleSelectChangeSupplier,
+            onShowPurchaseHistory: handleShowPurchaseHistory,
             vehicleId: id
         }));
     }, [editingSection, editedData])
@@ -868,6 +876,14 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             <ShippingHistory
                 vehicleId={id}
                 onClose={() => setShowShippingHistory(false)}
+            />
+        )}
+
+        {/* Purchase History Modal */}
+        {showPurchaseHistory && (
+            <PurchaseHistory
+                vehicleId={id}
+                onClose={() => setShowPurchaseHistory(false)}
             />
         )}
 

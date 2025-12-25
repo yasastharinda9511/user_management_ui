@@ -195,6 +195,16 @@ const vehicleService = {
     },
 
     /**
+     * Get purchase history for a vehicle
+     * @param {number} vehicleId - Vehicle ID
+     * @returns {Promise} - Purchase history data
+     */
+    getVehiclePurchaseHistory: async (vehicleId) => {
+        const response = await carServiceApi.get(`/vehicles/purchase/history/${vehicleId}`);
+        return response.data;
+    },
+
+    /**
      * Upload LC document for a vehicle
      * @param {number} vehicleId - Vehicle ID
      * @param {File} file - LC document file
