@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Upload, FileText, Download, Trash2, Eye, X, File } from 'lucide-react';
-import { vehicleService } from '../../../api/index.js';
-import {getAllDocumentTypes, getDocumentColor, getDocumentIcon} from "../../../utils/documetsUtil.jsx";
-import PDFViewer from '../../common/PDFViewer.jsx';
+import { vehicleService } from '../../../../api/index.js';
+import {getAllDocumentTypes, getDocumentColor, getDocumentIcon} from "../../../../utils/documetsUtil.jsx";
+import PDFViewer from '../../../common/PDFViewer.jsx';
 
 const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
     const [uploading, setUploading] = useState(false);

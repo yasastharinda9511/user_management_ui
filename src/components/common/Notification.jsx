@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SelectedCarCard from "../tabs/orderedCars/SelectedCarCard.jsx";
+import SelectedCarCard from "../tabs/orderedCars/SelectedCarCard/SelectedCarCard.jsx";
 
 const Notification = ({
                           type = 'error',

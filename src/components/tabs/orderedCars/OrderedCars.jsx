@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Car, ChevronLeft, ChevronRight, Plus, Grid, List } from 'lucide-react';
 import CreateVehicle from "./CreateVehicle.jsx";
-import SelectedCarCard from "./SelectedCarCard.jsx";
+import SelectedCarCard from "./SelectedCarCard/SelectedCarCard.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {
     fetchVehicles,

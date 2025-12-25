@@ -5,7 +5,7 @@ import { vehicleService } from '../../../api/index.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateVehicleShipping, selectFilters } from '../../../state/vehicleSlice.js';
 import Notification from '../../common/Notification.jsx';
-import SelectedCarCard from '../orderedCars/SelectedCarCard.jsx';
+import SelectedCarCard from '../orderedCars/SelectedCarCard/SelectedCarCard.jsx';
 import Filter from '../orderedCars/Filter.jsx';
 
 const SHIPPING_STATUSES = [

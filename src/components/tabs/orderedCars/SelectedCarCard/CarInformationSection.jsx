@@ -1,0 +1,127 @@
+import EditableField from "../EditableField.jsx";
+import React from "react";
+
+
+const CarInformationSection = ({editedData, editingSection, vehicle, updateField }) => {
+    
+    return (
+        <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+            <EditableField
+                label="Make"
+                value={editedData.vehicle?.make || vehicle.make}
+                section="vehicle"
+                field="make"
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.make || vehicle.make || ''}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Model"
+                value={editedData.vehicle?.model || vehicle.model}
+                section="vehicle"
+                field="model"
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.model || vehicle.model || ''}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Year"
+                value={editedData.vehicle?.year_of_manufacture || vehicle.year_of_manufacture}
+                section="vehicle"
+                field="year_of_manufacture"
+                type="number"
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.year_of_manufacture || vehicle.year_of_manufacture || ''}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Color"
+                value={editedData.vehicle?.color || vehicle.color}
+                section="vehicle"
+                field="color"
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.color || vehicle.color || ''}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Trim Level"
+                value={editedData.vehicle?.trim_level || vehicle.trim_level}
+                section="vehicle"
+                field="trim_level"
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.trim_level || vehicle.trim_level || ''}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Mileage (km)"
+                value={editedData.vehicle?.mileage_km ? `${editedData.vehicle.mileage_km.toLocaleString()} km` : (vehicle.mileage_km ? `${vehicle.mileage_km.toLocaleString()} km` : 'N/A')}
+                section="vehicle"
+                field="mileage_km"
+                type="number"
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.mileage_km || vehicle.mileage_km || 0}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Condition"
+                value={editedData.vehicle?.condition_status || vehicle.condition_status}
+                section="vehicle"
+                field="condition_status"
+                options={['REGISTERED', 'UNREGISTERED']}
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.condition_status || vehicle.condition_status || 'UNREGISTERED'}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Auction Grade"
+                value={editedData.vehicle?.auction_grade || vehicle.auction_grade}
+                section="vehicle"
+                field="auction_grade"
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.auction_grade || vehicle.auction_grade || ''}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Vehicle Code"
+                value={`ORD-${editedData.vehicle?.code || vehicle.code || 'N/A'}`}
+                section="vehicle"
+                field="code"
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.code || vehicle.code || ''}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Chassis Number"
+                value={editedData.vehicle?.chassis_id || vehicle.chassis_id}
+                section="vehicle"
+                field="chassis_id"
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.chassis_id || vehicle.chassis_id || ''}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Vehicle ID"
+                value={editedData.vehicle?.id || vehicle.id}
+                section="vehicle"
+                field="id"
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.id || vehicle.id || ''}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Currency"
+                value={editedData.vehicle?.currency || vehicle.currency}
+                section="vehicle"
+                field="currency"
+                options={['JPY', 'USD', 'LKR', 'EUR']}
+                isEditing={editingSection !== null}
+                currentValue={editedData.vehicle?.currency || vehicle.currency || 'LKR'}
+                updateField={updateField}
+            />
+        </div>
+    );
+
+};
+
+
+export default CarInformationSection;
