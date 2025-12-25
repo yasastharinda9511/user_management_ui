@@ -74,7 +74,7 @@ export const VehicleSections = ({
             color: "bg-purple-50",
             sectionKey: "sales",
             requiredPermission: `${RESOURCES.SALES}.${ACTIONS.ACCESS}`,
-            content: (<SalesInformationSection editedData={editedData} editingSection={editingSection} sales={sales} updateField={updateField} showNotification={showNotification} onSelectChangeCustomer={onSelectChangeCustomer} />)
+            content: (<SalesInformationSection editedData={editedData} editingSection={editingSection} sales={sales} updateField={updateField} onSelectChangeCustomer={onSelectChangeCustomer} />)
         },
         {
             title: SELECTED_VEHICLE_CARD_OPTIONS.DOCUMENTS,

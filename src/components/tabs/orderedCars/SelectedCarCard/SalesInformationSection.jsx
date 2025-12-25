@@ -1,32 +1,24 @@
 import EditableField from "../EditableField.jsx";
 import {formatDate, formatCurrency} from "../../../../utils/common.js";
-import {fetchCustomerById} from "../../../../state/customerSlice.js";
-import {useDispatch} from "react-redux";
-import {useState} from "react";
-import {Eye} from "lucide-react";
+import {fetchCustomerById, selectLoadingCustomer, selectSelectedCustomer} from "../../../../state/customerSlice.js";
+import {useDispatch, useSelector} from "react-redux";
+import {useState, useEffect} from "react";
 
 
-const SalesInformationSection = ({editedData, editingSection, sales, updateField, showNotification, onSelectChangeCustomer }) => {
+const SalesInformationSection = ({editedData, editingSection, sales, updateField, onSelectChangeCustomer }) => {
 
     const dispatch = useDispatch();
-    const [showViewCustomerModal, setShowViewCustomerModal] = useState(false);
+    const loadingCustomer = useSelector(selectLoadingCustomer);
+    const customer = useSelector(selectSelectedCustomer);
 
-    const handleViewCustomer = async (customerId) => {
-        if (!customerId) {
-            showNotification('warning', 'No Customer', 'No customer assigned to this sale');
-            return;
+    // Fetch customer details when customer_id changes
+    useEffect(() => {
+        const customerId = editedData.sales?.customer_id;
+        if (customerId && (!customer || customer.customer_id !== customerId)) {
+            console.log("called api call customer id is :" + customerId);
+            dispatch(fetchCustomerById(customerId));
         }
-
-        try {
-            console.log('Fetching customer with ID:', customerId);
-            await dispatch(fetchCustomerById(customerId)).unwrap();
-            setShowViewCustomerModal(true);
-        } catch (error) {
-            console.error('Failed to load customer:', error);
-            showNotification('error', 'Error', 'Failed to load customer details: ' + error);
-        }
-    };
-
+    }, [editedData.sales?.customer_id]);
 
     return (
         <div className="space-y-3">
@@ -76,7 +68,7 @@ const SalesInformationSection = ({editedData, editingSection, sales, updateField
                 <div className="flex justify-between items-start mb-2">
                     <span className="text-sm font-medium text-gray-700">Customer Information</span>
                     {(editedData.sales?.customer_id || sales.customer_id) && (
-                        editingSection !== null ? (
+                        editingSection !== null && (
                             // Edit mode - show select/change button
                             onSelectChangeCustomer && (
                                 <button
@@ -85,18 +77,6 @@ const SalesInformationSection = ({editedData, editingSection, sales, updateField
                                     type="button"
                                 >
                                     Select/Change Customer
-                                </button>
-                            )
-                        ) : (
-                            // View mode - show eye icon to view details
-                            (
-                                <button
-                                    onClick={() => handleViewCustomer(editedData.sales?.customer_id || sales.customer_id)}
-                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                                    type="button"
-                                    title="View customer details"
-                                >
-                                    <Eye className="w-4 h-4" />
                                 </button>
                             )
                         )
@@ -111,23 +91,40 @@ const SalesInformationSection = ({editedData, editingSection, sales, updateField
                         </button>
                     )}
                 </div>
-                <EditableField
-                    label="Customer ID"
-                    value={editedData.sales?.customer_id || sales.customer_id || 'Not assigned'}
-                    section="sales"
-                    field="customer_id"
-                    type="number"
-                    isEditing={editingSection !== null}
-                    currentValue={editedData.sales?.customer_id || sales.customer_id || ''}
-                    updateField={updateField}
-                />
-                {(editedData.sales?.customer_id || sales.customer_id) ? (
-                    <p className="text-xs text-gray-500 mt-1">
-                        {editingSection !== null ? 'Click the button above to change the customer' : 'Click the eye icon to view customer details'}
-                    </p>
-                ) : editingSection !== null && (
-                    <p className="text-xs text-gray-500 mt-1">
-                        Click "Assign Customer" to select a customer for this sale
+
+                {/* Display customer details (read-only) */}
+                {loadingCustomer ? (
+                    <p className="text-sm text-gray-500">Loading customer details...</p>
+                ) : customer ? (
+                    <div className="space-y-2 bg-gray-50 p-3 rounded border border-gray-200">
+                        <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Name:</span>
+                            <span className="text-sm font-medium text-gray-900">
+                                {customer.customer_title} {customer.customer_name}
+                            </span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Email:</span>
+                            <span className="text-sm font-medium text-gray-900">
+                                {customer.email || 'N/A'}
+                            </span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Phone:</span>
+                            <span className="text-sm font-medium text-gray-900">
+                                {customer.contact_number || 'N/A'}
+                            </span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Type:</span>
+                            <span className="text-sm font-medium text-gray-900">
+                                {customer.customer_type || 'N/A'}
+                            </span>
+                        </div>
+                    </div>
+                ) : (
+                    <p className="text-sm text-gray-500">
+                        {editingSection !== null ? 'Click "Assign Customer" to select a customer for this sale' : 'No customer assigned'}
                     </p>
                 )}
             </div>

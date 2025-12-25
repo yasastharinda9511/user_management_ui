@@ -8,7 +8,7 @@ import {
     updateVehicleShipping,
     updateVehicleSales
 } from "../../../../state/vehicleSlice.js";
-import { fetchCustomerById, selectSelectedCustomer, selectLoadingCustomer, clearSelectedCustomer } from "../../../../state/customerSlice.js";
+import { selectSelectedCustomer, selectLoadingCustomer, clearSelectedCustomer } from "../../../../state/customerSlice.js";
 import Notification from "../../../common/Notification.jsx"
 import {SELECTED_VEHICLE_CARD_OPTIONS} from "../../../common/Costants.js";
 import {hasPermission} from "../../../../utils/permissionUtils.js";
@@ -214,22 +214,6 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         purchase.current = selectedCar.vehicle_purchase;
         images.current = selectedCar.vehicle_image;
         documents.current = selectedCar.vehicle_documents;
-
-
-        setSections(VehicleSections({
-            permissions,
-            editedData,
-            vehicle :vehicle.current,
-            shipping : shipping.current,
-            financials :financials.current,
-            sales : sales.current,
-            purchase :purchase.current,
-            documents :documents.current,
-            editingSection,
-            updateField,
-            onSelectChangeCustomer: handleSelectChangeCustomer,
-            vehicleId: id
-        }));
 
         setEditedData({
             vehicle: { ...vehicle.current },
