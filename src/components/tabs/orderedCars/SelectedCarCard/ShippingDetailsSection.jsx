@@ -1,11 +1,26 @@
 import EditableField from "../EditableField.jsx";
 import {formatDate} from "../../../../utils/common.js";
+import {History} from "lucide-react";
 
 
-const ShippingDetailsSection = ({editedData, editingSection, shipping, updateField}) =>{
+const ShippingDetailsSection = ({editedData, editingSection, shipping, updateField, onShowShippingHistory}) =>{
 
     return(
         <div className="space-y-3">
+            {/* Shipping History Button */}
+            {onShowShippingHistory && (
+                <div className="flex justify-end mb-2">
+                    <button
+                        onClick={onShowShippingHistory}
+                        className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                        type="button"
+                    >
+                        <History className="w-4 h-4 mr-2" />
+                        View Shipping History
+                    </button>
+                </div>
+            )}
+
             <EditableField
                 label="Vessel"
                 value={editedData.shipping?.vessel_name || shipping.vessel_name}

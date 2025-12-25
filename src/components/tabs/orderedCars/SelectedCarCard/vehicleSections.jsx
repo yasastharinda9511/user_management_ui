@@ -39,6 +39,7 @@ export const VehicleSections = ({
     onSelectChangeCustomer,
     onSelectChangeSupplier,
     onShowPurchaseHistory,
+    onShowShippingHistory,
     vehicleId
 }) => {
 
@@ -55,7 +56,7 @@ export const VehicleSections = ({
             color: "bg-yellow-50",
             sectionKey: "shipping",
             requiredPermission: `${RESOURCES.SHIPPING}.${ACTIONS.ACCESS}`,
-            content: (<ShippingDetailsSection editedData={editedData} updateField={updateField} editingSection={editingSection} shipping={shipping} />)
+            content: (<ShippingDetailsSection editedData={editedData} updateField={updateField} editingSection={editingSection} shipping={shipping} onShowShippingHistory={onShowShippingHistory} />)
         },
         {
             title: SELECTED_VEHICLE_CARD_OPTIONS.PURCHASE_DETAILS,

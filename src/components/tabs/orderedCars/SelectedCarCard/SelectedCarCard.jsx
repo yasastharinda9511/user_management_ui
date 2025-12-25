@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {useDispatch, useSelector} from "react-redux";
-import { Plus, History, Download } from 'lucide-react';
+import { Plus, History, Download, ShoppingCart } from 'lucide-react';
 import {
     fetchVehicleById, selectSelectedCar,
     updateVehicle,
@@ -118,6 +118,11 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         setShowPurchaseHistory(true);
     };
 
+    // Handle opening shipping history modal
+    const handleShowShippingHistory = () => {
+        setShowShippingHistory(true);
+    };
+
     // Minimum swipe distance (in px)
     const minSwipeDistance = 50;
 
@@ -232,6 +237,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             onSelectChangeCustomer: handleSelectChangeCustomer,
             onSelectChangeSupplier: handleSelectChangeSupplier,
             onShowPurchaseHistory: handleShowPurchaseHistory,
+            onShowShippingHistory: handleShowShippingHistory,
             vehicleId: id
         }));
     }, [editingSection, editedData])
@@ -538,11 +544,19 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                             <h2 className="text-2xl font-bold text-gray-900">Deal Details</h2>
                             <button
                                 onClick={() => setShowShippingHistory(true)}
-                                className="flex items-center space-x-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                                className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
                                 title="View shipping history"
                             >
-                                <History className="w-4 h-4" />
-                                <span>Shipping History</span>
+                                <History className="w-3.5 h-3.5" />
+                                <span>Shipping</span>
+                            </button>
+                            <button
+                                onClick={() => setShowPurchaseHistory(true)}
+                                className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
+                                title="View purchase history"
+                            >
+                                <ShoppingCart className="w-3.5 h-3.5" />
+                                <span>Purchase</span>
                             </button>
                         </div>
                         <button

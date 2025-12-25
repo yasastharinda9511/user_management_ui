@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Car, Truck, Package, Eye, MapPin, Ship, History, ChevronLeft, ChevronRight, Trash2} from 'lucide-react';
+import { Car, Truck, Package, Eye, MapPin, Ship, History, ChevronLeft, ChevronRight, Trash2, ShoppingCart} from 'lucide-react';
 import { useSelector } from 'react-redux';
 import {getStatusColor} from "../../common/CommonLogics.js";
 import config from "../../../configs/config.json";
 import AuthImage from "../../common/AuthImage.jsx";
 import {carServiceApi, vehicleService} from "../../../api/index.js";
 import ShippingHistory from "./ShippingHistory.jsx";
+import PurchaseHistory from "./PurchaseHistory.jsx";
 import ConfirmationModal from "../../common/ConfirmationModal.jsx";
 import { selectPermissions } from "../../../state/authSlice.js";
 import { hasPermission } from "../../../utils/permissionUtils.js";
@@ -15,6 +16,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     const [imageUrls, setImageUrls] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showShippingHistory, setShowShippingHistory] = useState(false);
+    const [showPurchaseHistory, setShowPurchaseHistory] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const permissions = useSelector(selectPermissions);
 
@@ -179,6 +181,16 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                         >
                                             <History className="w-4 h-4" />
                                         </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setShowPurchaseHistory(true);
+                                            }}
+                                            className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"
+                                            title="View purchase history"
+                                        >
+                                            <ShoppingCart className="w-4 h-4" />
+                                        </button>
                                     </div>
                                 </div>
 
@@ -253,6 +265,14 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                     <ShippingHistory
                         vehicleId={car.vehicle.id}
                         onClose={() => setShowShippingHistory(false)}
+                    />
+                )}
+
+                {/* Purchase History Modal */}
+                {showPurchaseHistory && (
+                    <PurchaseHistory
+                        vehicleId={car.vehicle.id}
+                        onClose={() => setShowPurchaseHistory(false)}
                     />
                 )}
 
@@ -348,6 +368,16 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                         >
                             <History className="w-4 h-4" />
                         </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowPurchaseHistory(true);
+                            }}
+                            className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"
+                            title="View purchase history"
+                        >
+                            <ShoppingCart className="w-4 h-4" />
+                        </button>
                     </div>
                 </div>
 
@@ -417,6 +447,14 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 <ShippingHistory
                     vehicleId={car.vehicle.id}
                     onClose={() => setShowShippingHistory(false)}
+                />
+            )}
+
+            {/* Purchase History Modal */}
+            {showPurchaseHistory && (
+                <PurchaseHistory
+                    vehicleId={car.vehicle.id}
+                    onClose={() => setShowPurchaseHistory(false)}
                 />
             )}
 
