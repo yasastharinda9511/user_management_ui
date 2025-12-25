@@ -9,6 +9,7 @@ import {
     updateVehicleSales
 } from "../../../../state/vehicleSlice.js";
 import { selectSelectedCustomer, selectLoadingCustomer, clearSelectedCustomer } from "../../../../state/customerSlice.js";
+import { selectSelectedSupplier, selectLoadingSupplier, clearSelectedSupplier } from "../../../../state/supplierSlice.js";
 import Notification from "../../../common/Notification.jsx"
 import {SELECTED_VEHICLE_CARD_OPTIONS} from "../../../common/Costants.js";
 import {hasPermission} from "../../../../utils/permissionUtils.js";
@@ -17,6 +18,7 @@ import {selectPermissions} from "../../../../state/authSlice.js";
 import { VehicleSections} from "./vehicleSections.jsx";
 import {vehicleService} from "../../../../api/index.js";
 import SelectCustomerModal from "../SelectCustomerModal.jsx";
+import SelectSupplierModal from "../SelectSupplierModal.jsx";
 import ViewCustomerModal from "../ViewCustomerModal.jsx";
 import ImageViewer from "../../../common/ImageViewer.jsx";
 import ShippingHistory from "../ShippingHistory.jsx";
@@ -43,12 +45,15 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     const [sections, setSections] = useState([]);
     const [showSelectCustomerModal, setShowSelectCustomerModal] = useState(false);
     const [showViewCustomerModal, setShowViewCustomerModal] = useState(false);
+    const [showSelectSupplierModal, setShowSelectSupplierModal] = useState(false);
     const [showShippingHistory, setShowShippingHistory] = useState(false);
     const [showImageViewer, setShowImageViewer] = useState(false);
 
     const selectedCar = useSelector(selectSelectedCar);
     const selectedCustomer = useSelector(selectSelectedCustomer);
     const loadingCustomer = useSelector(selectLoadingCustomer);
+    const selectedSupplier = useSelector(selectSelectedSupplier);
+    const loadingSupplier = useSelector(selectLoadingSupplier);
 
     let vehicle = useRef({});
     let shipping = useRef({});
@@ -86,6 +91,24 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         // Update the editedData with the new customer_id
         updateField('sales', 'customer_id', customerId);
         showNotification('success', 'Customer Updated', 'Customer has been assigned to this sale');
+    };
+
+    // Handle opening supplier selection modal (edit mode)
+    const handleSelectChangeSupplier = () => {
+        setShowSelectSupplierModal(true);
+    };
+
+    const handleCloseSelectSupplierModal = () => {
+        setShowSelectSupplierModal(false);
+        dispatch(clearSelectedSupplier());
+    };
+
+    // Handle supplier selection - update the purchase data with new supplier_id
+    const handleSelectSupplier = (supplierId) => {
+        console.log('Supplier selected:', supplierId);
+        // Update the editedData with the new supplier_id
+        updateField('purchase', 'supplier_id', supplierId);
+        showNotification('success', 'Supplier Updated', 'Supplier has been assigned to this purchase');
     };
 
     // Minimum swipe distance (in px)
@@ -200,6 +223,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             updateField,
             showNotification,
             onSelectChangeCustomer: handleSelectChangeCustomer,
+            onSelectChangeSupplier: handleSelectChangeSupplier,
             vehicleId: id
         }));
     }, [editingSection, editedData])
@@ -827,6 +851,15 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                 currentCustomerId={editedData.sales?.customer_id || sales.current.customer_id}
                 onSelect={handleSelectCustomer}
                 onClose={handleCloseSelectCustomerModal}
+            />
+        )}
+
+        {/* Select Supplier Modal (Edit Mode) */}
+        {showSelectSupplierModal && (
+            <SelectSupplierModal
+                currentSupplierId={editedData.purchase?.supplier_id || purchase.current.supplier_id}
+                onSelect={handleSelectSupplier}
+                onClose={handleCloseSelectSupplierModal}
             />
         )}
 

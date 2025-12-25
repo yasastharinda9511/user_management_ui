@@ -1,8 +1,23 @@
-import {Component} from "react";
+import {useEffect} from "react";
 import EditableField from "../EditableField.jsx";
 import {formatCurrency, formatDate} from "../../../../utils/common.js";
+import {fetchSupplierById, selectLoadingSupplier, selectSelectedSupplier} from "../../../../state/supplierSlice.js";
+import {useDispatch, useSelector} from "react-redux";
 
-const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateField })=>{
+const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateField, onSelectChangeSupplier })=>{
+
+    const dispatch = useDispatch();
+    const loadingSupplier = useSelector(selectLoadingSupplier);
+    const supplier = useSelector(selectSelectedSupplier);
+
+    // Fetch supplier details when supplier_id changes
+    useEffect(() => {
+        const supplierId = editedData.purchase?.supplier_id;
+        if (supplierId && (!supplier || supplier.supplier_id !== supplierId)) {
+            console.log("called api call supplier id is :" + supplierId);
+            dispatch(fetchSupplierById(supplierId));
+        }
+    }, [editedData.purchase?.supplier_id]);
 
     return (
         <div className="space-y-3">
@@ -14,15 +29,6 @@ const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateFie
                 type="date"
                 isEditing={editingSection !== null}
                 currentValue={editedData.purchase?.purchase_date || purchase.purchase_date || ''}
-                updateField={updateField}
-            />
-            <EditableField
-                label="Bought From"
-                value={editedData.purchase?.bought_from_name || purchase.bought_from_name}
-                section="purchase"
-                field="bought_from_name"
-                isEditing={editingSection !== null}
-                currentValue={editedData.purchase?.bought_from_name || purchase.bought_from_name || ''}
                 updateField={updateField}
             />
             <EditableField
@@ -73,6 +79,73 @@ const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateFie
                 currentValue={editedData.purchase?.purchase_remarks || purchase.purchase_remarks || ''}
                 updateField={updateField}
             />
+
+
+            {/* Supplier Information */}
+            <div className="border-t pt-3 mt-3">
+                <div className="flex justify-between items-start mb-2">
+                    <span className="text-sm font-medium text-gray-700">Supplier Information</span>
+                    {(editedData.purchase?.supplier_id || purchase.supplier_id) && (
+                        editingSection !== null && (
+                            // Edit mode - show select/change button
+                            onSelectChangeSupplier && (
+                                <button
+                                    onClick={onSelectChangeSupplier}
+                                    className="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                    type="button"
+                                >
+                                    Select/Change Supplier
+                                </button>
+                            )
+                        )
+                    )}
+                    {!(editedData.purchase?.supplier_id || purchase.supplier_id) && editingSection !== null && onSelectChangeSupplier && (
+                        <button
+                            onClick={onSelectChangeSupplier}
+                            className="text-xs px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                            type="button"
+                        >
+                            Assign Supplier
+                        </button>
+                    )}
+                </div>
+
+                {/* Display supplier details (read-only) */}
+                {loadingSupplier ? (
+                    <p className="text-sm text-gray-500">Loading supplier details...</p>
+                ) : supplier ? (
+                    <div className="space-y-2 bg-gray-50 p-3 rounded border border-gray-200">
+                        <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Name:</span>
+                            <span className="text-sm font-medium text-gray-900">
+                                {supplier.supplier_name}
+                            </span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Email:</span>
+                            <span className="text-sm font-medium text-gray-900">
+                                {supplier.email || 'N/A'}
+                            </span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Phone:</span>
+                            <span className="text-sm font-medium text-gray-900">
+                                {supplier.contact_number || 'N/A'}
+                            </span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Country:</span>
+                            <span className="text-sm font-medium text-gray-900">
+                                {supplier.country || 'N/A'}
+                            </span>
+                        </div>
+                    </div>
+                ) : (
+                    <p className="text-sm text-gray-500">
+                        {editingSection !== null ? 'Click "Assign Supplier" to select a supplier for this purchase' : 'No supplier assigned'}
+                    </p>
+                )}
+            </div>
         </div>
     );
 

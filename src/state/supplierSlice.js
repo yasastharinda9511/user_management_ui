@@ -286,6 +286,7 @@ export const selectTotalPages = (state) => state.suppliers.totalPages;
 export const selectPageLimit = (state) => state.suppliers.limit;
 export const selectTotalSuppliers = (state) => state.suppliers.totalSuppliers;
 export const selectLoading = (state) => state.suppliers.loading;
+export const selectLoadingSupplier = (state) => state.suppliers.loadingSupplier;
 export const selectSearchQuery = (state) => state.suppliers.searchQuery;
 
 export default supplierSlice.reducer;

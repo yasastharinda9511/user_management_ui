@@ -37,6 +37,7 @@ export const VehicleSections = ({
     updateField,
     showNotification,
     onSelectChangeCustomer,
+    onSelectChangeSupplier,
     vehicleId
 }) => {
 
@@ -60,7 +61,7 @@ export const VehicleSections = ({
             color: "bg-indigo-50",
             sectionKey: "purchase",
             requiredPermission: `${RESOURCES.PURCHASE}.${ACTIONS.ACCESS}`,
-            content: (<PurchaseDetailsSection editedData={editedData} updateField={updateField} editingSection={editingSection} purchase={purchase}/>)
+            content: (<PurchaseDetailsSection editedData={editedData} updateField={updateField} editingSection={editingSection} purchase={purchase} onSelectChangeSupplier={onSelectChangeSupplier}/>)
         },
         {
             title: SELECTED_VEHICLE_CARD_OPTIONS.FINANCIAL_SUMMARY,
