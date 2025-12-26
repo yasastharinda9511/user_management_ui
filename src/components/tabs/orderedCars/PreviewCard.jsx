@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Car, Truck, Package, Eye, MapPin, Ship, History, ChevronLeft, ChevronRight, Trash2, ShoppingCart} from 'lucide-react';
+import { Car, Truck, Package, Eye, MapPin, Ship, History, ChevronLeft, ChevronRight, Trash2, ShoppingCart, Copy, Check} from 'lucide-react';
 import { useSelector } from 'react-redux';
 import {getStatusColor} from "../../common/CommonLogics.js";
 import config from "../../../configs/config.json";
@@ -18,6 +18,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     const [showShippingHistory, setShowShippingHistory] = useState(false);
     const [showPurchaseHistory, setShowPurchaseHistory] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [copiedField, setCopiedField] = useState(null);
     const permissions = useSelector(selectPermissions);
 
     const formatDate = (dateString) => {
@@ -27,6 +28,16 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
             month: 'short',
             day: 'numeric'
         });
+    };
+
+    const handleCopyToClipboard = async (text, fieldName) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopiedField(fieldName);
+            setTimeout(() => setCopiedField(null), 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
     };
 
     const getSaleStatusColor = (status) => {
@@ -200,12 +211,40 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                         <Package className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
                                         <span className="text-gray-600 min-w-[80px]">vehicleID:</span>
                                         <span className="font-medium text-gray-900">{car.vehicle.id}</span>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleCopyToClipboard(car.vehicle.id, 'vehicleId');
+                                            }}
+                                            className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                            title="Copy Vehicle ID"
+                                        >
+                                            {copiedField === 'vehicleId' ? (
+                                                <Check className="w-3.5 h-3.5 text-green-600" />
+                                            ) : (
+                                                <Copy className="w-3.5 h-3.5" />
+                                            )}
+                                        </button>
                                     </div>
 
                                     <div className="flex items-center text-sm">
                                         <Car className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
                                         <span className="text-gray-600 min-w-[80px]">Chassis:</span>
                                         <span className="font-mono text-xs text-gray-900">{car.vehicle.chassis_id}</span>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleCopyToClipboard(car.vehicle.chassis_id, 'chassisId');
+                                            }}
+                                            className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                            title="Copy Chassis Number"
+                                        >
+                                            {copiedField === 'chassisId' ? (
+                                                <Check className="w-3.5 h-3.5 text-green-600" />
+                                            ) : (
+                                                <Copy className="w-3.5 h-3.5" />
+                                            )}
+                                        </button>
                                     </div>
 
                                     <div className="flex items-center text-sm">
@@ -387,12 +426,40 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                         <Package className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
                         <span className="text-gray-600 min-w-[80px]">vehicleID:</span>
                         <span className="font-medium text-gray-900">{car.vehicle.id}</span>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleCopyToClipboard(car.vehicle.id, 'vehicleId');
+                            }}
+                            className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                            title="Copy Vehicle ID"
+                        >
+                            {copiedField === 'vehicleId' ? (
+                                <Check className="w-3.5 h-3.5 text-green-600" />
+                            ) : (
+                                <Copy className="w-3.5 h-3.5" />
+                            )}
+                        </button>
                     </div>
 
                     <div className="flex items-center text-sm">
                         <Car className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
                         <span className="text-gray-600 min-w-[80px]">Chassis:</span>
                         <span className="font-mono text-xs text-gray-900">{car.vehicle.chassis_id}</span>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleCopyToClipboard(car.vehicle.chassis_id, 'chassisId');
+                            }}
+                            className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                            title="Copy Chassis Number"
+                        >
+                            {copiedField === 'chassisId' ? (
+                                <Check className="w-3.5 h-3.5 text-green-600" />
+                            ) : (
+                                <Copy className="w-3.5 h-3.5" />
+                            )}
+                        </button>
                     </div>
 
                     <div className="flex items-center text-sm">
