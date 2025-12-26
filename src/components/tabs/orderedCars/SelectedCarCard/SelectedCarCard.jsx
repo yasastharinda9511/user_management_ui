@@ -23,6 +23,7 @@ import ViewCustomerModal from "../ViewCustomerModal.jsx";
 import ImageViewer from "../../../common/ImageViewer.jsx";
 import ShippingHistory from "../ShippingHistory.jsx";
 import PurchaseHistory from "../PurchaseHistory.jsx";
+import {convertToRFC3339} from "../../../../utils/common.js";
 
 const SelectedCarCard = ({id, closeModal, onSave}) => {
     const dispatch = useDispatch();
@@ -282,26 +283,14 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         setEditingSection(null);
     };
 
-    // Helper function to convert date to RFC3339 format
-    const convertToRFC3339 = (dateString) => {
-        if (!dateString || dateString === 'N/A' || dateString === '') return null;
-
-        // If already in ISO format, return as is
-        if (dateString.includes('T')) return dateString;
-
-        // Convert YYYY-MM-DD to RFC3339 format
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return null;
-
-        return date.toISOString();
-    };
-
     // Helper function to convert date fields in an object
     const convertDateFields = (data, dateFields) => {
         const converted = { ...data };
         dateFields.forEach(field => {
-            if (converted[field]) {
+            if (converted[field] !== null && converted[field] !== undefined && converted[field] !== '') {
                 converted[field] = convertToRFC3339(converted[field]);
+            } else {
+                converted[field] = null;
             }
         });
         return converted;
