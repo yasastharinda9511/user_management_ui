@@ -41,7 +41,7 @@ const MainScreen = () => {
     return (
         <div className="h-screen w-screen bg-gray-100">
             {/* Sidebar - Collapsible */}
-            <div className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-10 transition-all duration-300 ${
+            <div className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-10 transition-all duration-300 flex flex-col ${
                 sidebarCollapsed ? 'w-20' : 'w-64'
             }`}>
                 {/* Sidebar Header */}
@@ -94,7 +94,7 @@ const MainScreen = () => {
                 </nav>
 
                 {/* User info and logout */}
-                <div className="border-t border-gray-200 p-4">
+                <div className="border-t border-gray-200 p-4 flex-shrink-0">
                     {!sidebarCollapsed ? (
                         <>
                             <div className="flex items-center space-x-3 mb-4">
