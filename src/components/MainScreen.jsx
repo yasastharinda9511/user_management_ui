@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     User,
     LogOut,
@@ -6,12 +6,20 @@ import {
     Bell,
     ChevronLeft,
     ChevronRight,
+    X as XIcon,
+    Car,
+    UserCircle,
+    Building2,
+    Loader2
 } from 'lucide-react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {logout, selectPermissions, selectUser} from '../state/authSlice.js';
 import { getAccessibleTabs } from '../utils/permissionUtils.js';
 import ConfirmationModal from './common/ConfirmationModal.jsx';
+import vehicleService from '../api/vehicleService';
+import customerService from '../api/customerService';
+import supplierService from '../api/supplierService';
 
 const MainScreen = () => {
     const navigate = useNavigate();
@@ -21,6 +29,104 @@ const MainScreen = () => {
     const user = useSelector(selectUser);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+    // Global search state
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState({ vehicles: [], customers: [], suppliers: [] });
+    const [isSearching, setIsSearching] = useState(false);
+    const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+    const searchRef = useRef(null);
+    const searchTimeoutRef = useRef(null);
+
+    // Global search functionality
+    const performSearch = async (query) => {
+        if (!query.trim()) {
+            setSearchResults({ vehicles: [], customers: [], suppliers: [] });
+            setShowSearchDropdown(false);
+            return;
+        }
+
+        setIsSearching(true);
+        setShowSearchDropdown(true);
+
+        try {
+            const [vehiclesRes, customersRes, suppliersRes] = await Promise.all([
+                vehicleService.getAllVehicles({ page: 1, limit: 5, filters:{search : query} }).catch(() => ({ data: [] })),
+                customerService.getAllCustomers({ page: 1, limit: 5, search: query }).catch(() => ({ data: [] })),
+                supplierService.getAllSuppliers({ page: 1, limit: 5, search: query }).catch(() => ({ data: [] }))
+            ]);
+
+            setSearchResults({
+                vehicles: vehiclesRes.data || [],
+                customers: customersRes.data || [],
+                suppliers: suppliersRes.data || []
+            });
+        } catch (error) {
+            console.error('Search error:', error);
+            setSearchResults({ vehicles: [], customers: [], suppliers: [] });
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
+    const handleSearchChange = (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+
+        // Debounce search
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+        }
+
+        searchTimeoutRef.current = setTimeout(() => {
+            performSearch(query);
+        }, 300);
+    };
+
+    const handleClearSearch = () => {
+        setSearchQuery('');
+        setSearchResults({ vehicles: [], customers: [], suppliers: [] });
+        setShowSearchDropdown(false);
+    };
+
+    const handleResultClick = (type, id) => {
+        setShowSearchDropdown(false);
+        setSearchQuery('');
+
+        // Navigate based on type
+        if (type === 'vehicle') {
+            navigate('/ordered-cars');
+        } else if (type === 'customer') {
+            navigate('/customers');
+        } else if (type === 'supplier') {
+            navigate('/suppliers');
+        }
+    };
+
+    // Keyboard shortcut (Ctrl+K or Cmd+K)
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchRef.current?.focus();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (searchRef.current && !searchRef.current.contains(e.target)) {
+                setShowSearchDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleLogoutClick = () => {
         setShowLogoutModal(true);
@@ -138,15 +244,136 @@ const MainScreen = () => {
                 {/* Header */}
                 <header className="bg-white border-b border-gray-200 px-6 py-4 h-16 flex-shrink-0">
                     <div className="flex items-center justify-between h-full">
-                        {/* Search bar - centered in available space */}
+                        {/* Enhanced Global Search */}
                         <div className="flex-1 flex justify-center">
-                            <div className="relative max-w-md w-full">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                            <div className="relative max-w-2xl w-full" ref={searchRef}>
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 z-10" />
                                 <input
                                     type="text"
-                                    placeholder="Search..."
-                                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
+                                    placeholder="Search vehicles, customers, suppliers... (Ctrl+K)"
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
+                                    className="pl-11 pr-20 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full transition-all"
                                 />
+                                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-2 z-10">
+                                    {isSearching && (
+                                        <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                                    )}
+                                    {searchQuery && (
+                                        <button
+                                            onClick={handleClearSearch}
+                                            className="p-1 hover:bg-gray-100 rounded transition-colors"
+                                        >
+                                            <XIcon className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+                                        </button>
+                                    )}
+                                    <kbd className="hidden sm:inline-block px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-100 border border-gray-300 rounded">
+                                        ⌘K
+                                    </kbd>
+                                </div>
+
+                                {/* Search Results Dropdown */}
+                                {showSearchDropdown && searchQuery && (
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-2xl border border-gray-200 max-h-96 overflow-y-auto z-50">
+                                        {!isSearching && (
+                                            <>
+                                                {/* Vehicles */}
+                                                {searchResults.vehicles.length > 0 && (
+                                                    <div className="p-3">
+                                                        <div className="flex items-center gap-2 px-2 py-1 text-xs font-semibold text-gray-500 uppercase">
+                                                            <Car className="w-4 h-4" />
+                                                            Vehicles
+                                                        </div>
+                                                        {searchResults.vehicles.map((vehicle) => (
+                                                            <button
+                                                                key={vehicle.id}
+                                                                onClick={() => handleResultClick('vehicle', vehicle.vehicle.id)}
+                                                                className="w-full text-left px-3 py-2 hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-between group"
+                                                            >
+                                                                <div>
+                                                                    <div className="font-medium text-gray-900">
+                                                                        {vehicle.vehicle.make} {vehicle.vehicle.model}
+                                                                    </div>
+                                                                    <div className="text-sm text-gray-500">
+                                                                        {vehicle.vehicle.year_of_manufacture} • {vehicle.vehicle.chassis_id || 'No VIN'}
+                                                                    </div>
+                                                                </div>
+                                                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* Customers */}
+                                                {searchResults.customers.length > 0 && (
+                                                    <div className="p-3 border-t border-gray-100">
+                                                        <div className="flex items-center gap-2 px-2 py-1 text-xs font-semibold text-gray-500 uppercase">
+                                                            <UserCircle className="w-4 h-4" />
+                                                            Customers
+                                                        </div>
+                                                        {searchResults.customers.map((customer) => (
+                                                            <button
+                                                                key={customer.id}
+                                                                onClick={() => handleResultClick('customer', customer.id)}
+                                                                className="w-full text-left px-3 py-2 hover:bg-green-50 rounded-lg transition-colors flex items-center justify-between group"
+                                                            >
+                                                                <div>
+                                                                    <div className="font-medium text-gray-900">
+                                                                        {customer.customer_title} {customer.customer_name}
+                                                                    </div>
+                                                                    <div className="text-sm text-gray-500">
+                                                                        {customer.email || customer.contact_number || 'No contact'}
+                                                                    </div>
+                                                                </div>
+                                                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-green-600" />
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* Suppliers */}
+                                                {searchResults.suppliers.length > 0 && (
+                                                    <div className="p-3 border-t border-gray-100">
+                                                        <div className="flex items-center gap-2 px-2 py-1 text-xs font-semibold text-gray-500 uppercase">
+                                                            <Building2 className="w-4 h-4" />
+                                                            Suppliers
+                                                        </div>
+                                                        {searchResults.suppliers.map((supplier) => (
+                                                            <button
+                                                                key={supplier.id}
+                                                                onClick={() => handleResultClick('supplier', supplier.id)}
+                                                                className="w-full text-left px-3 py-2 hover:bg-purple-50 rounded-lg transition-colors flex items-center justify-between group"
+                                                            >
+                                                                <div>
+                                                                    <div className="font-medium text-gray-900">
+                                                                        {supplier.supplier_name}
+                                                                    </div>
+                                                                    <div className="text-sm text-gray-500">
+                                                                        {supplier.country} • {supplier.supplier_type}
+                                                                    </div>
+                                                                </div>
+                                                                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-purple-600" />
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* No Results */}
+                                                {searchResults.vehicles.length === 0 &&
+                                                 searchResults.customers.length === 0 &&
+                                                 searchResults.suppliers.length === 0 && (
+                                                    <div className="p-8 text-center">
+                                                        <Search className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                                        <p className="text-gray-600 font-medium">No results found</p>
+                                                        <p className="text-sm text-gray-400 mt-1">
+                                                            Try searching with different keywords
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
