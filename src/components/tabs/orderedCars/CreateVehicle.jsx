@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Car, Upload, X, Save, Plus, Trash2, FileText } from 'lucide-react';
+import { Car, Upload, X, Save, Plus, Trash2, FileText, UserCircle } from 'lucide-react';
 
 import {
     createVehicleRecordWithImage,
 } from "../../../state/vehicleSlice.js";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Notification from "../../common/Notification.jsx";
 import { vehicleService } from "../../../api/index.js";
 import {getAllDocumentTypes} from "../../../utils/documetsUtil.jsx";
+import SelectCustomerModal from "./SelectCustomerModal.jsx";
+import {fetchCustomerById, selectSelectedCustomer, clearSelectedCustomer} from "../../../state/customerSlice.js";
 
 const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
     const dispatch = useDispatch();
+    const selectedCustomer = useSelector(selectSelectedCustomer);
+
     // Vehicle Form State - matching your API structure
     const [vehicleForm, setVehicleForm] = useState({
         code: '',
@@ -40,6 +44,10 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
     })
 
+    // Customer selection state
+    const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+    const [showCustomerModal, setShowCustomerModal] = useState(false);
+
     const [availableCars, setAvailableCars] = useState([]);
     const [models, setModels] = useState([]);
     const [loadingMakes, setLoadingMakes] = useState(true);
@@ -62,6 +70,15 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
     const bodyTypes = ['Sedan', 'SUV', 'Hatchback', 'Wagon', 'Coupe', 'Van', 'Truck', 'Convertible'];
     const fuelTypes = ['Petrol', 'Diesel', 'Hybrid', 'Electric', 'CNG', 'LPG'];
     const transmissionTypes = ['Automatic', 'Manual', 'CVT', 'Semi-Automatic'];
+
+    // Fetch customer details when customer ID is selected
+    useEffect(() => {
+        if (selectedCustomerId) {
+            dispatch(fetchCustomerById(selectedCustomerId));
+        } else {
+            dispatch(clearSelectedCustomer());
+        }
+    }, [selectedCustomerId, dispatch]);
 
     useEffect(() => {
         const fetchMakes = async () => {
@@ -308,6 +325,16 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
         setNotification({ show: false, type: '', title: '', message: '' });
     };
 
+    const handleCustomerSelect = (customerId) => {
+        setSelectedCustomerId(customerId);
+        setShowCustomerModal(false);
+    };
+
+    const handleRemoveCustomer = () => {
+        setSelectedCustomerId(null);
+        dispatch(clearSelectedCustomer());
+    };
+
     const resetForm = () => {
         setVehicleForm({
             code: '',
@@ -330,6 +357,10 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
         // Clear documents
         setVehicleDocuments([]);
+
+        // Clear customer selection
+        setSelectedCustomerId(null);
+        dispatch(clearSelectedCustomer());
     };
 
     const handleClose = () => {
@@ -379,7 +410,22 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                 }
             }
 
-            showNotification('success', 'Success', `Vehicle Created Successfully${vehicleDocuments.length > 0 ? ' with documents' : ''}`);
+            // Update sales information with customer if selected
+            if (selectedCustomerId && createdVehicleId) {
+                try {
+                    console.log('Updating sales information with customer:', selectedCustomerId);
+                    await vehicleService.updateVehicleSales(createdVehicleId, {
+                        customer_id: selectedCustomerId,
+                        sale_status: "RESERVED",
+                    });
+                    showNotification('success', 'Success', `Vehicle created successfully and assigned to customer`);
+                } catch (salesError) {
+                    console.error('Failed to update sales information:', salesError);
+                    showNotification('warning', 'Warning', `Vehicle created but failed to assign customer`);
+                }
+            } else {
+                showNotification('success', 'Success', `Vehicle Created Successfully${vehicleDocuments.length > 0 ? ' with documents' : ''}`);
+            }
         }catch (error) {
             showNotification('error', 'Fail', `Vehicle Created failed: ${error}`);
         }
@@ -732,6 +778,83 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                 </div>
                             </div>
 
+                            {/* Customer Selection Section */}
+                            <div className="bg-purple-50 rounded-lg p-6">
+                                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                    <UserCircle className="w-5 h-5 mr-2 text-purple-600" />
+                                    Customer Information (Optional)
+                                </h3>
+
+                                {selectedCustomer ? (
+                                    <div className="space-y-3">
+                                        <div className="bg-white p-4 rounded-lg border border-purple-200">
+                                            <div className="flex justify-between items-start mb-3">
+                                                <h4 className="text-sm font-semibold text-gray-900">Selected Customer</h4>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setShowCustomerModal(true)}
+                                                        className="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                                    >
+                                                        Change Customer
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleRemoveCustomer}
+                                                        className="text-xs px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <div className="flex justify-between">
+                                                    <span className="text-sm text-gray-600">Name:</span>
+                                                    <span className="text-sm font-medium text-gray-900">
+                                                        {selectedCustomer.customer_title} {selectedCustomer.customer_name}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-sm text-gray-600">Email:</span>
+                                                    <span className="text-sm font-medium text-gray-900">
+                                                        {selectedCustomer.email || 'N/A'}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-sm text-gray-600">Phone:</span>
+                                                    <span className="text-sm font-medium text-gray-900">
+                                                        {selectedCustomer.contact_number || 'N/A'}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-sm text-gray-600">Type:</span>
+                                                    <span className="text-sm font-medium text-gray-900">
+                                                        {selectedCustomer.customer_type || 'N/A'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-xs text-gray-600 italic">
+                                            This vehicle will be assigned to this customer upon creation
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <UserCircle className="w-16 h-16 text-gray-400 mx-auto mb-3" />
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            No customer selected. You can assign a customer to this vehicle now or later.
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowCustomerModal(true)}
+                                            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                                        >
+                                            Select Customer
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
                             {/* Image Upload Section */}
                             <div className="bg-green-50 rounded-lg p-6">
                                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -891,6 +1014,15 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                     </div>
                 </div>
             </div>
+
+            {/* Customer Selection Modal */}
+            {showCustomerModal && (
+                <SelectCustomerModal
+                    currentCustomerId={selectedCustomerId}
+                    onSelect={handleCustomerSelect}
+                    onClose={() => setShowCustomerModal(false)}
+                />
+            )}
         </>
 
     );
