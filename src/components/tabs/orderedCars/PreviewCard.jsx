@@ -19,6 +19,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     const [showPurchaseHistory, setShowPurchaseHistory] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [copiedField, setCopiedField] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
     const permissions = useSelector(selectPermissions);
 
     const formatDate = (dateString) => {
@@ -100,21 +101,28 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     };
 
     const handleDeleteConfirm = async () => {
-        try {
-            await vehicleService.deleteVehicle(car.vehicle.id);
-            if (onDelete) {
-                onDelete(car.vehicle.id);
+        setShowDeleteModal(false);
+        setIsDeleting(true);
+
+        // Wait for animation to complete (300ms as defined in CSS)
+        setTimeout(async () => {
+            try {
+                await vehicleService.deleteVehicle(car.vehicle.id);
+                if (onDelete) {
+                    onDelete(car.vehicle.id);
+                }
+            } catch (error) {
+                console.error('Failed to delete vehicle:', error);
+                alert('Failed to delete vehicle. Please try again.');
+                setIsDeleting(false); // Reset if error occurs
             }
-        } catch (error) {
-            console.error('Failed to delete vehicle:', error);
-            alert('Failed to delete vehicle. Please try again.');
-        }
+        }, 300);
     };
 
     // List View Layout
     if (viewMode === 'list') {
         return (
-            <div key={car.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow relative">
+            <div key={car.id} className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow relative ${isDeleting ? 'deleting' : ''}`}>
                 <div className="flex flex-col md:flex-row">
                     {/* Car Image */}
                     <div className="md:w-64 h-48 md:h-auto bg-gray-200 overflow-hidden flex-shrink-0 relative group">
@@ -332,7 +340,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
 
     // Grid View Layout (Default)
     return (
-        <div key={car.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+        <div key={car.id} className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow ${isDeleting ? 'deleting' : ''}`}>
             {/* Car Image */}
             <div className="h-48 bg-gray-200 overflow-hidden relative group">
                 {imageUrls.length > 0 ? (

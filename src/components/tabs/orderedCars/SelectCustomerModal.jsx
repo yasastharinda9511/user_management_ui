@@ -21,6 +21,7 @@ const SelectCustomerModal = ({ currentCustomerId, onSelect, onClose }) => {
     const [selectedCustomerId, setSelectedCustomerId] = useState(currentCustomerId || '');
     const [searchTerm, setSearchTerm] = useState('');
     const [showEditModal, setShowEditModal] = useState(false);
+    const [isClosing, setIsClosing] = useState(false);
 
     useEffect(() => {
         dispatch(fetchCustomers());
@@ -39,11 +40,19 @@ const SelectCustomerModal = ({ currentCustomerId, onSelect, onClose }) => {
         }
     };
 
+    const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsClosing(false);
+            onClose();
+        }, 200);
+    };
+
     const handleConfirmSelection = () => {
         if (selectedCustomerId) {
             onSelect(parseInt(selectedCustomerId));
         }
-        onClose();
+        handleClose();
     };
 
     const handleCloseEditModal = () => {
@@ -64,8 +73,8 @@ const SelectCustomerModal = ({ currentCustomerId, onSelect, onClose }) => {
 
     return (
         <>
-            <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div className={`modal-backdrop fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
+                <div className={`modal-content bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col ${isClosing ? 'closing' : ''}`}>
                     {/* Header */}
                     <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex-shrink-0">
                         <div className="flex items-center justify-between">
@@ -83,7 +92,7 @@ const SelectCustomerModal = ({ currentCustomerId, onSelect, onClose }) => {
                                 </div>
                             </div>
                             <button
-                                onClick={onClose}
+                                onClick={handleClose}
                                 className="text-gray-400 hover:text-gray-600 transition-colors"
                             >
                                 <X className="w-6 h-6" />
@@ -220,7 +229,7 @@ const SelectCustomerModal = ({ currentCustomerId, onSelect, onClose }) => {
                         </div>
                         <div className="flex items-center space-x-3">
                             <button
-                                onClick={onClose}
+                                onClick={handleClose}
                                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                             >
                                 Cancel

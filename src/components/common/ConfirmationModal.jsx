@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertCircle, X } from 'lucide-react';
 
 const ConfirmationModal = ({
@@ -12,7 +12,17 @@ const ConfirmationModal = ({
     confirmButtonClass = 'bg-blue-600 hover:bg-blue-700 text-white',
     type = 'default' // 'default', 'danger', 'warning'
 }) => {
-    if (!isOpen) return null;
+    const [isClosing, setIsClosing] = useState(false);
+    const [shouldRender, setShouldRender] = useState(isOpen);
+
+    useEffect(() => {
+        if (isOpen) {
+            setShouldRender(true);
+            setIsClosing(false);
+        }
+    }, [isOpen]);
+
+    if (!shouldRender) return null;
 
     const getIconColor = () => {
         switch (type) {
@@ -36,17 +46,26 @@ const ConfirmationModal = ({
         }
     };
 
+    const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setShouldRender(false);
+            setIsClosing(false);
+            onClose();
+        }, 200); // Match the animation duration
+    };
+
     const handleConfirm = () => {
         onConfirm();
-        onClose();
+        handleClose();
     };
 
     return (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all">
+        <div className={`modal-backdrop fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
+            <div className={`modal-content relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform ${isClosing ? 'closing' : ''}`}>
                 {/* Close button */}
                 <button
-                    onClick={onClose}
+                    onClick={handleClose}
                     className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                     <X className="w-5 h-5" />
@@ -72,7 +91,7 @@ const ConfirmationModal = ({
                     {/* Actions */}
                     <div className="flex space-x-3">
                         <button
-                            onClick={onClose}
+                            onClick={handleClose}
                             className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                         >
                             {cancelText}

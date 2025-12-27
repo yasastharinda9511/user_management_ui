@@ -269,18 +269,34 @@ const OrderedCars = () => {
                 <>
                     {/* Grid View */}
                     {viewMode === 'grid' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {vehicles.map((car) => (
-                                <PreviewCard car={car} key={car.id} handleViewDetails={handleViewDetails} onDelete={handleDelete} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" style={{ transition: 'all 0.3s ease' }}>
+                            {vehicles.map((car, index) => (
+                                <div
+                                    key={car.id}
+                                    className="card-animate"
+                                    style={{
+                                        animationDelay: `${index * 0.05}s`,
+                                    }}
+                                >
+                                    <PreviewCard car={car} handleViewDetails={handleViewDetails} onDelete={handleDelete} />
+                                </div>
                             ))}
                         </div>
                     )}
 
                     {/* List View */}
                     {viewMode === 'list' && (
-                        <div className="space-y-4">
-                            {vehicles.map((car) => (
-                                <PreviewCard car={car} key={car.id} handleViewDetails={handleViewDetails} onDelete={handleDelete} viewMode="list" />
+                        <div className="space-y-4" style={{ transition: 'all 0.3s ease' }}>
+                            {vehicles.map((car, index) => (
+                                <div
+                                    key={car.id}
+                                    className="card-animate"
+                                    style={{
+                                        animationDelay: `${index * 0.03}s`,
+                                    }}
+                                >
+                                    <PreviewCard car={car} handleViewDetails={handleViewDetails} onDelete={handleDelete} viewMode="list" />
+                                </div>
                             ))}
                         </div>
                     )}

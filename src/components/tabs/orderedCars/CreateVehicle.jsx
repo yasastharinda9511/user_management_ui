@@ -15,6 +15,16 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
     const dispatch = useDispatch();
     const selectedCustomer = useSelector(selectSelectedCustomer);
 
+    const [isClosing, setIsClosing] = useState(false);
+    const [shouldRender, setShouldRender] = useState(isOpen);
+
+    useEffect(() => {
+        if (isOpen) {
+            setShouldRender(true);
+            setIsClosing(false);
+        }
+    }, [isOpen]);
+
     // Vehicle Form State - matching your API structure
     const [vehicleForm, setVehicleForm] = useState({
         code: '',
@@ -364,8 +374,13 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
     };
 
     const handleClose = () => {
-        resetForm();
-        onClose();
+        setIsClosing(true);
+        setTimeout(() => {
+            resetForm();
+            setShouldRender(false);
+            setIsClosing(false);
+            onClose();
+        }, 200);
     };
 
     const handleSubmit = async () => {
@@ -439,7 +454,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
             vehicleForm.color;
     };
 
-    if (!isOpen) return null;
+    if (!shouldRender) return null;
 
     return (
         <>
@@ -450,8 +465,8 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                 isVisible={notification.show}
                 onClose={hideNotification}
             />
-            <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+            <div className={`modal-backdrop fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
+                <div className={`modal-content bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto ${isClosing ? 'closing' : ''}`}>
                     <div className="p-6">
                         <div className="flex justify-between items-start mb-6">
                             <h2 className="text-2xl font-bold text-gray-900">Add New Vehicle</h2>

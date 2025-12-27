@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Save, Key } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -45,12 +45,20 @@ const EditPermissionModal = ({ permission, onClose }) => {
     // Common resource suggestions
     const commonResources = ['users', 'roles', 'permissions', 'vehicles', 'orders', 'reports', 'settings'];
 
+    const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsClosing(false);
+            onClose();
+        }, 200);
+    };
+
     return (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className={`modal-backdrop fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
             {/* Modal container */}
             <div className="flex min-h-full items-center justify-center p-4">
                 {/* Modal panel */}
-                <div className="relative bg-white rounded-lg shadow-xl transform transition-all w-full max-w-2xl">
+                <div className={`modal-content relative bg-white rounded-lg shadow-xl transform transition-all w-full max-w-2xl ${isClosing ? 'closing' : ''}`}>
                     {/* Header */}
                     <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
                         <div className="flex items-center justify-between">
@@ -68,7 +76,7 @@ const EditPermissionModal = ({ permission, onClose }) => {
                                 </div>
                             </div>
                             <button
-                                onClick={onClose}
+                                onClick={handleClose}
                                 className="text-gray-400 hover:text-gray-600 transition-colors"
                             >
                                 <X className="w-6 h-6" />
@@ -198,8 +206,8 @@ const EditPermissionModal = ({ permission, onClose }) => {
                         <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
                             <button
                                 type="button"
-                                onClick={onClose}
-                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                onClick={handleClose}
+                                className={`modal-content px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors ${isClosing ? 'closing' : ''}`}
                             >
                                 Cancel
                             </button>
