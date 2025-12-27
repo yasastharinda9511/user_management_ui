@@ -30,16 +30,27 @@ const Filter = ({closeModal}) => {
         dispatch(fetchSuppliers({ page :1, limit : 100, search :'' }));
     }, [dispatch]);
 
-    // Handle ESC key to close filter
+    // Handle ESC key to close filter and Enter key to apply filters
     useEffect(() => {
-        const handleEscKey = (e) => {
+        const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
                 closeModal();
+            } else if (e.key === 'Enter') {
+                // Apply filters when Enter is pressed
+                const hasPendingActiveFilters = Object.values(pendingFilters).some(value => {
+                    return value && value.toString().trim() !== '';
+                });
+
+                if (hasChanges || hasPendingActiveFilters) {
+                    dispatch(applyFilters(pendingFilters));
+                    dispatch(setCurrentPage(1));
+                    setHasChanges(false);
+                }
             }
         };
-        document.addEventListener('keydown', handleEscKey);
-        return () => document.removeEventListener('keydown', handleEscKey);
-    }, [closeModal]);
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [closeModal, hasChanges, pendingFilters, dispatch]);
 
     // Handle click outside to close filter
     useEffect(() => {

@@ -436,8 +436,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
         return vehicleForm.code &&
             vehicleForm.make &&
             vehicleForm.model &&
-            vehicleForm.color &&
-            vehicleForm.cif_value;
+            vehicleForm.color;
     };
 
     if (!isOpen) return null;
@@ -752,7 +751,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">CIF Value *</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">CIF Value</label>
                                         <input
                                             type="number"
                                             step="0.01"
