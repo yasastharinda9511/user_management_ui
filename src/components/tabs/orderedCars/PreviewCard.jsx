@@ -217,22 +217,24 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                                     <div className="flex items-center text-sm">
                                         <Package className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
-                                        <span className="text-gray-600 min-w-[80px]">vehicleID:</span>
-                                        <span className="font-medium text-gray-900">{car.vehicle.id}</span>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleCopyToClipboard(car.vehicle.id, 'vehicleId');
-                                            }}
-                                            className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
-                                            title="Copy Vehicle ID"
-                                        >
-                                            {copiedField === 'vehicleId' ? (
-                                                <Check className="w-3.5 h-3.5 text-green-600" />
-                                            ) : (
-                                                <Copy className="w-3.5 h-3.5" />
-                                            )}
-                                        </button>
+                                        <span className="text-gray-600 min-w-[80px]">Code:  </span>
+                                        <span className="font-semibold text-blue-700">{car.vehicle.code ? `${car.vehicle.code}` : 'N/A'}</span>
+                                        {car.vehicle.code && (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleCopyToClipboard(`${car.vehicle.code}`, 'vehicleCode');
+                                                }}
+                                                className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                                title="Copy Vehicle Code"
+                                            >
+                                                {copiedField === 'vehicleCode' ? (
+                                                    <Check className="w-3.5 h-3.5 text-green-600" />
+                                                ) : (
+                                                    <Copy className="w-3.5 h-3.5" />
+                                                )}
+                                            </button>
+                                        )}
                                     </div>
 
                                     <div className="flex items-center text-sm">
@@ -432,22 +434,24 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 <div className="space-y-3 mb-4">
                     <div className="flex items-center text-sm">
                         <Package className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
-                        <span className="text-gray-600 min-w-[80px]">vehicleID:</span>
-                        <span className="font-medium text-gray-900">{car.vehicle.id}</span>
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleCopyToClipboard(car.vehicle.id, 'vehicleId');
-                            }}
-                            className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
-                            title="Copy Vehicle ID"
-                        >
-                            {copiedField === 'vehicleId' ? (
-                                <Check className="w-3.5 h-3.5 text-green-600" />
-                            ) : (
-                                <Copy className="w-3.5 h-3.5" />
-                            )}
-                        </button>
+                        <span className="text-gray-600 min-w-[80px]">Code:  </span>
+                        <span className="font-semibold text-blue-700">{car.vehicle.code ? `${car.vehicle.code}` : 'N/A'}</span>
+                        {car.vehicle.code && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCopyToClipboard(`${car.vehicle.code}`, 'vehicleCode');
+                                }}
+                                className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                title="Copy Vehicle Code"
+                            >
+                                {copiedField === 'vehicleCode' ? (
+                                    <Check className="w-3.5 h-3.5 text-green-600" />
+                                ) : (
+                                    <Copy className="w-3.5 h-3.5" />
+                                )}
+                            </button>
+                        )}
                     </div>
 
                     <div className="flex items-center text-sm">
