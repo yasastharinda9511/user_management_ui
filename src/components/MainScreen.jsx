@@ -20,6 +20,7 @@ import ConfirmationModal from './common/ConfirmationModal.jsx';
 import vehicleService from '../api/vehicleService';
 import customerService from '../api/customerService';
 import supplierService from '../api/supplierService';
+import ProfileDropdown from "./common/ProfileDropDown.jsx";
 
 const MainScreen = () => {
     const navigate = useNavigate();
@@ -37,6 +38,8 @@ const MainScreen = () => {
     const [showSearchDropdown, setShowSearchDropdown] = useState(false);
     const searchRef = useRef(null);
     const searchTimeoutRef = useRef(null);
+    const profileRef = useRef(null);
+    const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
     // Global search functionality
     const performSearch = async (query) => {
@@ -121,6 +124,9 @@ const MainScreen = () => {
         const handleClickOutside = (e) => {
             if (searchRef.current && !searchRef.current.contains(e.target)) {
                 setShowSearchDropdown(false);
+            }
+            if (profileRef.current && !profileRef.current.contains(e.target)) {
+                setShowProfileDropdown(false);
             }
         };
 
@@ -384,8 +390,17 @@ const MainScreen = () => {
                                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                             </button>
 
-                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                <span className="text-sm font-medium text-blue-600">{getAvatarNameFromUsername(user)}</span>
+                            {/* Profile Dropdown */}
+                            <div className="relative" ref={profileRef}>
+                                <button
+                                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                                    className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center hover:bg-blue-200 transition-colors cursor-pointer"
+                                >
+                                    <span className="text-sm font-medium text-blue-600">{getAvatarNameFromUsername(user)}</span>
+                                </button>
+
+                                {/* Dropdown Menu */}
+                                {showProfileDropdown && <ProfileDropdown user={user} setShowProfileDropdown={setShowProfileDropdown} handleLogoutClick={handleLogoutClick} /> }
                             </div>
                         </div>
                     </div>
