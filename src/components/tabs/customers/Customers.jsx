@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Users, Mail, Phone, User, MapPin, CheckCircle, XCircle, RefreshCw, Edit, Plus, Tag } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import {
     fetchCustomers,
     selectCustomers,
@@ -15,6 +16,7 @@ import EditCustomerModal from './EditCustomerModal.jsx';
 
 const Customers = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
     const customers = useSelector(selectCustomers);
     const totalCount = useSelector(selectTotalCount);
     const loading = useSelector(selectLoading);
@@ -29,6 +31,15 @@ const Customers = () => {
     useEffect(() => {
         dispatch(fetchCustomers());
     }, [dispatch]);
+
+    // Check if navigated with selected customer from search
+    useEffect(() => {
+        if (location.state?.selectedCustomer) {
+            setEditingCustomer(location.state.selectedCustomer);
+            // Clear the state to prevent reopening on refresh
+            window.history.replaceState({}, document.title);
+        }
+    }, [location]);
 
     const handleRefresh = () => {
         dispatch(fetchCustomers());

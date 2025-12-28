@@ -89,17 +89,17 @@ const MainScreen = () => {
         setShowSearchDropdown(false);
     };
 
-    const handleResultClick = (type, id) => {
+    const handleResultClick = (type, id, item) => {
         setShowSearchDropdown(false);
         setSearchQuery('');
 
-        // Navigate based on type
+        // Navigate based on type with state to open the specific item
         if (type === 'vehicle') {
-            navigate('/ordered-cars');
+            navigate('/ordered-cars', { state: { selectedVehicle: item } });
         } else if (type === 'customer') {
-            navigate('/customers');
+            navigate('/customers', { state: { selectedCustomer: item } });
         } else if (type === 'supplier') {
-            navigate('/suppliers');
+            navigate('/suppliers', { state: { selectedSupplier: item } });
         }
     };
 
@@ -287,7 +287,7 @@ const MainScreen = () => {
                                                         {searchResults.vehicles.map((vehicle) => (
                                                             <button
                                                                 key={vehicle.id}
-                                                                onClick={() => handleResultClick('vehicle', vehicle.vehicle.id)}
+                                                                onClick={() => handleResultClick('vehicle', vehicle.id, vehicle)}
                                                                 className="w-full text-left px-3 py-2 hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-between group"
                                                             >
                                                                 <div>
@@ -314,7 +314,7 @@ const MainScreen = () => {
                                                         {searchResults.customers.map((customer) => (
                                                             <button
                                                                 key={customer.id}
-                                                                onClick={() => handleResultClick('customer', customer.id)}
+                                                                onClick={() => handleResultClick('customer', customer.id, customer)}
                                                                 className="w-full text-left px-3 py-2 hover:bg-green-50 rounded-lg transition-colors flex items-center justify-between group"
                                                             >
                                                                 <div>
@@ -341,7 +341,7 @@ const MainScreen = () => {
                                                         {searchResults.suppliers.map((supplier) => (
                                                             <button
                                                                 key={supplier.id}
-                                                                onClick={() => handleResultClick('supplier', supplier.id)}
+                                                                onClick={() => handleResultClick('supplier', supplier.id, supplier)}
                                                                 className="w-full text-left px-3 py-2 hover:bg-purple-50 rounded-lg transition-colors flex items-center justify-between group"
                                                             >
                                                                 <div>

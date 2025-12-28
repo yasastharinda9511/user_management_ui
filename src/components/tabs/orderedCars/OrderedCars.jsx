@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { useLocation } from 'react-router-dom';
 import { Car, ChevronLeft, ChevronRight, Plus, Grid, List } from 'lucide-react';
 import CreateVehicle from "./CreateVehicle.jsx";
 import SelectedCarCard from "./SelectedCarCard/SelectedCarCard.jsx";
@@ -19,6 +20,7 @@ import {hasPermission} from "../../../utils/permissionUtils.js";
 
 const OrderedCars = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
     const [selectedCar, setSelectedCar] = useState(null);
     const [showCreateOrder, setShowCreateOrder] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
@@ -65,6 +67,15 @@ const OrderedCars = () => {
             }))
         }
     }, [shouldRefresh]);
+
+    // Check if navigated with selected vehicle from search
+    useEffect(() => {
+        if (location.state?.selectedVehicle) {
+            setSelectedCar(location.state.selectedVehicle);
+            // Clear the state to prevent reopening on refresh
+            window.history.replaceState({}, document.title);
+        }
+    }, [location]);
 
     const handleOrderSubmit = (orderData) => {
         console.log('Order received:', orderData);

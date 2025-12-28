@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { Plus, Search, Grid, List, Building2 } from 'lucide-react';
 import {
     fetchSuppliers,
@@ -20,6 +21,7 @@ import CreateSupplier from './CreateSupplier';
 
 const Suppliers = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
     const suppliers = useSelector(selectSuppliers);
     const loading = useSelector(selectLoading);
     const currentPage = useSelector(selectCurrentPage);
@@ -39,6 +41,16 @@ const Suppliers = () => {
         }
         dispatch(fetchSuppliers({ page: currentPage, limit: pageLimit, search: searchQuery }));
     }, [dispatch, currentPage, pageLimit, searchQuery]);
+
+    // Check if navigated with selected supplier from search
+    useEffect(() => {
+        if (location.state?.selectedSupplier) {
+            setSelectedSupplier(location.state.selectedSupplier);
+            setShowCreateModal(true);
+            // Clear the state to prevent reopening on refresh
+            window.history.replaceState({}, document.title);
+        }
+    }, [location]);
 
     const toggleViewMode = (mode) => {
         setViewMode(mode);

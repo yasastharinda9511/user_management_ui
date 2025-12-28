@@ -8,6 +8,7 @@ const EditCustomerModal = ({ customer, onClose }) => {
     const dispatch = useDispatch();
     const updating = useSelector(selectUpdating);
 
+    const [isClosing, setIsClosing] = useState(false);
     const [formData, setFormData] = useState({
         customer_title: customer.customer_title || '',
         customer_name: customer.customer_name || '',
