@@ -8,6 +8,7 @@ import {carServiceApi, vehicleService} from "../../../api/index.js";
 import ShippingHistory from "./ShippingHistory.jsx";
 import PurchaseHistory from "./PurchaseHistory.jsx";
 import ConfirmationModal from "../../common/ConfirmationModal.jsx";
+import Portal from "../../common/Portal.jsx";
 import { selectPermissions } from "../../../state/authSlice.js";
 import { hasPermission } from "../../../utils/permissionUtils.js";
 import { PERMISSIONS } from "../../../utils/permissions.js";
@@ -122,6 +123,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     // List View Layout
     if (viewMode === 'list') {
         return (
+            <>
             <div key={car.id} className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow relative ${isDeleting ? 'deleting' : ''}`}>
                 <div className="flex flex-col md:flex-row">
                     {/* Car Image */}
@@ -308,24 +310,30 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 >
                     <Eye className="w-5 h-5" />
                 </button>
+            </div>
 
-                {/* Shipping History Modal */}
-                {showShippingHistory && (
+            {/* Shipping History Modal */}
+            {showShippingHistory && (
+                <Portal>
                     <ShippingHistory
                         vehicleId={car.vehicle.id}
                         onClose={() => setShowShippingHistory(false)}
                     />
-                )}
+                </Portal>
+            )}
 
-                {/* Purchase History Modal */}
-                {showPurchaseHistory && (
+            {/* Purchase History Modal */}
+            {showPurchaseHistory && (
+                <Portal>
                     <PurchaseHistory
                         vehicleId={car.vehicle.id}
                         onClose={() => setShowPurchaseHistory(false)}
                     />
-                )}
+                </Portal>
+            )}
 
-                {/* Delete Confirmation Modal */}
+            {/* Delete Confirmation Modal */}
+            <Portal>
                 <ConfirmationModal
                     isOpen={showDeleteModal}
                     onClose={() => setShowDeleteModal(false)}
@@ -336,12 +344,14 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                     cancelText="Cancel"
                     type="danger"
                 />
-            </div>
+            </Portal>
+            </>
         );
     }
 
     // Grid View Layout (Default)
     return (
+        <>
         <div key={car.id} className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow ${isDeleting ? 'deleting' : ''}`}>
             {/* Car Image */}
             <div className="h-48 bg-gray-200 overflow-hidden relative group">
@@ -520,24 +530,30 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                     </button>
                 </div>
             </div>
+        </div>
 
-            {/* Shipping History Modal */}
-            {showShippingHistory && (
+        {/* Shipping History Modal */}
+        {showShippingHistory && (
+            <Portal>
                 <ShippingHistory
                     vehicleId={car.vehicle.id}
                     onClose={() => setShowShippingHistory(false)}
                 />
-            )}
+            </Portal>
+        )}
 
-            {/* Purchase History Modal */}
-            {showPurchaseHistory && (
+        {/* Purchase History Modal */}
+        {showPurchaseHistory && (
+            <Portal>
                 <PurchaseHistory
                     vehicleId={car.vehicle.id}
                     onClose={() => setShowPurchaseHistory(false)}
                 />
-            )}
+            </Portal>
+        )}
 
-            {/* Delete Confirmation Modal */}
+        {/* Delete Confirmation Modal */}
+        <Portal>
             <ConfirmationModal
                 isOpen={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
@@ -548,7 +564,8 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 cancelText="Cancel"
                 type="danger"
             />
-        </div>
+        </Portal>
+        </>
     );
 }
 
