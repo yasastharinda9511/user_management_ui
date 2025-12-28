@@ -52,8 +52,8 @@ const MainScreen = () => {
         try {
             const [vehiclesRes, customersRes, suppliersRes] = await Promise.all([
                 vehicleService.getAllVehicles({ page: 1, limit: 5, filters:{search : query} }).catch(() => ({ data: [] })),
-                customerService.getAllCustomers({ page: 1, limit: 5, search: query }).catch(() => ({ data: [] })),
-                supplierService.getAllSuppliers({ page: 1, limit: 5, search: query }).catch(() => ({ data: [] }))
+                customerService.searchCustomers(query).catch(() => ({ data: [] })),
+                supplierService.searchSuppliers(query).catch(() => ({ data: [] }))
             ]);
 
             setSearchResults({

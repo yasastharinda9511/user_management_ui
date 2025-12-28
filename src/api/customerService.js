@@ -7,6 +7,12 @@ const customerService = {
         return response.data;
     },
 
+    // Get all customers - Using POST as specified by the user
+    searchCustomers: async (query) => {
+        const response = await carServiceApi.get(`/customers/search?q=${query}`);
+        return response.data;
+    },
+
     // Get customer by ID
     getCustomerById: async (customerId) => {
         const response = await carServiceApi.get(`/customers/${customerId}`);
