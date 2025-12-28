@@ -18,6 +18,7 @@ import { hasPermission } from '../../../utils/permissionUtils';
 import { PERMISSIONS } from '../../../utils/permissions';
 import SupplierCard from './SupplierCard';
 import CreateSupplier from './CreateSupplier';
+import ViewSupplierModal from './ViewSupplierModal';
 
 const Suppliers = () => {
     const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const Suppliers = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [selectedSupplier, setSelectedSupplier] = useState(null);
+    const [viewingSupplier, setViewingSupplier] = useState(null);
 
     useEffect(() => {
         if (localStorage.getItem('supplierViewMode')) {
@@ -45,8 +47,7 @@ const Suppliers = () => {
     // Check if navigated with selected supplier from search
     useEffect(() => {
         if (location.state?.selectedSupplier) {
-            setSelectedSupplier(location.state.selectedSupplier);
-            setShowCreateModal(true);
+            setViewingSupplier(location.state.selectedSupplier);
             // Clear the state to prevent reopening on refresh
             window.history.replaceState({}, document.title);
         }
@@ -217,6 +218,7 @@ const Suppliers = () => {
                             supplier={supplier}
                             viewMode={viewMode}
                             onEdit={handleEditSupplier}
+                            onView={setViewingSupplier}
                         />
                     ))}
                 </div>
@@ -281,6 +283,14 @@ const Suppliers = () => {
                     supplier={selectedSupplier}
                     onClose={handleCloseModal}
                     onSaved={handleSupplierSaved}
+                />
+            )}
+
+            {/* View Supplier Modal */}
+            {viewingSupplier && (
+                <ViewSupplierModal
+                    supplier={viewingSupplier}
+                    onClose={() => setViewingSupplier(null)}
                 />
             )}
         </div>

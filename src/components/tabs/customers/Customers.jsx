@@ -13,6 +13,7 @@ import {
 } from '../../../state/customerSlice.js';
 import CreateCustomerModal from './CreateCustomerModal.jsx';
 import EditCustomerModal from './EditCustomerModal.jsx';
+import ViewCustomerModal from './ViewCustomerModal.jsx';
 
 const Customers = () => {
     const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const Customers = () => {
 
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [editingCustomer, setEditingCustomer] = useState(null);
+    const [viewingCustomer, setViewingCustomer] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
@@ -35,7 +37,7 @@ const Customers = () => {
     // Check if navigated with selected customer from search
     useEffect(() => {
         if (location.state?.selectedCustomer) {
-            setEditingCustomer(location.state.selectedCustomer);
+            setViewingCustomer(location.state.selectedCustomer);
             // Clear the state to prevent reopening on refresh
             window.history.replaceState({}, document.title);
         }
@@ -189,7 +191,11 @@ const Customers = () => {
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                                 {filteredCustomers.map((customer) => (
-                                    <tr key={customer.id || customer.customer_id} className="hover:bg-gray-50 transition-colors">
+                                    <tr
+                                        key={customer.id || customer.customer_id}
+                                        onClick={() => setViewingCustomer(customer)}
+                                        className="hover:bg-gray-50 transition-colors cursor-pointer"
+                                    >
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="flex-shrink-0 h-10 w-10">
@@ -261,7 +267,10 @@ const Customers = () => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                                             <button
-                                                onClick={() => setEditingCustomer(customer)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setEditingCustomer(customer);
+                                                }}
                                                 className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
                                             >
                                                 <Edit className="w-3 h-3 mr-1" />
@@ -335,6 +344,14 @@ const Customers = () => {
                 <EditCustomerModal
                     customer={editingCustomer}
                     onClose={() => setEditingCustomer(null)}
+                />
+            )}
+
+            {/* View Customer Modal */}
+            {viewingCustomer && (
+                <ViewCustomerModal
+                    customer={viewingCustomer}
+                    onClose={() => setViewingCustomer(null)}
                 />
             )}
         </div>

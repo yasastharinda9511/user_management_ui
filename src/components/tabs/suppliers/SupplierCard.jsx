@@ -7,7 +7,7 @@ import { hasPermission } from '../../../utils/permissionUtils';
 import { PERMISSIONS } from '../../../utils/permissions';
 import ConfirmationModal from '../../common/ConfirmationModal';
 
-const SupplierCard = ({ supplier, viewMode = 'grid', onEdit }) => {
+const SupplierCard = ({ supplier, viewMode = 'grid', onEdit, onView }) => {
     const dispatch = useDispatch();
     const permissions = useSelector(selectPermissions);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -47,7 +47,10 @@ const SupplierCard = ({ supplier, viewMode = 'grid', onEdit }) => {
     if (viewMode === 'list') {
         return (
             <>
-                <div className="bg-white rounded-lg p-4 shadow hover:shadow-md transition-shadow border border-gray-200">
+                <div
+                    onClick={() => onView && onView(supplier)}
+                    className="bg-white rounded-lg p-4 shadow hover:shadow-md transition-shadow border border-gray-200 cursor-pointer"
+                >
                     <div className="flex items-start justify-between">
                         <div className="flex items-start space-x-4 flex-1">
                             <div className="p-3 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg">
@@ -96,7 +99,10 @@ const SupplierCard = ({ supplier, viewMode = 'grid', onEdit }) => {
                         <div className="flex items-center gap-2">
                             {hasPermission(permissions, PERMISSIONS.SUPPLIER_UPDATE) && (
                                 <button
-                                    onClick={() => onEdit(supplier)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onEdit(supplier);
+                                    }}
                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                     title="Edit"
                                 >
@@ -105,7 +111,10 @@ const SupplierCard = ({ supplier, viewMode = 'grid', onEdit }) => {
                             )}
                             {hasPermission(permissions, PERMISSIONS.SUPPLIER_DELETE) && (
                                 <button
-                                    onClick={() => setShowDeleteModal(true)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShowDeleteModal(true);
+                                    }}
                                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                     title="Delete"
                                 >
@@ -134,7 +143,10 @@ const SupplierCard = ({ supplier, viewMode = 'grid', onEdit }) => {
     // Grid View
     return (
         <>
-            <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200 overflow-hidden">
+            <div
+                onClick={() => onView && onView(supplier)}
+                className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200 overflow-hidden cursor-pointer"
+            >
                 {/* Header */}
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4">
                     <div className="flex items-start justify-between">
@@ -151,7 +163,10 @@ const SupplierCard = ({ supplier, viewMode = 'grid', onEdit }) => {
                         </div>
                         <div className="relative">
                             <button
-                                onClick={() => setShowMenu(!showMenu)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowMenu(!showMenu);
+                                }}
                                 className="p-1 hover:bg-white/50 rounded transition-colors"
                             >
                                 <MoreVertical className="w-4 h-4 text-gray-600" />
@@ -160,7 +175,8 @@ const SupplierCard = ({ supplier, viewMode = 'grid', onEdit }) => {
                                 <div className="absolute right-0 mt-1 w-32 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
                                     {hasPermission(permissions, PERMISSIONS.SUPPLIER_UPDATE) && (
                                         <button
-                                            onClick={() => {
+                                            onClick={(e) => {
+                                                e.stopPropagation();
                                                 onEdit(supplier);
                                                 setShowMenu(false);
                                             }}
@@ -172,7 +188,8 @@ const SupplierCard = ({ supplier, viewMode = 'grid', onEdit }) => {
                                     )}
                                     {hasPermission(permissions, PERMISSIONS.SUPPLIER_DELETE) && (
                                         <button
-                                            onClick={() => {
+                                            onClick={(e) => {
+                                                e.stopPropagation();
                                                 setShowDeleteModal(true);
                                                 setShowMenu(false);
                                             }}
