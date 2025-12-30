@@ -7,6 +7,7 @@ import userReducer from "./userSlice.js";
 import roleReducer from "./roleSlice.js";
 import customerReducer from "./customerSlice.js";
 import supplierReducer from "./supplierSlice.js";
+import notificationReducer from "./notificationSlice.js";
 
 export const store = configureStore({
     reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
         roles: roleReducer,
         customers: customerReducer,
         suppliers: supplierReducer,
+        notifications: notificationReducer,
     }
 });

@@ -26,6 +26,14 @@ export const imageServiceApi = axios.create({
     },
 });
 
+export const notificationServiceApi = axios.create({
+    baseURL: config.notification_service.base_url,
+    timeout: config.notification_service.timeout_seconds * 1000,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
 // Token refresh state
 let isRefreshing = false;
 let failedQueue = [];
@@ -177,13 +185,16 @@ const addResponseInterceptor = (apiInstance) => {
 addAuthInterceptor(authApi);
 addAuthInterceptor(carServiceApi);
 addAuthInterceptor(imageServiceApi);
+addAuthInterceptor(notificationServiceApi);
 
 addResponseInterceptor(authApi);
 addResponseInterceptor(carServiceApi);
 addResponseInterceptor(imageServiceApi);
+addResponseInterceptor(notificationServiceApi);
 
 export default {
     authApi,
     carServiceApi,
     imageServiceApi,
+    notificationServiceApi,
 };

@@ -5,11 +5,15 @@
     "api_key": "your-api-key"
   },
   "car_service": {
-    "base_url": "https://car-service-backend-sov3y.ondigitalocean.app/car-service/api/v1",
+    "base_url": "http://localhost:8085/car-service/api/v1",
     "timeout_seconds": 30
   },
   "image_service": {
     "base_url": "http://localhost:8083/api/v1",
     "timeout_seconds": 60
+  },
+  "notification_service": {
+    "base_url": "https://email-service-gtdqk.ondigitalocean.app/notification-service",
+    "timeout_seconds": 30
   }
 }

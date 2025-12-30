@@ -30,6 +30,7 @@ export const allTabs = [
     { path: '/customers', label: 'Customers', icon: UserCircle, requiredPermission: PERMISSIONS.CUSTOMER_TAB_ACCESS },
     { path: '/suppliers', label: 'Suppliers', icon: Building2, requiredPermission: PERMISSIONS.SUPPLIER_TAB_ACCESS },
     { path: '/dashboard', label: 'Dashboard', icon: Home, requiredPermission: PERMISSIONS.CAR_TAB_ACCESS },
+    { path: '/notifications', label: 'Notifications', icon: Bell, requiredPermission: PERMISSIONS.NOTIFICATIONS_TAB_ACCESS },
     { path: '/users', label: 'Users', icon: Users , requiredPermission: PERMISSIONS.USER_TAB_ACCESS},
     { path: '/roles', label: 'Roles', icon: Shield , requiredPermission: PERMISSIONS.ROLE_TAB_ACCESS },
     { path: '/permissions', label: 'Permissions', icon: Key , requiredPermission: PERMISSIONS.PERMISSIONS_TAB_ACCESS },

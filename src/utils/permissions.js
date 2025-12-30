@@ -16,5 +16,6 @@ export const PERMISSIONS = {
     PROFILE_TAB_ACCESS : 'profile.access',
     DASHBOARD_TAB_ACCESS : 'dashboard.access',
     SETTINGS_TAB_ACCESS : 'settings.access',
+    NOTIFICATIONS_TAB_ACCESS : 'notification.access',
 
 }

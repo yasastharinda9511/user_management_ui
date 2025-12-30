@@ -21,6 +21,7 @@ import vehicleService from '../api/vehicleService';
 import customerService from '../api/customerService';
 import supplierService from '../api/supplierService';
 import ProfileDropdown from "./common/ProfileDropDown.jsx";
+import { fetchNotifications, selectUnreadCount } from '../state/notificationSlice.js';
 
 const MainScreen = () => {
     const navigate = useNavigate();
@@ -28,6 +29,7 @@ const MainScreen = () => {
     const dispatch = useDispatch();
     const permissions = useSelector(selectPermissions);
     const user = useSelector(selectUser);
+    const unreadNotifications = useSelector(selectUnreadCount);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -40,6 +42,10 @@ const MainScreen = () => {
     const searchTimeoutRef = useRef(null);
     const profileRef = useRef(null);
     const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+
+    useEffect(() => {
+        dispatch(fetchNotifications({ page: 1, page_size: 20 }));
+    }, [dispatch]);
 
     // Global search functionality
     const performSearch = async (query) => {
@@ -385,9 +391,17 @@ const MainScreen = () => {
 
                         {/* Right side icons */}
                         <div className="flex items-center space-x-4">
-                            <button className="relative p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
+                            <button
+                                onClick={() => navigate('/notifications')}
+                                className="relative p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+                                title="Notifications"
+                            >
                                 <Bell className="w-5 h-5" />
-                                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                                {unreadNotifications > 0 && (
+                                    <span className="absolute top-1 right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1">
+                                        {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                                    </span>
+                                )}
                             </button>
 
                             {/* Profile Dropdown */}

@@ -23,6 +23,7 @@ import Makes from "./components/tabs/makes/Makes.jsx";
 import Customers from "./components/tabs/customers/Customers.jsx";
 import Suppliers from "./components/tabs/suppliers/Suppliers.jsx";
 import PurchaseTracking from "./components/tabs/purchaseTracking/PurchaseTracking.jsx";
+import Notifications from "./components/tabs/notifications/Notifications.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -64,6 +65,7 @@ function App() {
                     <Route path="makes" element={<Makes />} />
                     <Route path="customers" element={<Customers />} />
                     <Route path="suppliers" element={<Suppliers />} />
+                    <Route path="notifications" element={<Notifications />} />
                     <Route path="users" element={<Users />} />
                     <Route path="roles" element={<Roles />} />
                     <Route path="permissions" element={<Permissions />} />

@@ -73,7 +73,8 @@ const CreatePermissionModal = ({ onClose }) => {
         RESOURCES.SHIPPING,
         RESOURCES.PURCHASE,
         RESOURCES.CUSTOMERS,
-        RESOURCES.SUPPLIERS
+        RESOURCES.SUPPLIERS,
+        RESOURCES.NOTIFICATION
     ];
 
     return (
