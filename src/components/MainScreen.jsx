@@ -165,9 +165,11 @@ const MainScreen = () => {
                 {/* Sidebar Header */}
                 <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
                     <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                            <User className="w-5 h-5 text-white" />
-                        </div>
+                        <img
+                            src="/tarragon.jpg"
+                            alt="Tarragon.lk Logo"
+                            className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
+                        />
                         {!sidebarCollapsed && (
                             <span className="text-xl font-bold text-gray-900">Tarragon.lk</span>
                         )}
