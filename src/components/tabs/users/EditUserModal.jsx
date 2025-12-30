@@ -9,6 +9,7 @@ const EditUserModal = ({ user, onClose }) => {
     const updating = useSelector(selectUpdating);
     const roles = useSelector(selectRoles);
 
+    const [isClosing, setIsClosing] = useState(false);
     const [formData, setFormData] = useState({
         first_name: user.first_name || '',
         last_name: user.last_name || '',
