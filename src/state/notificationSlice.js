@@ -1,6 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import notificationService from '../api/notificationService';
 
+const LAST_SEEN_COUNT_KEY = 'last_seen_notification_count';
+
+const getLastSeenCount = () => {
+    const count = localStorage.getItem(LAST_SEEN_COUNT_KEY);
+    return count ? parseInt(count, 10) : 0;
+};
+
+const setLastSeenCount = (count) => {
+    localStorage.setItem(LAST_SEEN_COUNT_KEY, count.toString());
+};
+
 export const fetchNotifications = createAsyncThunk(
     'notifications/fetchNotifications',
     async (params, { rejectWithValue }) => {
@@ -13,41 +24,18 @@ export const fetchNotifications = createAsyncThunk(
     }
 );
 
-export const markNotificationAsRead = createAsyncThunk(
-    'notifications/markAsRead',
-    async (notificationId, { rejectWithValue }) => {
-        try {
-            await notificationService.markAsRead(notificationId);
-            return notificationId;
-        } catch (error) {
-            return rejectWithValue(error.response?.data || error.message);
-        }
-    }
-);
-
 export const markAllNotificationsAsRead = createAsyncThunk(
     'notifications/markAllAsRead',
-    async (_, { rejectWithValue }) => {
+    async (totalCount, { rejectWithValue }) => {
         try {
-            await notificationService.markAllAsRead();
-            return true;
+            setLastSeenCount(totalCount);
+            return totalCount;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
         }
     }
 );
 
-export const deleteNotification = createAsyncThunk(
-    'notifications/delete',
-    async (notificationId, { rejectWithValue }) => {
-        try {
-            await notificationService.deleteNotification(notificationId);
-            return notificationId;
-        } catch (error) {
-            return rejectWithValue(error.response?.data || error.message);
-        }
-    }
-);
 
 const notificationSlice = createSlice({
     name: 'notifications',
@@ -61,7 +49,8 @@ const notificationSlice = createSlice({
         },
         loading: false,
         error: null,
-        unreadCount: 0
+        unreadCount: 0,
+        lastSeenCount: getLastSeenCount()
     },
     reducers: {
         clearNotifications: (state) => {
@@ -84,28 +73,16 @@ const notificationSlice = createSlice({
                 state.loading = false;
                 state.notifications = action.payload.notifications || [];
                 state.pagination = action.payload.pagination || state.pagination;
-                state.unreadCount = state.notifications.filter(n => !n.read).length;
+                state.lastSeenCount = getLastSeenCount();
+                state.unreadCount = Math.max(0, state.pagination.total - state.lastSeenCount);
             })
             .addCase(fetchNotifications.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
-            .addCase(markNotificationAsRead.fulfilled, (state, action) => {
-                const notification = state.notifications.find(n => n.notification_id === action.payload);
-                if (notification) {
-                    notification.read = true;
-                    state.unreadCount = Math.max(0, state.unreadCount - 1);
-                }
-            })
-            .addCase(markAllNotificationsAsRead.fulfilled, (state) => {
-                state.notifications.forEach(n => n.read = true);
+            .addCase(markAllNotificationsAsRead.fulfilled, (state, action) => {
+                state.lastSeenCount = action.payload;
                 state.unreadCount = 0;
-            })
-            .addCase(deleteNotification.fulfilled, (state, action) => {
-                state.notifications = state.notifications.filter(
-                    n => n.notification_id !== action.payload
-                );
-                state.pagination.total = Math.max(0, state.pagination.total - 1);
             });
     }
 });
@@ -117,5 +94,6 @@ export const selectNotificationsPagination = (state) => state.notifications.pagi
 export const selectNotificationsLoading = (state) => state.notifications.loading;
 export const selectNotificationsError = (state) => state.notifications.error;
 export const selectUnreadCount = (state) => state.notifications.unreadCount;
+export const selectLastSeenCount = (state) => state.notifications.lastSeenCount;
 
 export default notificationSlice.reducer;

@@ -6,21 +6,17 @@ import {
     RefreshCw,
     ChevronLeft,
     ChevronRight,
-    Trash2,
     CheckCheck,
     Package,
     TruckIcon,
     AlertCircle,
     Info,
     CheckCircle,
-    XCircle,
     Car
 } from 'lucide-react';
 import {
     fetchNotifications,
-    markNotificationAsRead,
     markAllNotificationsAsRead,
-    deleteNotification,
     selectNotifications,
     selectNotificationsPagination,
     selectNotificationsLoading,
@@ -51,16 +47,8 @@ const Notifications = () => {
         loadNotifications(currentPage);
     };
 
-    const handleMarkAsRead = (notificationId) => {
-        dispatch(markNotificationAsRead(notificationId));
-    };
-
     const handleMarkAllAsRead = () => {
-        dispatch(markAllNotificationsAsRead());
-    };
-
-    const handleDelete = (notificationId) => {
-        dispatch(deleteNotification(notificationId));
+        dispatch(markAllNotificationsAsRead(pagination.total));
     };
 
     const handlePageChange = (newPage) => {
@@ -121,16 +109,13 @@ const Notifications = () => {
         });
     };
 
-    const NotificationCard = ({ notification }) => {
+    const NotificationCard = ({ notification, index }) => {
         const payload = notification.payload || {};
-        const isUnread = !notification.read;
 
         return (
-            <div className={`bg-white rounded-lg border p-4 hover:shadow-md transition-shadow ${
-                isUnread ? 'border-blue-300 bg-blue-50' : 'border-gray-200'
-            }`}>
+            <div className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-start gap-4">
-                    <div className={`p-3 rounded-lg ${isUnread ? 'bg-white' : 'bg-gray-50'}`}>
+                    <div className="p-3 rounded-lg bg-gray-50">
                         {getNotificationIcon(notification.notification_type, notification.priority)}
                     </div>
 
@@ -142,29 +127,8 @@ const Notifications = () => {
                                         {notification.notification_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                                     </h3>
                                     {getPriorityBadge(notification.priority)}
-                                    {isUnread && (
-                                        <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
-                                    )}
                                 </div>
                                 <p className="text-sm text-gray-600">{payload.message}</p>
-                            </div>
-                            <div className="flex items-center gap-2 flex-shrink-0">
-                                {isUnread && (
-                                    <button
-                                        onClick={() => handleMarkAsRead(notification.notification_id)}
-                                        className="p-1.5 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
-                                        title="Mark as read"
-                                    >
-                                        <CheckCheck className="w-4 h-4" />
-                                    </button>
-                                )}
-                                <button
-                                    onClick={() => handleDelete(notification.notification_id)}
-                                    className="p-1.5 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
-                                    title="Delete"
-                                >
-                                    <Trash2 className="w-4 h-4" />
-                                </button>
                             </div>
                         </div>
 
@@ -322,8 +286,8 @@ const Notifications = () => {
                 </div>
             ) : (
                 <div className="space-y-3">
-                    {notifications.map((notification) => (
-                        <NotificationCard key={notification.notification_id} notification={notification} />
+                    {notifications.map((notification, index) => (
+                        <NotificationCard key={notification.notification_id} notification={notification} index={index} />
                     ))}
                 </div>
             )}

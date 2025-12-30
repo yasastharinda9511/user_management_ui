@@ -10,21 +10,6 @@ const notificationService = {
             }
         });
         return response.data;
-    },
-
-    markAsRead: async (notificationId) => {
-        const response = await notificationServiceApi.put(`/notifications/${notificationId}/read`);
-        return response.data;
-    },
-
-    markAllAsRead: async () => {
-        const response = await notificationServiceApi.put('/notifications/read-all');
-        return response.data;
-    },
-
-    deleteNotification: async (notificationId) => {
-        const response = await notificationServiceApi.delete(`/notifications/${notificationId}`);
-        return response.data;
     }
 };
 
