@@ -1,9 +1,13 @@
 import { carServiceApi } from './axiosClient';
 
 const customerService = {
-    // Get all customers - Using POST as specified by the user
-    getAllCustomers: async () => {
-        const response = await carServiceApi.get('/customers');
+    // Get all customers with pagination support
+    getAllCustomers: async ({ page = 1, limit = 10, search = '' } = {}) => {
+        const queryParams = { page, limit };
+        if (search) {
+            queryParams.q = search;
+        }
+        const response = await carServiceApi.get('/customers', { params: queryParams });
         return response.data;
     },
 

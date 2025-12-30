@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import customerService from '../api/customerService';
 
-// Fetch all customers
+// Fetch all customers with pagination
 export const fetchCustomers = createAsyncThunk(
     'customers/fetchCustomers',
-    async (_, { rejectWithValue }) => {
+    async ({ page = 1, limit = 10, search = '' } = {}, { rejectWithValue }) => {
         try {
-            const data = await customerService.getAllCustomers();
+            const data = await customerService.getAllCustomers({ page, limit, search });
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || error.message);
@@ -84,6 +84,10 @@ const initialState = {
     customers: [],
     selectedCustomer: null,
     totalCount: 0,
+    currentPage: 1,
+    totalPages: 1,
+    limit: 10,
+    totalCustomers: 0,
     loading: false,
     loadingCustomer: false,
     updating: false,
@@ -103,6 +107,13 @@ const customerSlice = createSlice({
         clearSelectedCustomer: (state) => {
             state.selectedCustomer = null;
         },
+        setCurrentPage: (state, action) => {
+            state.currentPage = action.payload;
+        },
+        setPageLimit: (state, action) => {
+            state.limit = action.payload;
+            state.currentPage = 1; // Reset to first page when changing limit
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -113,14 +124,41 @@ const customerSlice = createSlice({
             })
             .addCase(fetchCustomers.fulfilled, (state, action) => {
                 state.loading = false;
-                state.customers = action.payload.data || action.payload || [];
-                state.totalCount = action.payload.meta.total || (action.payload.customers ? action.payload.customers.length : action.payload.length);
+
+                // Check if the response is valid
+                if (!action.payload) {
+                    state.customers = [];
+                    state.totalCustomers = 0;
+                    state.totalCount = 0;
+                    state.totalPages = 1;
+                    state.error = 'Invalid response from server';
+                    return;
+                }
+
+                // Ensure customers is always an array
+                const customersData = action.payload.data || action.payload;
+                state.customers = Array.isArray(customersData) ? customersData : [];
+
+                // Handle pagination metadata
+                if (action.payload.meta) {
+                    state.totalCustomers = action.payload.meta.total || 0;
+                    state.totalCount = action.payload.meta.count || state.customers.length;
+                    state.currentPage = action.payload.meta.page || state.currentPage;
+                    state.totalPages = Math.ceil(action.payload.meta.total / action.payload.meta.limit) || 1;
+                } else {
+                    // Fallback for non-paginated responses
+                    state.totalCustomers = state.customers.length;
+                    state.totalCount = state.customers.length;
+                    state.totalPages = 1;
+                }
             })
             .addCase(fetchCustomers.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload || 'Failed to fetch customers';
                 state.customers = [];
                 state.totalCount = 0;
+                state.totalCustomers = 0;
+                state.totalPages = 1;
             })
 
             // Fetch Customer by ID
@@ -211,7 +249,7 @@ const customerSlice = createSlice({
 });
 
 // Actions
-export const { clearError, clearSelectedCustomer } = customerSlice.actions;
+export const { clearError, clearSelectedCustomer, setCurrentPage, setPageLimit } = customerSlice.actions;
 
 // Selectors
 export const selectCustomers = (state) => state.customers.customers;
@@ -224,10 +262,22 @@ export const selectError = (state) => state.customers.error;
 export const selectUpdateError = (state) => state.customers.updateError;
 
 // Stats selectors
-export const selectActiveCustomersCount = (state) =>
-    state.customers.customers.filter(c => c.is_active).length;
+export const selectActiveCustomersCount = (state) => {
+    const customers = state.customers?.customers;
+    if (!Array.isArray(customers)) return 0;
+    return customers.filter(c => c?.is_active).length;
+};
 
-export const selectCustomersByType = (state, customerType) =>
-    state.customers.customers.filter(c => c.customer_type === customerType);
+export const selectCustomersByType = (state, customerType) => {
+    const customers = state.customers?.customers;
+    if (!Array.isArray(customers)) return [];
+    return customers.filter(c => c?.customer_type === customerType);
+};
+
+// Pagination selectors
+export const selectCurrentPage = (state) => state.customers.currentPage;
+export const selectTotalPages = (state) => state.customers.totalPages;
+export const selectPageLimit = (state) => state.customers.limit;
+export const selectTotalCustomers = (state) => state.customers.totalCustomers;
 
 export default customerSlice.reducer;

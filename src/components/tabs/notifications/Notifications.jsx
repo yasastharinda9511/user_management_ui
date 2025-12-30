@@ -12,7 +12,8 @@ import {
     AlertCircle,
     Info,
     CheckCircle,
-    Car
+    Car,
+    UserCircle
 } from 'lucide-react';
 import {
     fetchNotifications,
@@ -61,6 +62,8 @@ const Notifications = () => {
         switch (type) {
             case 'vehicle_created':
                 return <Car className="w-5 h-5 text-green-600" />;
+            case 'customer_created':
+                return <UserCircle className="w-5 h-5 text-green-600" />;
             case 'purchase_status':
                 return <Package className="w-5 h-5 text-blue-600" />;
             case 'shipping_status':

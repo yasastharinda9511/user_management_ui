@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Users, Mail, Phone, User, MapPin, CheckCircle, XCircle, RefreshCw, Edit, Plus, Tag } from 'lucide-react';
+import { Users, Mail, Phone, User, MapPin, CheckCircle, XCircle, RefreshCw, Edit, Plus, Tag, Search } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import {
@@ -9,7 +9,13 @@ import {
     selectLoading,
     selectError,
     selectUpdating,
-    selectActiveCustomersCount
+    selectActiveCustomersCount,
+    selectCurrentPage,
+    selectTotalPages,
+    selectPageLimit,
+    selectTotalCustomers,
+    setCurrentPage,
+    setPageLimit
 } from '../../../state/customerSlice.js';
 import CreateCustomerModal from './CreateCustomerModal.jsx';
 import EditCustomerModal from './EditCustomerModal.jsx';
@@ -24,15 +30,31 @@ const Customers = () => {
     const updating = useSelector(selectUpdating);
     const error = useSelector(selectError);
     const activeCustomersCount = useSelector(selectActiveCustomersCount);
+    const currentPage = useSelector(selectCurrentPage);
+    const totalPages = useSelector(selectTotalPages);
+    const pageLimit = useSelector(selectPageLimit);
+    const totalCustomers = useSelector(selectTotalCustomers);
 
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [editingCustomer, setEditingCustomer] = useState(null);
     const [viewingCustomer, setViewingCustomer] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+    // Debounce search term to avoid excessive API calls
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 500); // 500ms delay
+
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, [searchTerm]);
 
     useEffect(() => {
-        dispatch(fetchCustomers());
-    }, [dispatch]);
+        dispatch(fetchCustomers({ page: currentPage, limit: pageLimit, search: debouncedSearchTerm }));
+    }, [dispatch, currentPage, pageLimit, debouncedSearchTerm]);
 
     // Check if navigated with selected customer from search
     useEffect(() => {
@@ -44,12 +66,26 @@ const Customers = () => {
     }, [location]);
 
     const handleRefresh = () => {
-        dispatch(fetchCustomers());
+        dispatch(fetchCustomers({ page: currentPage, limit: pageLimit, search: debouncedSearchTerm }));
+    };
+
+    const handlePageChange = (pageNumber) => {
+        dispatch(setCurrentPage(pageNumber));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handlePageLimitChange = (newLimit) => {
+        dispatch(setPageLimit(Number(newLimit)));
+    };
+
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+        dispatch(setCurrentPage(1)); // Reset to first page on search
     };
 
     useEffect(() => {
         if (!updating) {
-            dispatch(fetchCustomers());
+            dispatch(fetchCustomers({ page: currentPage, limit: pageLimit, search: debouncedSearchTerm }));
         }
     }, [updating]);
 
@@ -64,17 +100,6 @@ const Customers = () => {
         });
     };
 
-    // Filter customers based on search term
-    const filteredCustomers = customers.filter(customer => {
-        const search = searchTerm.toLowerCase();
-        return (
-            customer.customer_name?.toLowerCase().includes(search) ||
-            customer.email?.toLowerCase().includes(search) ||
-            customer.contact_number?.toLowerCase().includes(search) ||
-            customer.customer_type?.toLowerCase().includes(search)
-        );
-    });
-
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -87,7 +112,7 @@ const Customers = () => {
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="text-sm text-gray-600">
-                        Total Customers: <span className="font-semibold text-gray-900">{totalCount}</span>
+                        Total Customers: <span className="font-semibold text-gray-900">{totalCustomers}</span>
                     </div>
                     <button
                         onClick={handleRefresh}
@@ -110,13 +135,22 @@ const Customers = () => {
             {/* Search Bar */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
                 <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Search className="h-5 w-5 text-gray-400" />
+                    </div>
                     <input
                         type="text"
                         placeholder="Search customers by name, email, phone, or type..."
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        onChange={handleSearch}
+                        className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
+                    {/* Show loading indicator when debouncing or loading */}
+                    {(searchTerm !== debouncedSearchTerm || (loading && searchTerm)) && (
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <RefreshCw className="h-5 w-5 text-blue-500 animate-spin" />
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -141,7 +175,7 @@ const Customers = () => {
             )}
 
             {/* No Customers */}
-            {!loading && !error && filteredCustomers.length === 0 && (
+            {!loading && !error && customers.length === 0 && (
                 <div className="text-center py-12">
                     <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -163,7 +197,7 @@ const Customers = () => {
             )}
 
             {/* Customers Table */}
-            {!loading && filteredCustomers.length > 0 && (
+            {!loading && customers.length > 0 && (
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
@@ -190,7 +224,7 @@ const Customers = () => {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {filteredCustomers.map((customer) => (
+                                {customers.map((customer) => (
                                     <tr
                                         key={customer.id || customer.customer_id}
                                         onClick={() => setViewingCustomer(customer)}
@@ -282,6 +316,90 @@ const Customers = () => {
                             </tbody>
                         </table>
                     </div>
+
+                    {/* Pagination Controls */}
+                    {totalPages > 1 && (
+                        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                {/* Left side - Showing info */}
+                                <div className="text-sm text-gray-700">
+                                    Showing <span className="font-medium">{(currentPage - 1) * pageLimit + 1}</span> to{' '}
+                                    <span className="font-medium">{Math.min(currentPage * pageLimit, totalCustomers)}</span> of{' '}
+                                    <span className="font-medium">{totalCustomers}</span> customers
+                                </div>
+
+                                {/* Center - Page navigation */}
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => handlePageChange(currentPage - 1)}
+                                        disabled={currentPage === 1}
+                                        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        Previous
+                                    </button>
+
+                                    {/* Page numbers */}
+                                    <div className="flex items-center gap-1">
+                                        {[...Array(totalPages)].map((_, index) => {
+                                            const pageNumber = index + 1;
+                                            // Show first page, last page, current page, and pages around current
+                                            if (
+                                                pageNumber === 1 ||
+                                                pageNumber === totalPages ||
+                                                (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                                            ) {
+                                                return (
+                                                    <button
+                                                        key={pageNumber}
+                                                        onClick={() => handlePageChange(pageNumber)}
+                                                        className={`px-3 py-2 text-sm font-medium rounded-lg ${
+                                                            currentPage === pageNumber
+                                                                ? 'bg-blue-600 text-white'
+                                                                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                                        }`}
+                                                    >
+                                                        {pageNumber}
+                                                    </button>
+                                                );
+                                            } else if (
+                                                pageNumber === currentPage - 2 ||
+                                                pageNumber === currentPage + 2
+                                            ) {
+                                                return <span key={pageNumber} className="px-2 text-gray-500">...</span>;
+                                            }
+                                            return null;
+                                        })}
+                                    </div>
+
+                                    <button
+                                        onClick={() => handlePageChange(currentPage + 1)}
+                                        disabled={currentPage === totalPages}
+                                        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+
+                                {/* Right side - Items per page selector */}
+                                <div className="flex items-center gap-2">
+                                    <label htmlFor="pageLimit" className="text-sm font-medium text-gray-700">
+                                        Items per page:
+                                    </label>
+                                    <select
+                                        id="pageLimit"
+                                        value={pageLimit}
+                                        onChange={(e) => handlePageLimitChange(e.target.value)}
+                                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -307,7 +425,7 @@ const Customers = () => {
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Inactive Customers</p>
                                 <p className="text-2xl font-bold text-gray-900 mt-2">
-                                    {totalCount - activeCustomersCount}
+                                    {totalCustomers - activeCustomersCount}
                                 </p>
                             </div>
                             <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
@@ -321,7 +439,7 @@ const Customers = () => {
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Total Customers</p>
                                 <p className="text-2xl font-bold text-gray-900 mt-2">
-                                    {totalCount}
+                                    {totalCustomers}
                                 </p>
                             </div>
                             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
