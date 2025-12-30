@@ -1,5 +1,5 @@
 import React from "react";
-import {AlertCircle, RefreshCw, TruckIcon, CheckCircle, UserCircle, Info, Store} from "lucide-react";
+import {Car, AlertCircle, Package, TruckIcon, CheckCircle, UserCircle, Info, Store} from "lucide-react";
 
 
 const NotificationCard = ({ notification, index }) => {
