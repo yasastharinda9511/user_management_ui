@@ -6,7 +6,7 @@
   },
   "car_service": {
     "base_url": "https://car-service-backend-sov3y.ondigitalocean.app/car-service/api/v1",
-    "timeout_seconds": 30
+    "timeout_seconds": 60
   },
   "image_service": {
     "base_url": "http://localhost:8083/api/v1",
