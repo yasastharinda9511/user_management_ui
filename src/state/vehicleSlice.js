@@ -171,7 +171,7 @@ const initialState = {
     // Pagination
     currentPage: 1,
     totalPages: 1,
-    limit: 10,
+    limit: 12,
     totalVehicles: 0,
 
     // Loading states

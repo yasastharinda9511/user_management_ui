@@ -44,6 +44,15 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
         }
     };
 
+    const formatStatus = (status) => {
+        if (!status) return '';
+        // Replace underscores with spaces and convert to title case
+        return status
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+    };
+
     const getSaleStatusColor = (status) => {
         switch (status) {
             case 'SOLD':
@@ -161,10 +170,10 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     if (viewMode === 'list') {
         return (
             <>
-            <div key={car.id} className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow relative ${isDeleting ? 'deleting' : ''}`}>
+            <div key={car.id} className={`bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-sm border-l-2 border-blue-300 overflow-hidden hover:shadow-lg hover:border-blue-400 transition-all relative ${isDeleting ? 'deleting' : ''}`}>
                 <div className="flex flex-col md:flex-row">
                     {/* Car Image */}
-                    <div className="md:w-64 h-48 md:h-auto bg-gray-200 overflow-hidden flex-shrink-0 relative group">
+                    <div className="md:w-64 h-48 md:h-auto bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden flex-shrink-0 relative group">
                         {imageUrls.length > 0 ? (
                             <img
                                 src={imageUrls[currentImageIndex]}
@@ -172,8 +181,8 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                             />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                <Car className="w-16 h-16 text-gray-300" />
+                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+                                <Car className="w-16 h-16 text-blue-300" />
                             </div>
                         )}
                         {/* Navigation Arrows */}
@@ -228,25 +237,25 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                             </div>
                                         )}
                                         <div>
-                                            <h3 className="text-lg font-semibold text-gray-900">{car.vehicle.make}</h3>
-                                            <p className="text-sm text-gray-600">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
-                                            <p className="text-xs text-gray-500">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
+                                            <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{car.vehicle.make}</h3>
+                                            <p className="text-sm text-gray-700 font-medium">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
+                                            <p className="text-xs text-gray-600">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-3">
                                         <div className="flex flex-col gap-2">
-                                            <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
-                                                {car.vehicle_shipping.shipping_status}
+                                            <span className={`px-2 py-1 text-xs font-semibold rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)} tracking-wide text-center inline-flex items-center justify-center`}>
+                                                {formatStatus(car.vehicle_shipping.shipping_status)}
                                             </span>
                                             {car.vehicle_purchase?.purchase_status && (
-                                                <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getPurchaseStatusColor(car.vehicle_purchase.purchase_status)}`}>
-                                                    {car.vehicle_purchase.purchase_status}
+                                                <span className={`px-2 py-1 text-xs font-semibold rounded-full border ${getPurchaseStatusColor(car.vehicle_purchase.purchase_status)} tracking-wide text-center inline-flex items-center justify-center`}>
+                                                    {formatStatus(car.vehicle_purchase.purchase_status)}
                                                 </span>
                                             )}
                                         </div>
                                         {car.vehicle_sale?.sale_status && (
-                                            <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getSaleStatusColor(car.vehicle_sale.sale_status)}`}>
-                                                {car.vehicle_sale.sale_status}
+                                            <span className={`px-2 py-1 text-xs font-semibold rounded-full border ${getSaleStatusColor(car.vehicle_sale.sale_status)} tracking-wide text-center inline-flex items-center justify-center`}>
+                                                {formatStatus(car.vehicle_sale.sale_status)}
                                             </span>
                                         )}
                                         <button
@@ -317,20 +326,20 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                     </div>
 
                                     <div className="flex items-center text-sm">
-                                        <Ship className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
+                                        <Ship className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" />
                                         <span className="text-gray-600 min-w-[80px]">Shipped:</span>
                                         <span className="text-gray-900">{formatDate(car.vehicle.created_at)}</span>
                                     </div>
 
                                     <div className="flex items-center text-sm">
-                                        <MapPin className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
+                                        <MapPin className="w-4 h-4 text-red-500 mr-2 flex-shrink-0" />
                                         <span className="text-gray-600 min-w-[80px]">Location:</span>
                                         <span className="text-gray-900">{car.vehicle_shipping.departure_harbour}</span>
                                     </div>
 
                                     {car.vehicle_shipping && (
                                         <div className="flex items-center text-sm">
-                                            <Truck className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
+                                            <Truck className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" />
                                             <span className="text-gray-600 min-w-[80px]">Vessel:</span>
                                             <span className="text-gray-900 text-xs">{car.vehicle_shipping.vessel_name}</span>
                                         </div>
@@ -409,9 +418,9 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     // Grid View Layout (Default)
     return (
         <>
-        <div key={car.id} className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow ${isDeleting ? 'deleting' : ''}`}>
+        <div key={car.id} className={`bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-sm border-t-2 border-blue-300 overflow-hidden hover:shadow-xl hover:border-blue-400 hover:-translate-y-1 transition-all duration-300 ${isDeleting ? 'deleting' : ''}`}>
             {/* Car Image */}
-            <div className="h-48 bg-gray-200 overflow-hidden relative group">
+            <div className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden relative group">
                 {imageUrls.length > 0 ? (
                     <img
                         src={imageUrls[currentImageIndex]}
@@ -419,8 +428,8 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                        <Car className="w-16 h-16 text-gray-300" />
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+                        <Car className="w-16 h-16 text-blue-300" />
                     </div>
                 )}
                 {/* Navigation Arrows */}
@@ -473,25 +482,25 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                             </div>
                         )}
                         <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-gray-900">{car.vehicle.make}</h3>
-                            <p className="text-sm text-gray-600">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
-                            <p className="text-xs text-gray-500">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
+                            <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{car.vehicle.make}</h3>
+                            <p className="text-sm text-gray-700 font-medium">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
+                            <p className="text-xs text-gray-600">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
                         </div>
                     </div>
                     <div className="flex items-start gap-3">
                         <div className="flex flex-col gap-2">
-                            <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
-                                {car.vehicle_shipping.shipping_status}
+                            <span className={`px-2 py-1 text-xs font-semibold rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)} tracking-wide text-center inline-flex items-center justify-center`}>
+                                {formatStatus(car.vehicle_shipping.shipping_status)}
                             </span>
                             {car.vehicle_purchase?.purchase_status && (
-                                <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getPurchaseStatusColor(car.vehicle_purchase.purchase_status)}`}>
-                                    {car.vehicle_purchase.purchase_status}
+                                <span className={`px-2 py-1 text-xs font-semibold rounded-full border ${getPurchaseStatusColor(car.vehicle_purchase.purchase_status)} tracking-wide text-center inline-flex items-center justify-center`}>
+                                    {formatStatus(car.vehicle_purchase.purchase_status)}
                                 </span>
                             )}
                         </div>
                         {car.vehicle_sale?.sale_status && (
-                            <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getSaleStatusColor(car.vehicle_sale.sale_status)}`}>
-                                {car.vehicle_sale.sale_status}
+                            <span className={`px-2 py-1 text-xs font-semibold rounded-full border ${getSaleStatusColor(car.vehicle_sale.sale_status)} tracking-wide text-center inline-flex items-center justify-center`}>
+                                {formatStatus(car.vehicle_sale.sale_status)}
                             </span>
                         )}
                         <button
@@ -520,9 +529,9 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 {/* Details Grid */}
                 <div className="space-y-3 mb-4">
                     <div className="flex items-center text-sm">
-                        <Package className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
+                        <Package className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" />
                         <span className="text-gray-600 min-w-[80px]">Code:  </span>
-                        <span className="font-semibold text-blue-700">{car.vehicle.code ? `${car.vehicle.code}` : 'N/A'}</span>
+                        <span className="font-semibold text-blue-600">{car.vehicle.code ? `${car.vehicle.code}` : 'N/A'}</span>
                         {car.vehicle.code && (
                             <button
                                 onClick={(e) => {
@@ -562,20 +571,20 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                     </div>
 
                     <div className="flex items-center text-sm">
-                        <Ship className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
+                        <Ship className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" />
                         <span className="text-gray-600 min-w-[80px]">Shipped:</span>
                         <span className="text-gray-900">{formatDate(car.vehicle.created_at)}</span>
                     </div>
 
                     <div className="flex items-center text-sm">
-                        <MapPin className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
+                        <MapPin className="w-4 h-4 text-red-500 mr-2 flex-shrink-0" />
                         <span className="text-gray-600 min-w-[80px]">Location:</span>
                         <span className="text-gray-900">{car.vehicle_shipping.departure_harbour}</span>
                     </div>
 
                     {car.vehicle_shipping && (
                         <div className="flex items-center text-sm">
-                            <Truck className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
+                            <Truck className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" />
                             <span className="text-gray-600 min-w-[80px]">Vessel:</span>
                             <span className="text-gray-900 text-xs">{car.vehicle_shipping.vessel_name}</span>
                         </div>
