@@ -21,6 +21,8 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [copiedField, setCopiedField] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [makeLogoUrl, setMakeLogoUrl] = useState(null);
+    const [loadingMakeLogo, setLoadingMakeLogo] = useState(false);
     const permissions = useSelector(selectPermissions);
 
     const formatDate = (dateString) => {
@@ -50,6 +52,19 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 return 'bg-yellow-50 text-yellow-700 border-yellow-200';
             case 'AVAILABLE':
                 return 'bg-blue-50 text-blue-700 border-blue-200';
+            default:
+                return 'bg-gray-50 text-gray-700 border-gray-200';
+        }
+    };
+
+    const getPurchaseStatusColor = (status) => {
+        switch (status) {
+            case 'PURCHASED':
+                return 'bg-green-50 text-green-700 border-green-200';
+            case 'PENDING':
+                return 'bg-yellow-50 text-yellow-700 border-yellow-200';
+            case 'CANCELLED':
+                return 'bg-red-50 text-red-700 border-red-200';
             default:
                 return 'bg-gray-50 text-gray-700 border-gray-200';
         }
@@ -85,6 +100,28 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
 
         fetchImageUrls();
     }, [car.vehicle_image]);
+
+    useEffect(() => {
+        const fetchMakeLogo = async () => {
+            if (!car.vehicle.make_id) {
+                setMakeLogoUrl(null);
+                return;
+            }
+
+            try {
+                setLoadingMakeLogo(true);
+                const response = await vehicleService.getMakeLogo(car.vehicle.make_id);
+                setMakeLogoUrl(response.data.presigned_url);
+            } catch (error) {
+                console.error('Error fetching make logo:', error);
+                setMakeLogoUrl(null);
+            } finally {
+                setLoadingMakeLogo(false);
+            }
+        };
+
+        fetchMakeLogo();
+    }, [car.vehicle.make_id]);
 
     const handlePreviousImage = (e) => {
         e.stopPropagation();
@@ -178,15 +215,35 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                             <div className="flex-1">
                                 {/* Header */}
                                 <div className="flex justify-between items-start mb-4">
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-900">{car.vehicle.make}</h3>
-                                        <p className="text-sm text-gray-600">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
-                                        <p className="text-xs text-gray-500">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
+                                    <div className="flex items-start gap-3">
+                                        {/* Make Logo */}
+                                        {makeLogoUrl && (
+                                            <div className="w-12 h-12 flex-shrink-0 bg-white border border-gray-200 rounded-lg p-1.5 flex items-center justify-center">
+                                                <img
+                                                    src={makeLogoUrl}
+                                                    alt={`${car.vehicle.make} logo`}
+                                                    className="max-w-full max-h-full object-contain"
+                                                    onError={(e) => e.target.style.display = 'none'}
+                                                />
+                                            </div>
+                                        )}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900">{car.vehicle.make}</h3>
+                                            <p className="text-sm text-gray-600">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
+                                            <p className="text-xs text-gray-500">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                        <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
-                                            {car.vehicle_shipping.shipping_status}
-                                        </span>
+                                    <div className="flex items-start gap-3">
+                                        <div className="flex flex-col gap-2">
+                                            <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
+                                                {car.vehicle_shipping.shipping_status}
+                                            </span>
+                                            {car.vehicle_purchase?.purchase_status && (
+                                                <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getPurchaseStatusColor(car.vehicle_purchase.purchase_status)}`}>
+                                                    {car.vehicle_purchase.purchase_status}
+                                                </span>
+                                            )}
+                                        </div>
                                         {car.vehicle_sale?.sale_status && (
                                             <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getSaleStatusColor(car.vehicle_sale.sale_status)}`}>
                                                 {car.vehicle_sale.sale_status}
@@ -403,15 +460,35 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
             <div className="p-6">
                 {/* Header */}
                 <div className="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{car.vehicle.make}</h3>
-                        <p className="text-sm text-gray-600">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
-                        <p className="text-xs text-gray-500">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
+                    <div className="flex items-start gap-3 flex-1">
+                        {/* Make Logo */}
+                        {makeLogoUrl && (
+                            <div className="w-12 h-12 flex-shrink-0 bg-white border border-gray-200 rounded-lg p-1.5 flex items-center justify-center">
+                                <img
+                                    src={makeLogoUrl}
+                                    alt={`${car.vehicle.make} logo`}
+                                    className="max-w-full max-h-full object-contain"
+                                    onError={(e) => e.target.style.display = 'none'}
+                                />
+                            </div>
+                        )}
+                        <div className="flex-1">
+                            <h3 className="text-lg font-semibold text-gray-900">{car.vehicle.make}</h3>
+                            <p className="text-sm text-gray-600">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
+                            <p className="text-xs text-gray-500">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
-                            {car.vehicle_shipping.shipping_status}
-                        </span>
+                    <div className="flex items-start gap-3">
+                        <div className="flex flex-col gap-2">
+                            <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(car.vehicle_shipping.shipping_status)}`}>
+                                {car.vehicle_shipping.shipping_status}
+                            </span>
+                            {car.vehicle_purchase?.purchase_status && (
+                                <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getPurchaseStatusColor(car.vehicle_purchase.purchase_status)}`}>
+                                    {car.vehicle_purchase.purchase_status}
+                                </span>
+                            )}
+                        </div>
                         {car.vehicle_sale?.sale_status && (
                             <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getSaleStatusColor(car.vehicle_sale.sale_status)}`}>
                                 {car.vehicle_sale.sale_status}

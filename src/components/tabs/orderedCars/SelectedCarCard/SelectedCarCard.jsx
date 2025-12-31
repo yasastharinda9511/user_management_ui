@@ -51,6 +51,8 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     const [showShippingHistory, setShowShippingHistory] = useState(false);
     const [showPurchaseHistory, setShowPurchaseHistory] = useState(false);
     const [showImageViewer, setShowImageViewer] = useState(false);
+    const [makeLogoUrl, setMakeLogoUrl] = useState(null);
+    const [loadingMakeLogo, setLoadingMakeLogo] = useState(false);
 
     const selectedCar = useSelector(selectSelectedCar);
     const selectedCustomer = useSelector(selectSelectedCustomer);
@@ -69,6 +71,29 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
     useEffect(() => {
         dispatch(fetchVehicleById(id));
     }, [dispatch, id])
+
+    // Fetch make logo
+    useEffect(() => {
+        const fetchMakeLogo = async () => {
+            if (!selectedCar?.vehicle?.make_id) {
+                setMakeLogoUrl(null);
+                return;
+            }
+
+            try {
+                setLoadingMakeLogo(true);
+                const response = await vehicleService.getMakeLogo(selectedCar.vehicle.make_id);
+                setMakeLogoUrl(response.data.presigned_url);
+            } catch (error) {
+                console.error('Error fetching make logo:', error);
+                setMakeLogoUrl(null);
+            } finally {
+                setLoadingMakeLogo(false);
+            }
+        };
+
+        fetchMakeLogo();
+    }, [selectedCar?.vehicle?.make_id])
 
     // Handle viewing customer details (view mode - not editing)
 
@@ -694,6 +719,24 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                     {editedData.shipping?.shipping_status || shipping.current.shipping_status || 'PROCESSING'}
                                 </span>
                             </div>
+
+                            {/* Make Logo */}
+                            {makeLogoUrl && (
+                                <div className="flex items-start pt-4">
+                                    <div className="w-20 h-20 flex items-center justify-center bg-white border border-gray-200 rounded-lg p-2">
+                                        {loadingMakeLogo ? (
+                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                                        ) : (
+                                            <img
+                                                src={makeLogoUrl}
+                                                alt={`${editedData.vehicle?.make || vehicle.current.make} logo`}
+                                                className="max-w-full max-h-full object-contain"
+                                                onError={(e) => e.target.style.display = 'none'}
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Right Column - Swipable Sections */}
