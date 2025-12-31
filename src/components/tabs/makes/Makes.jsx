@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Search, RefreshCw, Car } from 'lucide-react';
+import { Plus, Search, RefreshCw, Car } from 'lucide-react';
 import { vehicleService } from '../../../api/index.js';
 import Notification from '../../common/Notification.jsx';
+import ConfirmationModal from '../../common/ConfirmationModal.jsx';
+import MakeCard from './MakeCard.jsx';
 
 const Makes = () => {
     const [makes, setMakes] = useState([]);
@@ -12,6 +14,8 @@ const Makes = () => {
     const [selectedMake, setSelectedMake] = useState(null);
     const [newMakeName, setNewMakeName] = useState('');
     const [notification, setNotification] = useState({ show: false, type: '', title: '', message: '' });
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [makeToDelete, setMakeToDelete] = useState(null);
 
     useEffect(() => {
         fetchMakes();
@@ -76,15 +80,18 @@ const Makes = () => {
         }
     };
 
-    const handleDeleteMake = async (makeId, makeName) => {
-        if (!window.confirm(`Are you sure you want to delete "${makeName}"?`)) {
-            return;
-        }
+    const handleDeleteClick = (make) => {
+        setMakeToDelete(make);
+        setShowDeleteModal(true);
+    };
 
+    const handleDeleteConfirm = async () => {
         try {
             // Assuming there's a delete endpoint
-            // await vehicleService.deleteMake(makeId);
+            // await vehicleService.deleteMake(makeToDelete.id);
             showNotification('success', 'Success', 'Make deleted successfully');
+            setShowDeleteModal(false);
+            setMakeToDelete(null);
             fetchMakes();
         } catch (error) {
             console.error('Error deleting make:', error);
@@ -98,8 +105,15 @@ const Makes = () => {
         setShowEditModal(true);
     };
 
+    const handleLogoUploaded = (makeId) => {
+        showNotification('success', 'Success', 'Logo uploaded successfully');
+        // Optionally refresh makes to get updated data
+        // fetchMakes();
+    };
+
     const filteredMakes = makes.filter(make =>
-        make.make_name.toLowerCase().includes(searchTerm.toLowerCase())
+        make.make_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        make.country_origin?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -147,7 +161,7 @@ const Makes = () => {
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="Search makes..."
+                            placeholder="Search makes by name or country..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -155,78 +169,40 @@ const Makes = () => {
                     </div>
                 </div>
 
-                {/* Table */}
-                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                    {loading ? (
-                        <div className="flex items-center justify-center py-12">
-                            <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
-                        </div>
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-gray-50 border-b border-gray-200">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            ID
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Make Name
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Models Count
-                                        </th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200">
-                                    {filteredMakes.length > 0 ? (
-                                        filteredMakes.map((make) => (
-                                            <tr key={make.id} className="hover:bg-gray-50">
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    {make.id}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="text-sm font-medium text-gray-900">
-                                                        {make.make_name}
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {make.models?.length || 0} models
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                                    <div className="flex justify-end gap-2">
-                                                        <button
-                                                            onClick={() => openEditModal(make)}
-                                                            className="text-blue-600 hover:text-blue-700 transition-colors"
-                                                            title="Edit"
-                                                        >
-                                                            <Edit2 className="w-4 h-4" />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDeleteMake(make.id, make.make_name)}
-                                                            className="text-red-600 hover:text-red-700 transition-colors"
-                                                            title="Delete"
-                                                        >
-                                                            <Trash2 className="w-4 h-4" />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="4" className="px-6 py-12 text-center text-gray-500">
-                                                {searchTerm ? 'No makes found matching your search' : 'No makes available'}
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                </div>
+                {/* Makes Grid */}
+                {loading ? (
+                    <div className="flex items-center justify-center py-12">
+                        <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
+                    </div>
+                ) : filteredMakes.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {filteredMakes.map((make) => (
+                            <MakeCard
+                                key={make.id}
+                                make={make}
+                                onEdit={openEditModal}
+                                onDelete={handleDeleteClick}
+                                onLogoUploaded={handleLogoUploaded}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+                        <Car className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                        <p className="text-gray-500 text-lg">
+                            {searchTerm ? 'No makes found matching your search' : 'No makes available'}
+                        </p>
+                        {!searchTerm && (
+                            <button
+                                onClick={() => setShowAddModal(true)}
+                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+                            >
+                                <Plus className="w-4 h-4" />
+                                Add Your First Make
+                            </button>
+                        )}
+                    </div>
+                )}
 
                 {/* Stats */}
                 <div className="bg-white rounded-lg border border-gray-200 p-4">
@@ -322,6 +298,23 @@ const Makes = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {makeToDelete && (
+                <ConfirmationModal
+                    isOpen={showDeleteModal}
+                    onClose={() => {
+                        setShowDeleteModal(false);
+                        setMakeToDelete(null);
+                    }}
+                    onConfirm={handleDeleteConfirm}
+                    title="Delete Make"
+                    message={`Are you sure you want to delete "${makeToDelete.make_name}"? This action cannot be undone.`}
+                    confirmText="Delete"
+                    cancelText="Cancel"
+                    type="danger"
+                />
             )}
         </>
     );

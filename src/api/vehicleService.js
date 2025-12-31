@@ -175,6 +175,33 @@ const vehicleService = {
     },
 
     /**
+     * Upload logo for a make
+     * @param {number} makeId - Make ID
+     * @param {File} logoFile - Logo image file
+     * @returns {Promise} - Upload response
+     */
+    uploadMakeLogo: async (makeId, logoFile) => {
+        const formData = new FormData();
+        formData.append('logo', logoFile);
+        const response = await carServiceApi.post(`/makes/${makeId}/logo`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    },
+
+    /**
+     * Get logo URL for a make
+     * @param {number} makeId - Make ID
+     * @returns {Promise} - Logo URL
+     */
+    getMakeLogo: async (makeId) => {
+        const response = await carServiceApi.get(`/makes/${makeId}/logo`);
+        return response.data;
+    },
+
+    /**
      * Create a new vehicle model
      * @param {Object} modelData - Model data including make_id, model_name, body_type, fuel_type, transmission_type, engine_size_cc
      * @returns {Promise} - Created model data
