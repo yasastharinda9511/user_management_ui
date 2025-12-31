@@ -1,5 +1,5 @@
 import React from "react";
-import {Car, AlertCircle, Package, TruckIcon, CheckCircle, UserCircle, Info, Store} from "lucide-react";
+import {Car, AlertCircle, AlertTriangle, Package, TruckIcon, CheckCircle, UserCircle, Info, Store} from "lucide-react";
 
 
 const NotificationCard = ({ notification, index }) => {
@@ -9,6 +9,10 @@ const NotificationCard = ({ notification, index }) => {
         switch (type) {
             case 'vehicle_created':
                 return <Car className="w-5 h-5 text-green-600" />;
+            case 'vehicle_deleted':
+                return <AlertTriangle className="w-5 h-5 text-red-600" />;
+            case 'customer_deleted':
+                return <AlertTriangle className="w-5 h-5 text-red-600" />;
             case 'customer_created':
                 return <UserCircle className="w-5 h-5 text-green-600" />;
             case 'supplier_created':

@@ -197,7 +197,7 @@ const MainScreen = () => {
                                 onClick={() => {
                                     navigate(tab.path);
                                 }}
-                                className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center' : 'space-x-3'} px-4 py-3 text-left rounded-lg transition-colors ${
+                                className={`relative w-full flex items-center ${sidebarCollapsed ? 'justify-center' : 'space-x-3'} px-4 py-3 text-left rounded-lg transition-colors ${
                                     location.pathname === tab.path
                                         ? 'bg-blue-50 text-blue-600 border border-blue-200'
                                         : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
@@ -206,7 +206,19 @@ const MainScreen = () => {
                             >
                                 <Icon className="w-5 h-5 flex-shrink-0" />
                                 {!sidebarCollapsed && (
-                                    <span className="font-medium">{tab.label}</span>
+                                    <div className="flex items-center justify-between flex-1">
+                                        <span className="font-medium">{tab.label}</span>
+                                        {tab.path === '/notifications' && unreadNotifications > 0 && (
+                                            <span className="min-w-[20px] h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1.5">
+                                                {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
+                                {sidebarCollapsed && tab.path === '/notifications' && unreadNotifications > 0 && (
+                                    <span className="absolute top-2 right-2 min-w-[16px] h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
+                                        {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                                    </span>
                                 )}
                             </button>
                         );

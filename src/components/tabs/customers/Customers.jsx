@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Users, Mail, Phone, User, MapPin, CheckCircle, XCircle, RefreshCw, Edit, Plus, Tag, Search } from 'lucide-react';
+import { Users, Mail, Phone, User, MapPin, CheckCircle, XCircle, RefreshCw, Edit, Plus, Tag, Search, Trash2 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import {
     fetchCustomers,
+    deleteCustomer,
     selectCustomers,
     selectTotalCount,
     selectLoading,
@@ -17,9 +18,14 @@ import {
     setCurrentPage,
     setPageLimit
 } from '../../../state/customerSlice.js';
+import { selectPermissions } from '../../../state/authSlice';
+import { hasPermission } from '../../../utils/permissionUtils';
+import { PERMISSIONS } from '../../../utils/permissions';
 import CreateCustomerModal from './CreateCustomerModal.jsx';
 import EditCustomerModal from './EditCustomerModal.jsx';
 import ViewCustomerModal from './ViewCustomerModal.jsx';
+import ConfirmationModal from '../../common/ConfirmationModal';
+import Notification from '../../common/Notification';
 
 const Customers = () => {
     const dispatch = useDispatch();
@@ -34,12 +40,21 @@ const Customers = () => {
     const totalPages = useSelector(selectTotalPages);
     const pageLimit = useSelector(selectPageLimit);
     const totalCustomers = useSelector(selectTotalCustomers);
+    const permissions = useSelector(selectPermissions);
 
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [editingCustomer, setEditingCustomer] = useState(null);
     const [viewingCustomer, setViewingCustomer] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [customerToDelete, setCustomerToDelete] = useState(null);
+    const [notification, setNotification] = useState({
+        isVisible: false,
+        type: 'success',
+        title: '',
+        message: ''
+    });
 
     // Debounce search term to avoid excessive API calls
     useEffect(() => {
@@ -100,6 +115,38 @@ const Customers = () => {
         });
     };
 
+    const showNotification = (type, title, message) => {
+        setNotification({ isVisible: true, type, title, message });
+    };
+
+    const handleDeleteClick = (customer, e) => {
+        console.log("delete button is clicked !!");
+        e.stopPropagation();
+        setCustomerToDelete(customer);
+        setShowDeleteModal(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        try {
+            await dispatch(deleteCustomer(customerToDelete.id)).unwrap();
+            setShowDeleteModal(false);
+            setCustomerToDelete(null);
+            showNotification('success', 'Success', 'Customer deleted successfully');
+        } catch (error) {
+            console.error('Failed to delete customer:', error);
+            showNotification('error', 'Error', error || 'Failed to delete customer');
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setShowDeleteModal(false);
+        setCustomerToDelete(null);
+    };
+
+    // Check if user has any action permissions
+    const hasAnyActionPermission = hasPermission(permissions, PERMISSIONS.CUSTOMER_UPDATE) ||
+                                    hasPermission(permissions, PERMISSIONS.CUSTOMER_DELETE);
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -122,13 +169,15 @@ const Customers = () => {
                         <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                         <span>Refresh</span>
                     </button>
-                    <button
-                        onClick={() => setShowCreateModal(true)}
-                        className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                    >
-                        <Plus className="w-4 h-4" />
-                        <span>Add Customer</span>
-                    </button>
+                    {hasPermission(permissions, PERMISSIONS.CUSTOMER_CREATE) && (
+                        <button
+                            onClick={() => setShowCreateModal(true)}
+                            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                        >
+                            <Plus className="w-4 h-4" />
+                            <span>Add Customer</span>
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -218,9 +267,11 @@ const Customers = () => {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Status
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions
-                                    </th>
+                                    {hasAnyActionPermission && (
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions
+                                        </th>
+                                    )}
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
@@ -299,18 +350,33 @@ const Customers = () => {
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setEditingCustomer(customer);
-                                                }}
-                                                className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
-                                            >
-                                                <Edit className="w-3 h-3 mr-1" />
-                                                Edit
-                                            </button>
-                                        </td>
+                                        {hasAnyActionPermission && (
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                <div className="flex items-center gap-2">
+                                                    {hasPermission(permissions, PERMISSIONS.CUSTOMER_UPDATE) && (
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setEditingCustomer(customer);
+                                                            }}
+                                                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
+                                                        >
+                                                            <Edit className="w-3 h-3 mr-1" />
+                                                            Edit
+                                                        </button>
+                                                    )}
+                                                    {hasPermission(permissions, PERMISSIONS.CUSTOMER_DELETE) && (
+                                                        <button
+                                                            onClick={(e) => handleDeleteClick(customer, e)}
+                                                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors"
+                                                        >
+                                                            <Trash2 className="w-3 h-3 mr-1" />
+                                                            Delete
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>
@@ -470,6 +536,30 @@ const Customers = () => {
                 <ViewCustomerModal
                     customer={viewingCustomer}
                     onClose={() => setViewingCustomer(null)}
+                />
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {customerToDelete && (
+                <ConfirmationModal
+                    isOpen={showDeleteModal}
+                    title="Delete Customer"
+                    message={`Are you sure you want to delete "${customerToDelete.customer_name}"? This action cannot be undone.`}
+                    confirmText="Delete"
+                    cancelText="Cancel"
+                    onConfirm={handleDeleteConfirm}
+                    onClose={handleDeleteCancel}
+                    type="danger"
+                />
+            )}
+
+            {/* Notification */}
+            {notification.isVisible && (
+                <Notification
+                    type={notification.type}
+                    title={notification.title}
+                    message={notification.message}
+                    onClose={() => setNotification({ ...notification, isVisible: false })}
                 />
             )}
         </div>
