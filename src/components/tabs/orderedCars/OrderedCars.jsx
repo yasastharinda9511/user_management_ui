@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { useLocation } from 'react-router-dom';
-import { Car, ChevronLeft, ChevronRight, Plus, Grid, List } from 'lucide-react';
+import { Car, ChevronLeft, ChevronRight, Plus, Grid, List, Star } from 'lucide-react';
 import CreateVehicle from "./CreateVehicle.jsx";
 import SelectedCarCard from "./SelectedCarCard/SelectedCarCard.jsx";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,6 +11,7 @@ import {
     selectPageLimit,
     selectShouldRefresh,
     selectFilters,
+    setFilters,
 } from '../../../state/vehicleSlice.js';
 import PreviewCard from "./PreviewCard.jsx";
 import Filter from "./Filter.jsx";
@@ -177,6 +178,16 @@ const OrderedCars = () => {
         dispatch(setPageLimit(Number(newLimit)));
     };
 
+    const toggleFeaturedFilter = () => {
+        if (filters.is_featured) {
+            // Remove the is_featured filter by setting to undefined
+            dispatch(setFilters({ is_featured: undefined }));
+        } else {
+            // Add is_featured filter
+            dispatch(setFilters({ is_featured: true }));
+        }
+    };
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -214,6 +225,20 @@ const OrderedCars = () => {
                             <List className="w-4 h-4" />
                         </button>
                     </div>
+
+                    {/* Featured Filter Toggle */}
+                    <button
+                        onClick={toggleFeaturedFilter}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-medium ${
+                            filters.is_featured
+                                ? 'bg-yellow-500 text-white hover:bg-yellow-600'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                        title={filters.is_featured ? 'Show all vehicles' : 'Show featured only'}
+                    >
+                        <Star className={`w-4 h-4 ${filters.is_featured ? 'fill-white' : ''}`} />
+                        <span>Featured</span>
+                    </button>
 
                     <button
                         onClick={() => setShowFilters(!showFilters)}

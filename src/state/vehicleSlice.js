@@ -6,7 +6,11 @@ export const fetchVehicles = createAsyncThunk(
     'vehicles/fetchVehicles',
     async ({ page = 1, limit = 10, filters } = {}, { rejectWithValue }) => {
         try {
-            const queryParams = { ...filters, page, limit };
+            // Filter out undefined and null values from filters
+            const cleanFilters = Object.fromEntries(
+                Object.entries(filters || {}).filter(([_, value]) => value !== undefined && value !== null && value !== '')
+            );
+            const queryParams = { ...cleanFilters, page, limit };
             const response = await carServiceApi.get('/vehicles', { params: queryParams });
             return response.data;
         } catch (error) {
@@ -202,7 +206,7 @@ const initialState = {
         fuelType: '',
         supplier_id:'',
         order_by: 'id',
-        sort: 'ASC'
+        sort: 'DESC'
     },
     sortBy: 'created_at',
     sortOrder: 'desc',
