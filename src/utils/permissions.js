@@ -4,6 +4,7 @@ export const PERMISSIONS = {
     CAR_CREATE     : 'vehicles.create',
     CAR_UPDATE  : 'vehicles.edit',
     CAR_DELETE  : 'vehicles.delete',
+    CAR_FEATURE : 'vehicles.feature',
     CUSTOMER_TAB_ACCESS : 'customers.access',
     CUSTOMER_CREATE : 'customers.create',
     CUSTOMER_UPDATE : 'customers.edit',

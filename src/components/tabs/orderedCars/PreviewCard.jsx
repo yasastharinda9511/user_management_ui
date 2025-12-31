@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Car, Truck, Package, Eye, MapPin, Ship, History, ChevronLeft, ChevronRight, Trash2, ShoppingCart, Copy, Check} from 'lucide-react';
+import { Car, Truck, Package, Eye, MapPin, Ship, History, ChevronLeft, ChevronRight, Trash2, ShoppingCart, Copy, Check, Star} from 'lucide-react';
 import { useSelector } from 'react-redux';
 import {getStatusColor} from "../../common/CommonLogics.js";
 import config from "../../../configs/config.json";
@@ -23,6 +23,8 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     const [isDeleting, setIsDeleting] = useState(false);
     const [makeLogoUrl, setMakeLogoUrl] = useState(null);
     const [loadingMakeLogo, setLoadingMakeLogo] = useState(false);
+    const [isFeatured, setIsFeatured] = useState(car.vehicle.is_featured || false);
+    const [updatingFeatured, setUpdatingFeatured] = useState(false);
     const permissions = useSelector(selectPermissions);
 
     const formatDate = (dateString) => {
@@ -166,6 +168,24 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
         }, 300);
     };
 
+    const handleToggleFeatured = async (e) => {
+        e.stopPropagation();
+
+        if (updatingFeatured) return;
+
+        try {
+            setUpdatingFeatured(true);
+            const newFeaturedStatus = !isFeatured;
+            await vehicleService.updateFeaturedStatus(car.vehicle.id, newFeaturedStatus);
+            setIsFeatured(newFeaturedStatus);
+        } catch (error) {
+            console.error('Failed to update featured status:', error);
+            alert('Failed to update featured status. Please try again.');
+        } finally {
+            setUpdatingFeatured(false);
+        }
+    };
+
     // List View Layout
     if (viewMode === 'list') {
         return (
@@ -216,6 +236,13 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                 </div>
                             </>
                         )}
+                        {/* Featured Badge */}
+
+                        <div className="absolute top-2 left-2 px-2 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full flex items-center gap-1 shadow-lg">
+                            <Star className="w-3 h-3 fill-white" />
+                            Featured
+                        </div>
+
                     </div>
 
                     {/* Card Content */}
@@ -368,6 +395,22 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                     </button>
                 )}
 
+                {/* Featured Toggle Button */}
+                {hasPermission(permissions, PERMISSIONS.CAR_UPDATE) && (
+                    <button
+                        onClick={handleToggleFeatured}
+                        disabled={updatingFeatured}
+                        className={`absolute bottom-3 right-16 p-2 rounded-full transition-colors ${
+                            isFeatured
+                                ? 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50'
+                                : 'text-gray-600 hover:text-gray-700 hover:bg-gray-50'
+                        } ${updatingFeatured ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        title={isFeatured ? 'Remove from featured' : 'Mark as featured'}
+                    >
+                        <Star className={`w-5 h-5 ${isFeatured ? 'fill-yellow-600' : ''}`} />
+                    </button>
+                )}
+
                 {/* Details Button - Bottom Right Corner */}
                 <button
                     onClick={() => handleViewDetails(car)}
@@ -462,6 +505,13 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                             {currentImageIndex + 1} / {imageUrls.length}
                         </div>
                     </>
+                )}
+                {/* Featured Badge */}
+                {isFeatured && (
+                    <div className="absolute top-2 left-2 px-2 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full flex items-center gap-1 shadow-lg">
+                        <Star className="w-3 h-3 fill-white" />
+                        Featured
+                    </div>
                 )}
             </div>
 
@@ -593,27 +643,42 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
 
                 {/* Footer */}
                 <div className="flex justify-between items-center pt-4 border-t border-gray-100 mt-auto">
-                    <div className="flex items-center space-x-3">
-                        <div className="text-sm">
-                            <div className="text-lg font-bold text-blue-600">{car.vehicle.price}</div>
-                        </div>
+                    <div className="text-sm">
+                        <div className="text-lg font-bold text-blue-600">{car.vehicle.price}</div>
+                    </div>
+                    <div className="flex items-center gap-2">
                         {hasPermission(permissions, PERMISSIONS.CAR_DELETE) && (
                             <button
                                 onClick={handleDeleteClick}
-                                className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                             >
                                 <Trash2 className="w-4 h-4" />
                                 <span>Delete</span>
                             </button>
                         )}
+                        {hasPermission(permissions, PERMISSIONS.CAR_UPDATE) && (
+                            <button
+                                onClick={handleToggleFeatured}
+                                disabled={updatingFeatured}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                                    isFeatured
+                                        ? 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50'
+                                        : 'text-gray-600 hover:text-gray-700 hover:bg-gray-50'
+                                } ${updatingFeatured ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                title={isFeatured ? 'Remove from featured' : 'Mark as featured'}
+                            >
+                                <Star className={`w-4 h-4 ${isFeatured ? 'fill-yellow-600' : ''}`} />
+                                <span>{isFeatured ? 'Featured' : 'Feature'}</span>
+                            </button>
+                        )}
+                        <button
+                            onClick={() => handleViewDetails(car)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                        >
+                            <Eye className="w-4 h-4" />
+                            <span>Details</span>
+                        </button>
                     </div>
-                    <button
-                        onClick={() => handleViewDetails(car)}
-                        className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
-                    >
-                        <Eye className="w-4 h-4" />
-                        <span>Details</span>
-                    </button>
                 </div>
             </div>
         </div>

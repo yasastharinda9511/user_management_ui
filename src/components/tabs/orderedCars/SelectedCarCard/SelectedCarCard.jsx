@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {useDispatch, useSelector} from "react-redux";
-import { Plus, History, Download, ShoppingCart } from 'lucide-react';
+import { Plus, History, Download, ShoppingCart, Star } from 'lucide-react';
 import {
     fetchVehicleById, selectSelectedCar,
     updateVehicle,
@@ -715,9 +715,17 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                 <h3 className="text-xl font-semibold text-gray-900">
                                     {editedData.vehicle?.make || vehicle.current.make} {editedData.vehicle?.model || vehicle.current.model}
                                 </h3>
-                                <span className={`px-3 py-1 text-sm font-medium rounded-full border ${getStatusColor(editedData.shipping?.shipping_status || shipping.current.shipping_status)}`}>
-                                    {editedData.shipping?.shipping_status || shipping.current.shipping_status || 'PROCESSING'}
-                                </span>
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <span className={`px-3 py-1 text-sm font-medium rounded-full border ${getStatusColor(editedData.shipping?.shipping_status || shipping.current.shipping_status)}`}>
+                                        {editedData.shipping?.shipping_status || shipping.current.shipping_status || 'PROCESSING'}
+                                    </span>
+                                    {(editedData.vehicle?.is_featured || vehicle.current.is_featured) && (
+                                        <span className="px-3 py-1 text-sm font-semibold rounded-full bg-yellow-500 text-white flex items-center gap-1.5 shadow-md">
+                                            <Star className="w-3.5 h-3.5 fill-white" />
+                                            Featured
+                                        </span>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Make Logo */}

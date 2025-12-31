@@ -293,6 +293,19 @@ const vehicleService = {
     deleteVehicle: async (vehicleId) => {
         const response = await carServiceApi.delete(`/vehicles/${vehicleId}`);
         return response.data;
+    },
+
+    /**
+     * Update vehicle featured status
+     * @param {number} vehicleId - Vehicle ID
+     * @param {boolean} isFeatured - Featured status
+     * @returns {Promise} - Update response
+     */
+    updateFeaturedStatus: async (vehicleId, isFeatured) => {
+        const response = await carServiceApi.put(`/vehicles/${vehicleId}/featured`, {
+            is_featured: isFeatured
+        });
+        return response.data;
     }
 };
 
