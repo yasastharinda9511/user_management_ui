@@ -170,10 +170,10 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     if (viewMode === 'list') {
         return (
             <>
-            <div key={car.id} className={`bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-sm border-l-2 border-blue-300 overflow-hidden hover:shadow-lg hover:border-blue-400 transition-all relative ${isDeleting ? 'deleting' : ''}`}>
-                <div className="flex flex-col md:flex-row">
+            <div key={car.id} className={`bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-sm border-l-2 border-blue-300 overflow-hidden hover:shadow-lg hover:border-blue-400 transition-all relative h-auto md:h-64 ${isDeleting ? 'deleting' : ''}`}>
+                <div className="flex flex-col md:flex-row h-full">
                     {/* Car Image */}
-                    <div className="md:w-64 h-48 md:h-auto bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden flex-shrink-0 relative group">
+                    <div className="md:w-64 h-48 md:h-full bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden flex-shrink-0 relative group">
                         {imageUrls.length > 0 ? (
                             <img
                                 src={imageUrls[currentImageIndex]}
@@ -418,7 +418,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     // Grid View Layout (Default)
     return (
         <>
-        <div key={car.id} className={`bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-sm border-t-2 border-blue-300 overflow-hidden hover:shadow-xl hover:border-blue-400 hover:-translate-y-1 transition-all duration-300 ${isDeleting ? 'deleting' : ''}`}>
+        <div key={car.id} className={`bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-sm border-t-2 border-blue-300 overflow-hidden hover:shadow-xl hover:border-blue-400 hover:-translate-y-1 transition-all duration-300 h-[600px] flex flex-col ${isDeleting ? 'deleting' : ''}`}>
             {/* Car Image */}
             <div className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden relative group">
                 {imageUrls.length > 0 ? (
@@ -466,7 +466,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
             </div>
 
             {/* Card Content */}
-            <div className="p-6">
+            <div className="p-6 flex-1 flex flex-col">
                 {/* Header */}
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-start gap-3 flex-1">
@@ -527,7 +527,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 </div>
 
                 {/* Details Grid */}
-                <div className="space-y-3 mb-4">
+                <div className="space-y-3 mb-4 flex-1 overflow-auto">
                     <div className="flex items-center text-sm">
                         <Package className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" />
                         <span className="text-gray-600 min-w-[80px]">Code:  </span>
@@ -592,7 +592,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 </div>
 
                 {/* Footer */}
-                <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+                <div className="flex justify-between items-center pt-4 border-t border-gray-100 mt-auto">
                     <div className="flex items-center space-x-3">
                         <div className="text-sm">
                             <div className="text-lg font-bold text-blue-600">{car.vehicle.price}</div>
