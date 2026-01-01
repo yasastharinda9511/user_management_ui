@@ -188,7 +188,11 @@ const MainScreen = () => {
         if (!isResizing) return;
 
         const handleMouseMove = (e) => {
-            const newWidth = e.clientX;
+            // Handle both mouse and touch events
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            if (!clientX) return;
+
+            const newWidth = clientX;
             const clampedWidth = Math.min(Math.max(newWidth, 80), 400);
             setSidebarWidth(clampedWidth);
         };
@@ -199,7 +203,7 @@ const MainScreen = () => {
 
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
-        document.addEventListener('touchmove', handleMouseMove);
+        document.addEventListener('touchmove', handleMouseMove, { passive: false });
         document.addEventListener('touchend', handleMouseUp);
 
         // Prevent text selection while resizing
@@ -209,6 +213,8 @@ const MainScreen = () => {
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener('touchmove', handleMouseMove);
+            document.removeEventListener('touchend', handleMouseUp);
             document.body.style.userSelect = '';
             document.body.style.cursor = '';
         };
@@ -335,6 +341,7 @@ const MainScreen = () => {
                 {/* Resize Handle - Centered grip */}
                 <div
                     onMouseDown={handleResizeMouseDown}
+                    onTouchStart={handleResizeMouseDown}
                     className={`absolute top-1/2 -translate-y-1/2 -right-1.5 h-12 w-3 rounded-r-md flex items-center justify-center ${
                         isResizing ? 'bg-blue-500' : 'bg-gray-300 hover:bg-gray-400'
                     } cursor-col-resize transition-colors z-20 shadow-md`}
