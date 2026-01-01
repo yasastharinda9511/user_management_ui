@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import { carServiceApi } from '../api/index.js';
+import { carServiceApi, vehicleService } from '../api/index.js';
 
 // Fetch all vehicles with pagination
 export const fetchVehicles = createAsyncThunk(
@@ -163,6 +163,44 @@ export const fetchAllOptions = createAsyncThunk(
     }
 );
 
+// Fetch vehicle counts by status
+export const fetchVehicleCounts = createAsyncThunk(
+    'vehicles/fetchVehicleCounts',
+    async ({ statusType, statuses, filters = {} }, { rejectWithValue }) => {
+        try {
+            const response = await vehicleService.getVehicleCounts(statusType, statuses, filters);
+            return { statusType, counts: response.data };
+        } catch (error) {
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
+        }
+    }
+);
+
+// Fetch more vehicles for infinite scroll (appends to existing vehicles)
+export const fetchMoreVehicles = createAsyncThunk(
+    'vehicles/fetchMoreVehicles',
+    async ({ page, limit = 50, filters = {} }, { rejectWithValue }) => {
+        try {
+            // Filter out undefined and null values from filters
+            const cleanFilters = Object.fromEntries(
+                Object.entries(filters || {}).filter(([_, value]) => value !== undefined && value !== null && value !== '')
+            );
+            const queryParams = { ...cleanFilters, page, limit };
+            const response = await carServiceApi.get('/vehicles', { params: queryParams });
+            return {
+                vehicles: response.data.data || [],
+                page: response.data.meta?.page || page,
+                totalPages: response.data.meta?.total_pages || Math.ceil((response.data.meta?.total || 0) / limit),
+                total: response.data.meta?.total || 0
+            };
+        } catch (error) {
+            const message = error.response?.data?.message || error.message;
+            return rejectWithValue(message);
+        }
+    }
+);
+
 // =====================================================
 // INITIAL STATE
 // =====================================================
@@ -178,16 +216,32 @@ const initialState = {
     limit: 12,
     totalVehicles: 0,
 
+    // Infinite scroll pagination (for tracking views)
+    infiniteScroll: {
+        currentPage: 1,
+        totalPages: 1,
+        hasMore: true,
+        isLoadingMore: false,
+    },
+
+    // Vehicle counts by status (for tracking views)
+    vehicleCounts: {
+        shipping: {},
+        purchase: {},
+    },
+
     // Loading states
     loading: false,
     loadingVehicle: false,
     updating: false,
     loadingOptions: false,
+    loadingCounts: false,
 
     // Error states
     error: null,
     updateError: null,
     optionsError: null,
+    countsError: null,
 
     // UI states
     filters: {
@@ -304,6 +358,17 @@ const vehicleSlice = createSlice({
             if (vehicleIndex !== -1) {
                 state.vehicles[vehicleIndex] = { ...state.vehicles[vehicleIndex], ...updates };
             }
+        },
+
+        // Reset infinite scroll pagination
+        resetInfiniteScroll: (state) => {
+            state.vehicles = [];
+            state.infiniteScroll = {
+                currentPage: 1,
+                totalPages: 1,
+                hasMore: true,
+                isLoadingMore: false,
+            };
         },
     },
     extraReducers: (builder) => {
@@ -490,6 +555,39 @@ const vehicleSlice = createSlice({
             .addCase(fetchAllOptions.rejected, (state, action) => {
                 state.loadingOptions = false;
                 state.optionsError = action.payload;
+            })
+
+            // Fetch Vehicle Counts
+            .addCase(fetchVehicleCounts.pending, (state) => {
+                state.loadingCounts = true;
+                state.countsError = null;
+            })
+            .addCase(fetchVehicleCounts.fulfilled, (state, action) => {
+                state.loadingCounts = false;
+                const { statusType, counts } = action.payload;
+                state.vehicleCounts[statusType] = counts;
+            })
+            .addCase(fetchVehicleCounts.rejected, (state, action) => {
+                state.loadingCounts = false;
+                state.countsError = action.payload;
+            })
+
+            // Fetch More Vehicles (Infinite Scroll)
+            .addCase(fetchMoreVehicles.pending, (state) => {
+                state.infiniteScroll.isLoadingMore = true;
+            })
+            .addCase(fetchMoreVehicles.fulfilled, (state, action) => {
+                const { vehicles, page, totalPages } = action.payload;
+                // Append new vehicles to existing ones
+                state.vehicles = [...state.vehicles, ...vehicles];
+                state.infiniteScroll.currentPage = page;
+                state.infiniteScroll.totalPages = totalPages;
+                state.infiniteScroll.hasMore = page < totalPages;
+                state.infiniteScroll.isLoadingMore = false;
+            })
+            .addCase(fetchMoreVehicles.rejected, (state, action) => {
+                state.infiniteScroll.isLoadingMore = false;
+                state.error = action.payload;
             });
 
 
@@ -511,6 +609,7 @@ export const {
     setCurrentPage,
     setPageLimit,
     updateVehicleInList,
+    resetInfiniteScroll,
 } = vehicleSlice.actions;
 
 // =====================================================
@@ -557,5 +656,17 @@ export const selectVehiclesByStatus = (state) => {
         sold: vehicles.filter(v => v.saleStatus === 'SOLD').length,
     };
 };
+
+// Infinite scroll selectors
+export const selectInfiniteScroll = (state) => state.vehicles.infiniteScroll;
+export const selectHasMore = (state) => state.vehicles.infiniteScroll.hasMore;
+export const selectIsLoadingMore = (state) => state.vehicles.infiniteScroll.isLoadingMore;
+export const selectInfiniteScrollPage = (state) => state.vehicles.infiniteScroll.currentPage;
+
+// Vehicle counts selectors
+export const selectVehicleCounts = (state) => state.vehicles.vehicleCounts;
+export const selectShippingCounts = (state) => state.vehicles.vehicleCounts.shipping;
+export const selectPurchaseCounts = (state) => state.vehicles.vehicleCounts.purchase;
+export const selectLoadingCounts = (state) => state.vehicles.loadingCounts;
 
 export default vehicleSlice.reducer;

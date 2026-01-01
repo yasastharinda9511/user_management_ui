@@ -315,6 +315,40 @@ const vehicleService = {
             is_featured: isFeatured
         });
         return response.data;
+    },
+
+    /**
+     * Get vehicle counts by status type using meta data
+     * @param {string} statusType - 'shipping' or 'purchase'
+     * @param {Array} statuses - Array of status values to get counts for
+     * @param {Object} filters - Filter params
+     * @returns {Promise} - Status counts object
+     */
+    getVehicleCounts: async (statusType, statuses, filters = {}) => {
+        const statusField = statusType === 'shipping' ? 'shipping_status' : 'purchase_status';
+        const counts = {};
+
+        // Make a lightweight request for each status to get total count from meta
+        await Promise.all(
+            statuses.map(async (status) => {
+                try {
+                    const response = await carServiceApi.get('/vehicles', {
+                        params: {
+                            ...filters,
+                            [statusField]: status,
+                            limit: 1,
+                            page: 1
+                        }
+                    });
+                    counts[status] = response.data.meta?.total || 0;
+                } catch (error) {
+                    console.error(`Error fetching count for ${status}:`, error);
+                    counts[status] = 0;
+                }
+            })
+        );
+
+        return { data: counts };
     }
 };
 

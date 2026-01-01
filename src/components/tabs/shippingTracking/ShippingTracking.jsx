@@ -1,9 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { Ship, Package, AlertCircle, Eye, Filter as FilterIcon } from 'lucide-react';
+import { Ship, Package, AlertCircle, Eye, Filter as FilterIcon, Loader2 } from 'lucide-react';
 import { vehicleService } from '../../../api/index.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateVehicleShipping, selectFilters } from '../../../state/vehicleSlice.js';
+import {
+    updateVehicleShipping,
+    selectFilters,
+    fetchVehicleCounts,
+    fetchMoreVehicles,
+    resetInfiniteScroll,
+    selectShippingCounts,
+    selectHasMore,
+    selectIsLoadingMore,
+    selectInfiniteScrollPage
+} from '../../../state/vehicleSlice.js';
 import Notification from '../../common/Notification.jsx';
 import SelectedCarCard from '../orderedCars/SelectedCarCard/SelectedCarCard.jsx';
 import Filter from '../orderedCars/Filter.jsx';
@@ -24,18 +34,38 @@ const ShippingTracking = () => {
     const [notification, setNotification] = useState({ show: false, type: '', title: '', message: '' });
     const [selectedCar, setSelectedCar] = useState(null);
     const [showFilters, setShowFilters] = useState(false);
-    const filters = useSelector(selectFilters);
+    const containerRef = useRef(null);
 
+    // Redux selectors
+    const filters = useSelector(selectFilters);
+    const shippingCounts = useSelector(selectShippingCounts);
+    const hasMore = useSelector(selectHasMore);
+    const isLoadingMore = useSelector(selectIsLoadingMore);
+    const currentPage = useSelector(selectInfiniteScrollPage);
+
+    // Initial load and filter changes
     useEffect(() => {
-        fetchVehicles();
+        fetchInitialVehicles();
     }, [filters]);
 
-    const fetchVehicles = async () => {
+    const fetchInitialVehicles = async () => {
         try {
             setLoading(true);
+            // Reset pagination
+            dispatch(resetInfiniteScroll());
+
+            // Fetch counts first (pass all shipping status IDs)
+            const statusIds = SHIPPING_STATUSES.map(s => s.id);
+            await dispatch(fetchVehicleCounts({
+                statusType: 'shipping',
+                statuses: statusIds,
+                filters
+            })).unwrap();
+
+            // Fetch initial batch of 50 vehicles
             const response = await vehicleService.getAllVehicles({
                 page: 1,
-                limit: 1000,
+                limit: 50,
                 filters: filters
             });
 
@@ -60,6 +90,46 @@ const ShippingTracking = () => {
             setLoading(false);
         }
     };
+
+    // Load more vehicles for infinite scroll
+    const loadMoreVehicles = useCallback(async () => {
+        if (!hasMore || isLoadingMore) return;
+
+        try {
+            const response = await dispatch(fetchMoreVehicles({
+                page: currentPage + 1,
+                limit: 50,
+                filters
+            })).unwrap();
+
+            // Group new vehicles and append to existing columns
+            const newGrouped = { ...columns };
+            response.vehicles.forEach(vehicle => {
+                const status = vehicle.vehicle_shipping?.shipping_status || 'PROCESSING';
+                if (newGrouped[status]) {
+                    newGrouped[status].push(vehicle);
+                }
+            });
+
+            setColumns(newGrouped);
+        } catch (error) {
+            console.error('Error loading more vehicles:', error);
+        }
+    }, [hasMore, isLoadingMore, currentPage, filters, columns, dispatch]);
+
+    // Scroll detection for infinite scroll
+    const handleScroll = useCallback((e) => {
+        if (isLoadingMore || !hasMore) return;
+
+        // Use event.currentTarget instead of containerRef since each column scrolls independently
+        const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+        const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+
+        // Load more when scrolled 80% of the content
+        if (scrollPercentage > 0.8) {
+            loadMoreVehicles();
+        }
+    }, [isLoadingMore, hasMore, loadMoreVehicles]);
 
     const showNotification = (type, title, message) => {
         setNotification({ show: true, type, title, message });
@@ -226,7 +296,7 @@ const ShippingTracking = () => {
                                 Filters
                             </button>
                             <button
-                                onClick={fetchVehicles}
+                                onClick={fetchInitialVehicles}
                                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                             >
                                 Refresh
@@ -241,11 +311,11 @@ const ShippingTracking = () => {
                 <DragDropContext onDragEnd={onDragEnd}>
                     <div className="flex gap-4 overflow-x-auto pb-4 flex-1">
                         {SHIPPING_STATUSES.map(status => (
-                            <div key={status.id} className="flex-shrink-0 w-80">
+                            <div key={status.id} className="flex-shrink-0 w-80 flex flex-col" style={{ maxHeight: 'calc(100vh - 200px)' }}>
                                 <div className={`rounded-lg ${status.color} border-2 p-3 mb-3`}>
                                     <div className="flex items-center justify-between">
                                         <h3 className={`font-semibold ${status.textColor}`}>
-                                            {status.label}
+                                            {status.label} ({shippingCounts[status.id] || 0})
                                         </h3>
                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${status.textColor} bg-white`}>
                                             {columns[status.id]?.length || 0}
@@ -257,8 +327,9 @@ const ShippingTracking = () => {
                                     {(provided, snapshot) => (
                                         <div
                                             ref={provided.innerRef}
+                                            onScroll={handleScroll}
                                             {...provided.droppableProps}
-                                            className={`min-h-[500px] rounded-lg p-2 transition-colors ${
+                                            className={`flex-1 overflow-y-auto rounded-lg p-2 transition-colors custom-scrollbar ${
                                                 snapshot.isDraggingOver ? 'bg-blue-50 ring-2 ring-blue-300' : 'bg-gray-50'
                                             }`}
                                         >
@@ -280,6 +351,14 @@ const ShippingTracking = () => {
                         ))}
                     </div>
                 </DragDropContext>
+
+                {/* Loading More Indicator */}
+                {isLoadingMore && (
+                    <div className="flex items-center justify-center py-4">
+                        <Loader2 className="w-6 h-6 text-blue-500 animate-spin mr-2" />
+                        <span className="text-sm text-gray-600">Loading more vehicles...</span>
+                    </div>
+                )}
             </div>
 
             {/* Vehicle Details Modal */}
@@ -288,8 +367,8 @@ const ShippingTracking = () => {
                     id={selectedCar.vehicle.id}
                     closeModal={closeModal}
                     onSave={(updatedData) => {
-                        // Optionally refresh the data after saving
-                        fetchVehicles();
+                        // Refresh the data after saving
+                        fetchInitialVehicles();
                     }}
                 />
             )}
