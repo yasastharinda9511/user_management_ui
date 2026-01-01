@@ -12,6 +12,7 @@ import {
 } from '../../../state/roleSlice.js';
 import EditPermissionModal from './EditPermissionModal.jsx';
 import CreatePermissionModal from './CreatePermissionModal.jsx';
+import LoadingOverlay from '../../common/LoadingOverlay.jsx';
 
 const Permissions = () => {
     const dispatch = useDispatch();
@@ -118,17 +119,11 @@ const Permissions = () => {
                 </div>
             </div>
 
-            {/* Loading State */}
-            {loading && (
-                <div className="flex items-center justify-center py-12">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                        <p className="text-gray-600 mt-4">Loading permissions...</p>
-                    </div>
-                </div>
-            )}
+            {/* Content Area with Loading Overlay */}
+            <div className="relative" style={{ minHeight: 'calc(100vh - 300px)' }}>
+                {loading && <LoadingOverlay message="Loading permissions..." icon={Key} />}
 
-            {/* Error State */}
+                {/* Error State */}
             {error && !loading && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                     <div className="flex items-center">
@@ -340,7 +335,8 @@ const Permissions = () => {
                         </div>
                     </div>
                 </div>
-            )}
+                )}
+            </div>
 
             {/* Create Permission Modal */}
             {showCreateModal && (

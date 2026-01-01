@@ -12,6 +12,7 @@ import {
 } from '../../../state/roleSlice.js';
 import EditRoleModal from './EditRoleModal.jsx';
 import CreateRoleModal from './CreateRoleModal.jsx';
+import LoadingOverlay from '../../common/LoadingOverlay.jsx';
 
 const Roles = () => {
     const dispatch = useDispatch();
@@ -87,17 +88,11 @@ const Roles = () => {
                 </div>
             </div>
 
-            {/* Loading State */}
-            {loading && (
-                <div className="flex items-center justify-center py-12">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                        <p className="text-gray-600 mt-4">Loading roles...</p>
-                    </div>
-                </div>
-            )}
+            {/* Content Area with Loading Overlay */}
+            <div className="relative" style={{ minHeight: 'calc(100vh - 300px)' }}>
+                {loading && <LoadingOverlay message="Loading roles..." icon={Shield} />}
 
-            {/* Error State */}
+                {/* Error State */}
             {error && !loading && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                     <div className="flex items-center">
@@ -271,7 +266,8 @@ const Roles = () => {
                         </div>
                     </div>
                 </div>
-            )}
+                )}
+            </div>
 
             {/* Create Role Modal */}
             {showCreateModal && (

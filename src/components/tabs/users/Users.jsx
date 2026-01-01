@@ -12,6 +12,7 @@ import {
     selectVerifiedUsersCount
 } from '../../../state/userSlice.js';
 import EditUserModal from './EditUserModal.jsx';
+import LoadingOverlay from '../../common/LoadingOverlay.jsx';
 
 const Users = () => {
     const dispatch = useDispatch();
@@ -75,37 +76,31 @@ const Users = () => {
                 </div>
             </div>
 
-            {/* Loading State */}
-            {loading && (
-                <div className="flex items-center justify-center py-12">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                        <p className="text-gray-600 mt-4">Loading users...</p>
+            {/* Content Area with Loading Overlay */}
+            <div className="relative" style={{ minHeight: 'calc(100vh - 300px)' }}>
+                {loading && <LoadingOverlay message="Loading users..." icon={UsersIcon} />}
+
+                {/* Error State */}
+                {error && !loading && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div className="flex items-center">
+                            <XCircle className="w-5 h-5 text-red-600 mr-2" />
+                            <p className="text-red-800">Error: {error}</p>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* Error State */}
-            {error && !loading && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <div className="flex items-center">
-                        <XCircle className="w-5 h-5 text-red-600 mr-2" />
-                        <p className="text-red-800">Error: {error}</p>
+                {/* No Users */}
+                {!loading && !error && users.length === 0 && (
+                    <div className="text-center py-12">
+                        <UsersIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">No users found</h3>
+                        <p className="text-gray-600">There are no registered users in the system.</p>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* No Users */}
-            {!loading && !error && users.length === 0 && (
-                <div className="text-center py-12">
-                    <UsersIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No users found</h3>
-                    <p className="text-gray-600">There are no registered users in the system.</p>
-                </div>
-            )}
-
-            {/* Users Table */}
-            {!loading && users.length > 0 && (
+                {/* Users Table */}
+                {!loading && users.length > 0 && (
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
@@ -234,10 +229,10 @@ const Users = () => {
                         </table>
                     </div>
                 </div>
-            )}
+                )}
 
-            {/* Stats Cards */}
-            {!loading && users.length > 0 && (
+                {/* Stats Cards */}
+                {!loading && users.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div className="flex items-center justify-between">
@@ -281,7 +276,8 @@ const Users = () => {
                         </div>
                     </div>
                 </div>
-            )}
+                )}
+            </div>
 
             {/* Edit User Modal */}
             {editingUser && (

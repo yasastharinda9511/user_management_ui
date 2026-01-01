@@ -18,6 +18,7 @@ import Filter from "./Filter.jsx";
 import {selectPermissions} from "../../../state/authSlice.js";
 import {PERMISSIONS} from "../../../utils/permissions.js";
 import {hasPermission} from "../../../utils/permissionUtils.js";
+import LoadingOverlay from "../../common/LoadingOverlay.jsx";
 
 const OrderedCars = () => {
     const dispatch = useDispatch();
@@ -268,76 +269,71 @@ const OrderedCars = () => {
                 </div>
             </div>
 
-            {/* Loading State */}
-            {loading && (
-                <div className="flex items-center justify-center py-12">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                        <p className="text-gray-600 mt-4">Loading vehicles...</p>
+            {/* Content Area with Loading Overlay */}
+            <div className="relative" style={{ minHeight: 'calc(100vh - 300px)' }}>
+                {loading && <LoadingOverlay message="Loading vehicles..." icon={Car} />}
+
+                {/* No Results */}
+                {!loading && vehicles.length === 0 && (
+                    <div className="text-center py-12">
+                        <Car className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">No vehicles found</h3>
+                        <p className="text-gray-600 mb-4">
+                            {hasActiveFilters
+                                ? 'Try adjusting your filters to see more results.'
+                                : 'No vehicles available at the moment.'
+                            }
+                        </p>
+                        {hasActiveFilters && (
+                            <button
+                                onClick={clearFilters}
+                                className="text-blue-600 hover:text-blue-800 font-medium"
+                            >
+                                Clear all filters
+                            </button>
+                        )}
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* No Results */}
-            {!loading && vehicles.length === 0 && (
-                <div className="text-center py-12">
-                    <Car className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No vehicles found</h3>
-                    <p className="text-gray-600 mb-4">
-                        {hasActiveFilters
-                            ? 'Try adjusting your filters to see more results.'
-                            : 'No vehicles available at the moment.'
-                        }
-                    </p>
-                    {hasActiveFilters && (
-                        <button
-                            onClick={clearFilters}
-                            className="text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                            Clear all filters
-                        </button>
-                    )}
-                </div>
-            )}
+                {/* Cars Display - Grid or List */}
+                {!loading && vehicles.length > 0 && (
+                    <>
+                        {/* Grid View */}
+                        {viewMode === 'grid' && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" style={{ transition: 'all 0.3s ease' }}>
+                                {vehicles.map((car, index) => (
+                                    <div
+                                        key={car.id}
+                                        className="card-animate"
+                                        style={{
+                                            animationDelay: `${index * 0.05}s`,
+                                        }}
+                                    >
+                                        <PreviewCard car={car} handleViewDetails={handleViewDetails} onDelete={handleDelete} />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
-            {/* Cars Display - Grid or List */}
-            {!loading && vehicles.length > 0 && (
-                <>
-                    {/* Grid View */}
-                    {viewMode === 'grid' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" style={{ transition: 'all 0.3s ease' }}>
-                            {vehicles.map((car, index) => (
-                                <div
-                                    key={car.id}
-                                    className="card-animate"
-                                    style={{
-                                        animationDelay: `${index * 0.05}s`,
-                                    }}
-                                >
-                                    <PreviewCard car={car} handleViewDetails={handleViewDetails} onDelete={handleDelete} />
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
-                    {/* List View */}
-                    {viewMode === 'list' && (
-                        <div className="space-y-4" style={{ transition: 'all 0.3s ease' }}>
-                            {vehicles.map((car, index) => (
-                                <div
-                                    key={car.id}
-                                    className="card-animate"
-                                    style={{
-                                        animationDelay: `${index * 0.03}s`,
-                                    }}
-                                >
-                                    <PreviewCard car={car} handleViewDetails={handleViewDetails} onDelete={handleDelete} viewMode="list" />
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </>
-            )}
+                        {/* List View */}
+                        {viewMode === 'list' && (
+                            <div className="space-y-4" style={{ transition: 'all 0.3s ease' }}>
+                                {vehicles.map((car, index) => (
+                                    <div
+                                        key={car.id}
+                                        className="card-animate"
+                                        style={{
+                                            animationDelay: `${index * 0.03}s`,
+                                        }}
+                                    >
+                                        <PreviewCard car={car} handleViewDetails={handleViewDetails} onDelete={handleDelete} viewMode="list" />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
 
             {/* Pagination */}
             {!loading && vehicles.length > 0 && (

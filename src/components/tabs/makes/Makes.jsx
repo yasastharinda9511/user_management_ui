@@ -4,6 +4,7 @@ import { vehicleService } from '../../../api/index.js';
 import Notification from '../../common/Notification.jsx';
 import ConfirmationModal from '../../common/ConfirmationModal.jsx';
 import MakeCard from './MakeCard.jsx';
+import LoadingOverlay from '../../common/LoadingOverlay.jsx';
 
 const Makes = () => {
     const [makes, setMakes] = useState([]);
@@ -169,40 +170,44 @@ const Makes = () => {
                     </div>
                 </div>
 
-                {/* Makes Grid */}
-                {loading ? (
-                    <div className="flex items-center justify-center py-12">
-                        <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
-                    </div>
-                ) : filteredMakes.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {filteredMakes.map((make) => (
-                            <MakeCard
-                                key={make.id}
-                                make={make}
-                                onEdit={openEditModal}
-                                onDelete={handleDeleteClick}
-                                onLogoUploaded={handleLogoUploaded}
-                            />
-                        ))}
-                    </div>
-                ) : (
-                    <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-                        <Car className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <p className="text-gray-500 text-lg">
-                            {searchTerm ? 'No makes found matching your search' : 'No makes available'}
-                        </p>
-                        {!searchTerm && (
-                            <button
-                                onClick={() => setShowAddModal(true)}
-                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
-                            >
-                                <Plus className="w-4 h-4" />
-                                Add Your First Make
-                            </button>
-                        )}
-                    </div>
-                )}
+                {/* Content Area with Loading Overlay */}
+                <div className="relative" style={{ minHeight: 'calc(100vh - 400px)' }}>
+                    {loading && <LoadingOverlay message="Loading makes..." icon={Car} />}
+
+                    {/* Makes Grid */}
+                    {!loading && filteredMakes.length > 0 && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {filteredMakes.map((make) => (
+                                <MakeCard
+                                    key={make.id}
+                                    make={make}
+                                    onEdit={openEditModal}
+                                    onDelete={handleDeleteClick}
+                                    onLogoUploaded={handleLogoUploaded}
+                                />
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Empty State */}
+                    {!loading && filteredMakes.length === 0 && (
+                        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+                            <Car className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                            <p className="text-gray-500 text-lg">
+                                {searchTerm ? 'No makes found matching your search' : 'No makes available'}
+                            </p>
+                            {!searchTerm && (
+                                <button
+                                    onClick={() => setShowAddModal(true)}
+                                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    Add Your First Make
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </div>
 
                 {/* Stats */}
                 <div className="bg-white rounded-lg border border-gray-200 p-4">

@@ -19,6 +19,7 @@ import { PERMISSIONS } from '../../../utils/permissions';
 import SupplierCard from './SupplierCard';
 import CreateSupplier from './CreateSupplier';
 import ViewSupplierModal from './ViewSupplierModal';
+import LoadingOverlay from '../../common/LoadingOverlay.jsx';
 
 const Suppliers = () => {
     const dispatch = useDispatch();
@@ -179,15 +180,12 @@ const Suppliers = () => {
                 </div>
             </div>
 
-            {/* Loading State */}
-            {loading && (
-                <div className="flex justify-center items-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                </div>
-            )}
+            {/* Content Area with Loading Overlay */}
+            <div className="relative" style={{ minHeight: 'calc(100vh - 400px)' }}>
+                {loading && <LoadingOverlay message="Loading suppliers..." icon={Building2} />}
 
-            {/* Empty State */}
-            {!loading && suppliers.length === 0 && (
+                {/* Empty State */}
+                {!loading && suppliers.length === 0 && (
                 <div className="text-center py-12 bg-gray-50 rounded-lg">
                     <Building2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No suppliers found</h3>
@@ -275,7 +273,8 @@ const Suppliers = () => {
                         </button>
                     </div>
                 </div>
-            )}
+                )}
+            </div>
 
             {/* Create/Edit Supplier Modal */}
             {showCreateModal && (

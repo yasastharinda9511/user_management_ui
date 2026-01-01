@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { Ship, Package, AlertCircle, Eye, Filter as FilterIcon, Loader2 } from 'lucide-react';
+import { Ship, Package, AlertCircle, Eye, Filter as FilterIcon, Loader2, Star } from 'lucide-react';
 import { vehicleService } from '../../../api/index.js';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -18,6 +18,7 @@ import Notification from '../../common/Notification.jsx';
 import SelectedCarCard from '../orderedCars/SelectedCarCard/SelectedCarCard.jsx';
 import Filter from '../orderedCars/Filter.jsx';
 import VehicleTrackerCard from "../../common/VehcleTrackerCard.jsx";
+import LoadingOverlay from '../../common/LoadingOverlay.jsx';
 
 const SHIPPING_STATUSES = [
     { id: 'PROCESSING', label: 'Processing', color: 'bg-orange-100 border-orange-300', textColor: 'text-orange-800' },
@@ -34,6 +35,7 @@ const ShippingTracking = () => {
     const [notification, setNotification] = useState({ show: false, type: '', title: '', message: '' });
     const [selectedCar, setSelectedCar] = useState(null);
     const [showFilters, setShowFilters] = useState(false);
+    const [featuredOnly, setFeaturedOnly] = useState(false);
     const containerRef = useRef(null);
 
     // Redux selectors
@@ -46,7 +48,7 @@ const ShippingTracking = () => {
     // Initial load and filter changes
     useEffect(() => {
         fetchInitialVehicles();
-    }, [filters]);
+    }, [filters, featuredOnly]);
 
     const fetchInitialVehicles = async () => {
         try {
@@ -54,19 +56,25 @@ const ShippingTracking = () => {
             // Reset pagination
             dispatch(resetInfiniteScroll());
 
+            // Prepare filters with featured flag
+            const combinedFilters = {
+                ...filters,
+                ...(featuredOnly && { is_featured: true })
+            };
+
             // Fetch counts first (pass all shipping status IDs)
             const statusIds = SHIPPING_STATUSES.map(s => s.id);
             await dispatch(fetchVehicleCounts({
                 statusType: 'shipping',
                 statuses: statusIds,
-                filters
+                filters: combinedFilters
             })).unwrap();
 
             // Fetch initial batch of 50 vehicles
             const response = await vehicleService.getAllVehicles({
                 page: 1,
                 limit: 50,
-                filters: filters
+                filters: combinedFilters
             });
 
             // Group vehicles by shipping status
@@ -96,10 +104,16 @@ const ShippingTracking = () => {
         if (!hasMore || isLoadingMore) return;
 
         try {
+            // Prepare filters with featured flag
+            const combinedFilters = {
+                ...filters,
+                ...(featuredOnly && { is_featured: true })
+            };
+
             const response = await dispatch(fetchMoreVehicles({
                 page: currentPage + 1,
                 limit: 50,
-                filters
+                filters: combinedFilters
             })).unwrap();
 
             // Group new vehicles and append to existing columns
@@ -115,7 +129,7 @@ const ShippingTracking = () => {
         } catch (error) {
             console.error('Error loading more vehicles:', error);
         }
-    }, [hasMore, isLoadingMore, currentPage, filters, columns, dispatch]);
+    }, [hasMore, isLoadingMore, currentPage, filters, featuredOnly, columns, dispatch]);
 
     // Scroll detection for infinite scroll
     const handleScroll = useCallback((e) => {
@@ -148,6 +162,8 @@ const ShippingTracking = () => {
     };
 
     const onDragEnd = async (result) => {
+        if (loading) return; // Prevent drag during loading
+
         const { source, destination } = result;
 
         // Dropped outside a valid droppable
@@ -255,17 +271,6 @@ const ShippingTracking = () => {
         );
     };
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                    <Ship className="w-12 h-12 text-blue-500 mx-auto mb-4 animate-bounce" />
-                    <p className="text-gray-600">Loading shipping data...</p>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <>
             <Notification
@@ -289,6 +294,17 @@ const ShippingTracking = () => {
                         </div>
                         <div className="flex items-center gap-2 relative">
                             <button
+                                onClick={() => setFeaturedOnly(!featuredOnly)}
+                                className={`px-4 py-2 border rounded-lg transition-colors flex items-center gap-2 ${
+                                    featuredOnly
+                                        ? 'bg-yellow-100 border-yellow-300 text-yellow-800 hover:bg-yellow-200'
+                                        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                                }`}
+                            >
+                                <Star className={`w-4 h-4 ${featuredOnly ? 'fill-yellow-500' : ''}`} />
+                                Featured
+                            </button>
+                            <button
                                 onClick={() => setShowFilters(!showFilters)}
                                 className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
                             >
@@ -308,10 +324,13 @@ const ShippingTracking = () => {
                 </div>
 
                 {/* Kanban Board */}
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <div className="flex gap-4 overflow-x-auto pb-4 flex-1">
-                        {SHIPPING_STATUSES.map(status => (
-                            <div key={status.id} className="flex-shrink-0 w-80 flex flex-col" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+                <div className="relative flex-1">
+                    {loading && <LoadingOverlay message="Loading shipping data..." icon={Ship} />}
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <div className="overflow-x-auto pb-4" style={{ height: 'calc(100vh - 200px)' }}>
+                            <div className="flex gap-4 h-full">
+                                {SHIPPING_STATUSES.map(status => (
+                                <div key={status.id} className="flex-shrink-0 w-80 flex flex-col h-full">
                                 <div className={`rounded-lg ${status.color} border-2 p-3 mb-3`}>
                                     <div className="flex items-center justify-between">
                                         <h3 className={`font-semibold ${status.textColor}`}>
@@ -347,18 +366,20 @@ const ShippingTracking = () => {
                                         </div>
                                     )}
                                 </Droppable>
+                                </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                </DragDropContext>
+                        </div>
+                    </DragDropContext>
 
-                {/* Loading More Indicator */}
-                {isLoadingMore && (
-                    <div className="flex items-center justify-center py-4">
-                        <Loader2 className="w-6 h-6 text-blue-500 animate-spin mr-2" />
-                        <span className="text-sm text-gray-600">Loading more vehicles...</span>
-                    </div>
-                )}
+                    {/* Loading More Indicator */}
+                    {isLoadingMore && (
+                        <div className="flex items-center justify-center py-4">
+                            <Loader2 className="w-6 h-6 text-blue-500 animate-spin mr-2" />
+                            <span className="text-sm text-gray-600">Loading more vehicles...</span>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Vehicle Details Modal */}
