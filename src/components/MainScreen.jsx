@@ -199,6 +199,8 @@ const MainScreen = () => {
 
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('touchmove', handleMouseMove);
+        document.addEventListener('touchend', handleMouseUp);
 
         // Prevent text selection while resizing
         document.body.style.userSelect = 'none';
