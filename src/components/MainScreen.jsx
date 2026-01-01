@@ -30,7 +30,13 @@ const MainScreen = () => {
     const permissions = useSelector(selectPermissions);
     const user = useSelector(selectUser);
     const unreadNotifications = useSelector(selectUnreadCount);
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+    // Sidebar resize state
+    const [sidebarWidth, setSidebarWidth] = useState(264); // Default 264px
+    const [isResizing, setIsResizing] = useState(false);
+    const [lastExpandedWidth, setLastExpandedWidth] = useState(264);
+    const sidebarCollapsed = sidebarWidth <= 80; // Derived state
+
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     // Global search state
@@ -46,6 +52,25 @@ const MainScreen = () => {
     useEffect(() => {
         dispatch(fetchNotifications({ page: 1, page_size: 20 }));
     }, [dispatch]);
+
+    // Load sidebar width from localStorage on mount
+    useEffect(() => {
+        const savedWidth = localStorage.getItem('sidebar-width');
+        if (savedWidth) {
+            const width = parseInt(savedWidth, 10);
+            if (width >= 80 && width <= 400) {
+                setSidebarWidth(width);
+                if (width > 80) {
+                    setLastExpandedWidth(width);
+                }
+            }
+        }
+    }, []);
+
+    // Save sidebar width to localStorage when it changes
+    useEffect(() => {
+        localStorage.setItem('sidebar-width', sidebarWidth.toString());
+    }, [sidebarWidth]);
 
     // Global search functionality
     const performSearch = async (query) => {
@@ -153,15 +178,51 @@ const MainScreen = () => {
         return user.first_name[0] + user.last_name[0];
     }
 
+    // Sidebar resize handlers
+    const handleResizeMouseDown = (e) => {
+        e.preventDefault();
+        setIsResizing(true);
+    };
+
+    useEffect(() => {
+        if (!isResizing) return;
+
+        const handleMouseMove = (e) => {
+            const newWidth = e.clientX;
+            const clampedWidth = Math.min(Math.max(newWidth, 80), 400);
+            setSidebarWidth(clampedWidth);
+        };
+
+        const handleMouseUp = () => {
+            setIsResizing(false);
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        // Prevent text selection while resizing
+        document.body.style.userSelect = 'none';
+        document.body.style.cursor = 'col-resize';
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.body.style.userSelect = '';
+            document.body.style.cursor = '';
+        };
+    }, [isResizing]);
 
     const tabs = getAccessibleTabs(permissions);
 
     return (
         <div className="h-screen w-screen bg-gray-100">
-            {/* Sidebar - Collapsible */}
-            <div className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-10 transition-all duration-300 flex flex-col ${
-                sidebarCollapsed ? 'w-20' : 'w-64'
-            }`}>
+            {/* Sidebar - Resizable */}
+            <div
+                className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-10 flex flex-col ${
+                    isResizing ? '' : 'transition-all duration-300'
+                }`}
+                style={{ width: `${sidebarWidth}px` }}
+            >
                 {/* Sidebar Header */}
                 <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
                     <div className="flex items-center space-x-3">
@@ -175,7 +236,14 @@ const MainScreen = () => {
                         )}
                     </div>
                     <button
-                        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                        onClick={() => {
+                            if (sidebarWidth > 80) {
+                                setLastExpandedWidth(sidebarWidth);
+                                setSidebarWidth(80);
+                            } else {
+                                setSidebarWidth(lastExpandedWidth);
+                            }
+                        }}
                         className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
                         title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                     >
@@ -261,12 +329,29 @@ const MainScreen = () => {
                         </div>
                     )}
                 </div>
+
+                {/* Resize Handle - Centered grip */}
+                <div
+                    onMouseDown={handleResizeMouseDown}
+                    className={`absolute top-1/2 -translate-y-1/2 -right-1.5 h-12 w-3 rounded-r-md flex items-center justify-center ${
+                        isResizing ? 'bg-blue-500' : 'bg-gray-300 hover:bg-gray-400'
+                    } cursor-col-resize transition-colors z-20 shadow-md`}
+                    title="Drag to resize sidebar"
+                >
+                    {/* Grip dots */}
+                    <div className="flex flex-col gap-1">
+                        <div className="w-0.5 h-0.5 bg-white rounded-full"></div>
+                        <div className="w-0.5 h-0.5 bg-white rounded-full"></div>
+                        <div className="w-0.5 h-0.5 bg-white rounded-full"></div>
+                    </div>
+                </div>
             </div>
 
             {/* Main content area - starts right after sidebar */}
-            <div className={`flex flex-col min-h-screen transition-all duration-300 ${
-                sidebarCollapsed ? 'ml-20' : 'ml-64'
-            }`}>
+            <div
+                className={`flex flex-col min-h-screen ${isResizing ? '' : 'transition-all duration-300'}`}
+                style={{ marginLeft: `${sidebarWidth}px` }}
+            >
                 {/* Header */}
                 <header className="bg-white border-b border-gray-200 px-6 py-4 h-16 flex-shrink-0">
                     <div className="flex items-center justify-between h-full">
