@@ -1,5 +1,5 @@
 import React from "react";
-import {Car, AlertCircle, AlertTriangle, Package, TruckIcon, CheckCircle, UserCircle, Info, Store} from "lucide-react";
+import {Car, AlertCircle, AlertTriangle, Package, TruckIcon, CheckCircle, UserCircle, Info, Store, Star} from "lucide-react";
 
 
 const NotificationCard = ({ notification, index }) => {
@@ -21,6 +21,8 @@ const NotificationCard = ({ notification, index }) => {
                 return <Package className="w-5 h-5 text-blue-600" />;
             case 'shipping_status':
                 return <TruckIcon className="w-5 h-5 text-purple-600" />;
+            case 'vehicle_featured_status_changed':
+                return <Star className="w-5 h-5 fill-yellow-600 text-yellow-600" />;
             case 'alert':
             case 'error':
                 return <AlertCircle className="w-5 h-5 text-red-600" />;
