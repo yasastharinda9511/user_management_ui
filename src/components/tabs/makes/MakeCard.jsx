@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Edit2, Trash2, Car, Upload, Image as ImageIcon, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import { vehicleService } from '../../../api/index.js';
+import presignedUrlCache from '../../../utils/presignedUrlCache.js';
 
 const MakeCard = ({ make, onEdit, onDelete, onLogoUploaded }) => {
     const [uploadingLogo, setUploadingLogo] = useState(false);
@@ -19,8 +20,8 @@ const MakeCard = ({ make, onEdit, onDelete, onLogoUploaded }) => {
         try {
             setLoadingLogo(true);
             setLogoError(false);
-            const response = await vehicleService.getMakeLogo(make.id);
-            setLogoUrl(response.data.presigned_url);
+            const url = await presignedUrlCache.getCachedMakeLogo(make.id);
+            setLogoUrl(url);
         } catch (error) {
             console.error(`Error fetching logo for make ${make.id}:`, error);
             setLogoError(true);
@@ -47,6 +48,8 @@ const MakeCard = ({ make, onEdit, onDelete, onLogoUploaded }) => {
         try {
             setUploadingLogo(true);
             await vehicleService.uploadMakeLogo(make.id, file);
+            // Invalidate cache for this make's logo
+            presignedUrlCache.invalidateMakeLogo(make.id);
             // Fetch the new presigned URL after upload
             await fetchLogoUrl();
             onLogoUploaded?.(make.id);

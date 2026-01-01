@@ -1,4 +1,5 @@
 import { carServiceApi } from './axiosClient';
+import presignedUrlCache from '../utils/presignedUrlCache.js';
 
 /**
  * Vehicle Service - Handles all vehicle-related API calls
@@ -142,6 +143,8 @@ const vehicleService = {
         const response = await carServiceApi.post(`/vehicles/upload-image/${vehicleId}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         });
+        // Invalidate cache for this vehicle's images
+        presignedUrlCache.invalidateVehicleImages(vehicleId);
         return response.data;
     },
 
@@ -188,6 +191,8 @@ const vehicleService = {
                 'Content-Type': 'multipart/form-data',
             },
         });
+        // Invalidate cache for this make's logo
+        presignedUrlCache.invalidateMakeLogo(makeId);
         return response.data;
     },
 
@@ -250,6 +255,8 @@ const vehicleService = {
                 'Content-Type': 'multipart/form-data'
             }
         });
+        // Invalidate cache for this vehicle's documents
+        presignedUrlCache.invalidateVehicleDocuments(vehicleId);
         return response.data;
     },
 
@@ -271,6 +278,8 @@ const vehicleService = {
      */
     deleteVehicleDocument: async (vehicleId, documentId) => {
         const response = await carServiceApi.delete(`/vehicles/${vehicleId}/documents/${documentId}`);
+        // Invalidate cache for this specific document
+        presignedUrlCache.invalidateDocument(vehicleId, documentId);
         return response.data;
     },
 

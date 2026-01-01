@@ -17,6 +17,7 @@ import {PERMISSIONS} from "../../../../utils/permissions.js";
 import {selectPermissions} from "../../../../state/authSlice.js";
 import { VehicleSections} from "./vehicleSections.jsx";
 import {vehicleService} from "../../../../api/index.js";
+import presignedUrlCache from "../../../../utils/presignedUrlCache.js";
 import SelectCustomerModal from "../SelectCustomerModal.jsx";
 import SelectSupplierModal from "../SelectSupplierModal.jsx";
 import ViewCustomerModal from "../ViewCustomerModal.jsx";
@@ -82,8 +83,8 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
 
             try {
                 setLoadingMakeLogo(true);
-                const response = await vehicleService.getMakeLogo(selectedCar.vehicle.make_id);
-                setMakeLogoUrl(response.data.presigned_url);
+                const url = await presignedUrlCache.getCachedMakeLogo(selectedCar.vehicle.make_id);
+                setMakeLogoUrl(url);
             } catch (error) {
                 console.error('Error fetching make logo:', error);
                 setMakeLogoUrl(null);
@@ -168,9 +169,9 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             const urls = await Promise.all(
                 sortedImages.map(async (img) => {
                     try {
-                        const response = await vehicleService.getVehicleImagePresignedUrl(img.vehicle_id, img.filename);
-                        console.log('Fetched image URL:', response.data.presigned_url);
-                        return response.data?.presigned_url || null;
+                        const url = await presignedUrlCache.getCachedVehicleImage(img.vehicle_id, img.filename);
+                        console.log('Fetched image URL:', url);
+                        return url || null;
                     } catch (error) {
                         console.error('Error fetching vehicle image', img.filename, error);
                         return null;
@@ -197,6 +198,9 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             await vehicleService.uploadVehicleImages(vehicle.current.id, Array.from(files));
             showNotification('success', 'Success', `${files.length} image(s) uploaded successfully`);
 
+            // Invalidate cache for this vehicle's images
+            presignedUrlCache.invalidateVehicleImages(vehicle.current.id);
+
             // Refresh images after upload
             const images = [...selectedCar.vehicle_image];
             const sortedImages = images.sort((a, b) => a.display_order - b.display_order);
@@ -204,8 +208,8 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             const urls = await Promise.all(
                 sortedImages.map(async (img) => {
                     try {
-                        const response = await vehicleService.getVehicleImagePresignedUrl(img.filename);
-                        return response.data?.presigned_url || null;
+                        const url = await presignedUrlCache.getCachedVehicleImage(img.vehicle_id, img.filename);
+                        return url || null;
                     } catch (error) {
                         console.error('Error fetching vehicle image', img.filename, error);
                         return null;

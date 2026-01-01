@@ -3,6 +3,7 @@ import { Car, Truck, Package, Eye, MapPin, Ship, History, ChevronLeft, ChevronRi
 import { useSelector } from 'react-redux';
 import {getStatusColor} from "../../common/CommonLogics.js";
 import { vehicleService} from "../../../api/index.js";
+import presignedUrlCache from "../../../utils/presignedUrlCache.js";
 import ShippingHistory from "./ShippingHistory.jsx";
 import PurchaseHistory from "./PurchaseHistory.jsx";
 import ConfirmationModal from "../../common/ConfirmationModal.jsx";
@@ -93,8 +94,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
 
             try {
                 const urlPromises = sortedImages.map(async (image) => {
-                    const response = await vehicleService.getVehicleImagePresignedUrl(image.vehicle_id, image.filename);
-                    return response.data.presigned_url;
+                    return await presignedUrlCache.getCachedVehicleImage(image.vehicle_id, image.filename);
                 });
 
                 const urls = await Promise.all(urlPromises);
@@ -119,8 +119,8 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
 
             try {
                 setLoadingMakeLogo(true);
-                const response = await vehicleService.getMakeLogo(car.vehicle.make_id);
-                setMakeLogoUrl(response.data.presigned_url);
+                const url = await presignedUrlCache.getCachedMakeLogo(car.vehicle.make_id);
+                setMakeLogoUrl(url);
             } catch (error) {
                 console.error('Error fetching make logo:', error);
                 setMakeLogoUrl(null);

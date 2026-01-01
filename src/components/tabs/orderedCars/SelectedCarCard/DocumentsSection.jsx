@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Upload, FileText, Download, Trash2, Eye, X, File } from 'lucide-react';
 import { vehicleService } from '../../../../api/index.js';
+import presignedUrlCache from '../../../../utils/presignedUrlCache.js';
 import {getAllDocumentTypes, getDocumentColor, getDocumentIcon} from "../../../../utils/documetsUtil.jsx";
 import PDFViewer from '../../../common/PDFViewer.jsx';
 
@@ -42,6 +43,8 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
         try {
             setUploading(true);
             await vehicleService.uploadVehicleDocument(vehicleId, selectedFile, documentType, selectedFile.name);
+            // Invalidate cache for this vehicle's documents
+            presignedUrlCache.invalidateVehicleDocuments(vehicleId);
             showNotification('success', 'Document uploaded successfully');
             setSelectedFile(null);
             setDocumentType('LC_DOCUMENT');
@@ -62,6 +65,8 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
 
         try {
             await vehicleService.deleteVehicleDocument(vehicleId, documentId);
+            // Invalidate cache for this specific document
+            presignedUrlCache.invalidateDocument(vehicleId, documentId);
             showNotification('success', 'Document deleted successfully');
         } catch (error) {
             console.error('Delete failed:', error);
@@ -71,8 +76,7 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
 
     const handleView = async (documentId, filename) => {
         try {
-            const response = await vehicleService.getVehicleDocumentUrl(vehicleId, documentId);
-            const url = response.data?.presigned_url || response.presigned_url;
+            const url = await presignedUrlCache.getCachedDocumentUrl(vehicleId, documentId);
 
             if (url) {
                 setViewingPdf({ url, filename });
@@ -88,8 +92,7 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
 
     const handleDownload = async (documentId, filename) => {
         try {
-            const response = await vehicleService.getVehicleDocumentUrl(vehicleId, documentId);
-            const url = response.data?.presigned_url || response.presigned_url;
+            const url = await presignedUrlCache.getCachedDocumentUrl(vehicleId, documentId);
 
             if (url) {
                 // Fetch the file as blob

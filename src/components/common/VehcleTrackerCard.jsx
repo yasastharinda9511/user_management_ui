@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Draggable} from "@hello-pangea/dnd";
 import {Eye, Package, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Car} from "lucide-react";
 import { vehicleService } from '../../api/index.js';
+import presignedUrlCache from '../../utils/presignedUrlCache.js';
 
 const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -28,8 +29,7 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
 
         try {
             const urlPromises = sortedImages.map(async (image) => {
-                const response = await vehicleService.getVehicleImagePresignedUrl(image.vehicle_id, image.filename);
-                return response.data.presigned_url;
+                return await presignedUrlCache.getCachedVehicleImage(image.vehicle_id, image.filename);
             });
 
             const urls = await Promise.all(urlPromises);
