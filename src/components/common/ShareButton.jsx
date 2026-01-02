@@ -22,6 +22,21 @@ const ShareButton = ({ vehicleId, vehicleData, variant = 'button', onShareComple
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleScroll = () => {
+            setIsOpen(false);
+        };
+
+        // Listen to scroll events on window and all scrollable parents
+        window.addEventListener('scroll', handleScroll, true);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll, true);
+        };
+    }, [isOpen]);
+
     const generateShareLink = async () => {
         if (shareUrl) return shareUrl;
 
