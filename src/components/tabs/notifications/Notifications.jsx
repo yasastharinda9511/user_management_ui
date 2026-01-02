@@ -25,6 +25,7 @@ import {
     selectUnreadCount
 } from '../../../state/notificationSlice';
 import NotificationCard from "./NotificationCard.jsx";
+import LoadingOverlay from '../../common/LoadingOverlay.jsx';
 
 const Notifications = () => {
     const dispatch = useDispatch();
@@ -62,11 +63,8 @@ const Notifications = () => {
 
     if (loading && notifications.length === 0) {
         return (
-            <div className="flex items-center justify-center h-96">
-                <div className="text-center">
-                    <RefreshCw className="w-12 h-12 text-blue-500 mx-auto mb-4 animate-spin" />
-                    <p className="text-gray-600">Loading notifications...</p>
-                </div>
+            <div className="relative" style={{ minHeight: 'calc(100vh - 200px)' }}>
+                <LoadingOverlay message="Loading notifications..." icon={Bell} />
             </div>
         );
     }

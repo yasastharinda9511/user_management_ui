@@ -37,6 +37,7 @@ import {
     selectVehicleSalesSummary,
     fetSalesStatusSummary
 } from '../../../state/dashBoardSlice.js';
+import LoadingOverlay from '../../common/LoadingOverlay.jsx';
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -189,11 +190,8 @@ const Dashboard = () => {
 
     if (isLoading && insights.totalVehicles === 0) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-center">
-                    <RefreshCw className="w-12 h-12 text-blue-500 mx-auto mb-4 animate-spin" />
-                    <p className="text-gray-600">Loading dashboard data...</p>
-                </div>
+            <div className="relative" style={{ minHeight: 'calc(100vh - 200px)' }}>
+                <LoadingOverlay message="Loading dashboard data..." icon={BarChart3} />
             </div>
         );
     }
