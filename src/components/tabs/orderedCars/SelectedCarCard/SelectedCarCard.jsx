@@ -24,6 +24,7 @@ import ViewCustomerModal from "../ViewCustomerModal.jsx";
 import ImageViewer from "../../../common/ImageViewer.jsx";
 import ShippingHistory from "../ShippingHistory.jsx";
 import PurchaseHistory from "../PurchaseHistory.jsx";
+import ShareButton from "../../../common/ShareButton.jsx";
 import {convertToRFC3339} from "../../../../utils/common.js";
 
 const SelectedCarCard = ({id, closeModal, onSave}) => {
@@ -577,12 +578,19 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                 <span>Purchase</span>
                             </button>
                         </div>
-                        <button
-                            onClick={closeModal}
-                            className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
-                        >
-                            ×
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <ShareButton
+                                vehicleId={id}
+                                vehicleData={selectedCar}
+                                variant="button"
+                            />
+                            <button
+                                onClick={closeModal}
+                                className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+                            >
+                                ×
+                            </button>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

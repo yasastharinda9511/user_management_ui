@@ -9,4 +9,5 @@ export { default as roleService } from './roleService';
 export { default as vehicleService } from './vehicleService';
 export { default as customerService } from './customerService';
 export { default as supplierService } from './supplierService';
+export { default as shareService } from './shareService';
 export { authApi, carServiceApi, imageServiceApi } from './axiosClient';

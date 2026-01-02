@@ -24,6 +24,7 @@ import Customers from "./components/tabs/customers/Customers.jsx";
 import Suppliers from "./components/tabs/suppliers/Suppliers.jsx";
 import PurchaseTracking from "./components/tabs/purchaseTracking/PurchaseTracking.jsx";
 import Notifications from "./components/tabs/notifications/Notifications.jsx";
+import PublicVehicleView from "./components/PublicVehicleView.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -47,8 +48,9 @@ function App() {
     return (
         <BrowserRouter basename="/car-app">
             <Routes>
-                {/* Public Route */}
+                {/* Public Routes */}
                 <Route path="/login" element={<LoginPage/>} />
+                <Route path="/share/:shareToken" element={<PublicVehicleView/>} />
 
                 {/* Protected Routes - Each route is explicitly wrapped with ProtectedRoute */}
                 <Route path="/" element={

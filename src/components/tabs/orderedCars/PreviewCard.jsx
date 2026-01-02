@@ -11,6 +11,7 @@ import Portal from "../../common/Portal.jsx";
 import { selectPermissions } from "../../../state/authSlice.js";
 import { hasPermission } from "../../../utils/permissionUtils.js";
 import { PERMISSIONS } from "../../../utils/permissions.js";
+import ShareButton from "../../common/ShareButton.jsx";
 
 const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     const [imageUrls, setImageUrls] = useState([]);
@@ -239,6 +240,10 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                         <div className="absolute top-2 left-2 px-2 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full flex items-center gap-1 shadow-lg">
                             <Star className="w-3 h-3 fill-white" />
                             Featured
+                        </div>
+
+                        <div className={"absolute bottom-0 left-2 px-2 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full flex items-center gap-1 shadow-lg"}>
+                             <ShareButton vehicleId={car.vehicle.vehicleId} vehicleData={car} variant =""/>
                         </div>
 
                     </div>
@@ -640,25 +645,25 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 </div>
 
                 {/* Footer */}
-                <div className="flex justify-between items-center pt-4 border-t border-gray-100 mt-auto">
-                    <div className="text-sm">
-                        <div className="text-lg font-bold text-blue-600">{car.vehicle.price}</div>
+                <div className="flex justify-center items-start gap-1 pt-4 border-t border-gray-100 mt-auto">
+                    <div className="text-sm flex-shrink-0">
+                        <div className="text-base sm:text-lg font-bold text-blue-600">{car.vehicle.price}</div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                         {hasPermission(permissions, PERMISSIONS.CAR_DELETE) && (
                             <button
                                 onClick={handleDeleteClick}
-                                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                                className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                                title="Delete"
                             >
                                 <Trash2 className="w-4 h-4" />
-                                <span>Delete</span>
                             </button>
                         )}
                         {hasPermission(permissions, PERMISSIONS.CAR_UPDATE) && (
                             <button
                                 onClick={handleToggleFeatured}
                                 disabled={updatingFeatured}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                                className={`flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                                     isFeatured
                                         ? 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50'
                                         : 'text-gray-600 hover:text-gray-700 hover:bg-gray-50'
@@ -666,16 +671,20 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                 title={isFeatured ? 'Remove from featured' : 'Mark as featured'}
                             >
                                 <Star className={`w-4 h-4 ${isFeatured ? 'fill-yellow-600' : ''}`} />
-                                <span>{isFeatured ? 'Featured' : 'Feature'}</span>
                             </button>
                         )}
                         <button
                             onClick={() => handleViewDetails(car)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="View Details"
                         >
                             <Eye className="w-4 h-4" />
-                            <span>Details</span>
                         </button>
+                        <ShareButton
+                            vehicleId={car.vehicle.id}
+                            vehicleData={car}
+                            variant="icon"
+                        />
                     </div>
                 </div>
             </div>

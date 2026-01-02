@@ -15,5 +15,9 @@
   "notification_service": {
     "base_url": "https://email-service-gtdqk.ondigitalocean.app/notification-service",
     "timeout_seconds": 30
+  },
+  "hosting_url": {
+    "base_url": "https://tarragon-web-ui-ek4qa.ondigitalocean.app/car-app",
+    "timeout_seconds": 60
   }
 }
