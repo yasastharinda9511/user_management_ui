@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { formatNumberWithCommas, removeCommas } from '../../../utils/common.js';
 
 const EditableField = React.memo(({ label, value, section, field, type = "text", options = null, isEditing, currentValue, updateField }) => {
     const [inputValue, setInputValue] = useState(currentValue?.toString() || '');
 
     useEffect(() => {
-        setInputValue(currentValue?.toString() || '');
-    }, [currentValue]);
+        // Format with commas for currency and number types
+        if ((type === 'number' || type === 'currency') && currentValue) {
+            setInputValue(formatNumberWithCommas(currentValue));
+        } else {
+            setInputValue(currentValue?.toString() || '');
+        }
+    }, [currentValue, type]);
 
     if (!isEditing) {
         if (type === "currency") {
@@ -45,16 +51,21 @@ const EditableField = React.memo(({ label, value, section, field, type = "text",
                         onChange={(e) => updateField(section, field, e.target.value)}
                         className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                ) : type === "number" ? (
+                ) : type === "number" || type === "currency" ? (
                     <input
-                        type="number"
+                        type="text"
                         value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
+                        onChange={(e) => {
+                            const formatted = formatNumberWithCommas(e.target.value);
+                            setInputValue(formatted);
+                        }}
                         onBlur={() => {
-                            const num = parseFloat(inputValue);
+                            const cleanValue = removeCommas(inputValue);
+                            const num = parseFloat(cleanValue);
                             updateField(section, field, isNaN(num) ? 0 : num);
                         }}
                         className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder={type === "currency" ? "e.g., 1,000,000" : ""}
                     />
                 ) : type === "textarea" ? (
                     <textarea
