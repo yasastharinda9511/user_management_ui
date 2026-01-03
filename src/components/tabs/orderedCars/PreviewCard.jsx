@@ -242,10 +242,6 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                             Featured
                         </div>
 
-                        <div className={"absolute bottom-0 left-2 px-2 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full flex items-center gap-1 shadow-lg"}>
-                             <ShareButton vehicleId={car.vehicle.vehicleId} vehicleData={car} variant =""/>
-                        </div>
-
                     </div>
 
                     {/* Card Content */}
@@ -403,7 +399,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                     <button
                         onClick={handleToggleFeatured}
                         disabled={updatingFeatured}
-                        className={`absolute bottom-3 right-16 p-2 rounded-full transition-colors ${
+                        className={`absolute bottom-3 right-28 p-2 rounded-full transition-colors ${
                             isFeatured
                                 ? 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50'
                                 : 'text-gray-600 hover:text-gray-700 hover:bg-gray-50'
@@ -413,6 +409,11 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                         <Star className={`w-5 h-5 ${isFeatured ? 'fill-yellow-600' : ''}`} />
                     </button>
                 )}
+
+                {/* Share Button */}
+                <div className="absolute bottom-3 right-16">
+                    <ShareButton vehicleId={car.vehicle.vehicleId} vehicleData={car} variant="icon" />
+                </div>
 
                 {/* Details Button - Bottom Right Corner */}
                 <button

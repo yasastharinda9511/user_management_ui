@@ -87,11 +87,12 @@ const ShareButton = ({ vehicleId, vehicleData, variant = 'button', onShareComple
                 ref={buttonRef}
                 onClick={() => setIsOpen(!isOpen)}
                 className={variant === 'icon'
-                    ? "p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    ? "p-2 text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-full transition-colors"
                     : "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
                 }
+                title="Share Vehicle"
             >
-                <Share2 className="w-4 h-4" />
+                <Share2 className={variant === 'icon' ? "w-5 h-5" : "w-4 h-4"} />
                 {variant === 'button' && <span>Share</span>}
             </button>
 
