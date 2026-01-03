@@ -66,6 +66,7 @@ const authSlice = createSlice({
         refreshToken: null,
         isLoading: false,
         isAuthenticated: false,
+        isInitializing: true,
         permissions:[],
         message: {
             type: '',
@@ -81,6 +82,7 @@ const authSlice = createSlice({
             state.accessToken = null;
             state.refreshToken = null;
             state.isAuthenticated = false;
+            state.isInitializing = false;
             state.permissions = [];
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
@@ -103,6 +105,9 @@ const authSlice = createSlice({
                     console.error('Failed to decode JWT:', error);
                     state.permissions = [];
                 }
+            } else {
+                // No stored token, initialization complete
+                state.isInitializing = false;
             }
         }
     },
@@ -116,6 +121,7 @@ const authSlice = createSlice({
             // Login fulfilled
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.isLoading = false;
+                state.isInitializing = false;
                 state.isAuthenticated = true;
                 state.user = action.payload.auth.user;
                 state.accessToken = action.payload.auth.access_token;
@@ -133,6 +139,7 @@ const authSlice = createSlice({
             // Login rejected
             .addCase(loginUser.rejected, (state, action) => {
                 state.isLoading = false;
+                state.isInitializing = false;
                 state.isAuthenticated = false;
                 state.user = null;
                 state.accessToken = null;
@@ -178,6 +185,7 @@ const authSlice = createSlice({
 
             .addCase(introspectUser.fulfilled, (state, action) => {
                 state.isLoading = false;
+                state.isInitializing = false;
                 state.isAuthenticated = action.payload.active;
 
                 // If token is active, update user info and permissions
@@ -199,6 +207,7 @@ const authSlice = createSlice({
 
             .addCase(introspectUser.rejected, (state, action) => {
                 state.isLoading = false;
+                state.isInitializing = false;
                 state.isAuthenticated = false;
                 state.user = null;
                 state.accessToken = null;
