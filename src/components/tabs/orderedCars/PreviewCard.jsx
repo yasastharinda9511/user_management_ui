@@ -245,12 +245,12 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                     </div>
 
                     {/* Card Content */}
-                    <div className="flex-1 p-6">
+                    <div className="flex-1 p-4 md:p-6">
                         <div className="flex flex-col md:flex-row justify-between h-full">
                             <div className="flex-1">
                                 {/* Header */}
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="flex items-start gap-3">
+                                <div className="flex justify-between items-start mb-3 md:mb-4">
+                                    <div className="flex items-start gap-2 md:gap-3">
                                         {/* Make Logo */}
                                         {makeLogoUrl && (
                                             <div className="w-12 h-12 flex-shrink-0 bg-white border border-gray-200 rounded-lg p-1.5 flex items-center justify-center">
@@ -263,8 +263,8 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                             </div>
                                         )}
                                         <div>
-                                            <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{car.vehicle.make}</h3>
-                                            <p className="text-sm text-gray-700 font-medium">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
+                                            <h3 className="text-base md:text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{car.vehicle.make}</h3>
+                                            <p className="text-xs md:text-sm text-gray-700 font-medium">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
                                             <p className="text-xs text-gray-600">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
                                         </div>
                                     </div>
@@ -387,10 +387,10 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 {hasPermission(permissions, PERMISSIONS.CAR_DELETE) && (
                     <button
                         onClick={handleDeleteClick}
-                        className="absolute top-3 right-3 p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors z-10"
+                        className="absolute top-2 right-2 md:top-3 md:right-3 p-1.5 md:p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors z-10"
                         title="Delete Vehicle"
                     >
-                        <Trash2 className="w-5 h-5" />
+                        <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
                     </button>
                 )}
 
@@ -399,29 +399,29 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                     <button
                         onClick={handleToggleFeatured}
                         disabled={updatingFeatured}
-                        className={`absolute bottom-3 right-28 p-2 rounded-full transition-colors ${
+                        className={`absolute bottom-2 right-20 md:bottom-3 md:right-28 p-1.5 md:p-2 rounded-full transition-colors ${
                             isFeatured
                                 ? 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50'
                                 : 'text-gray-600 hover:text-gray-700 hover:bg-gray-50'
                         } ${updatingFeatured ? 'opacity-50 cursor-not-allowed' : ''}`}
                         title={isFeatured ? 'Remove from featured' : 'Mark as featured'}
                     >
-                        <Star className={`w-5 h-5 ${isFeatured ? 'fill-yellow-600' : ''}`} />
+                        <Star className={`w-4 h-4 md:w-5 md:h-5 ${isFeatured ? 'fill-yellow-600' : ''}`} />
                     </button>
                 )}
 
                 {/* Share Button */}
-                <div className="absolute bottom-3 right-16">
+                <div className="absolute bottom-2 right-11 md:bottom-3 md:right-16">
                     <ShareButton vehicleId={car.vehicle.vehicleId} vehicleData={car} variant="icon" />
                 </div>
 
                 {/* Details Button - Bottom Right Corner */}
                 <button
                     onClick={() => handleViewDetails(car)}
-                    className="absolute bottom-3 right-3 p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors"
+                    className="absolute bottom-2 right-2 md:bottom-3 md:right-3 p-1.5 md:p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors"
                     title="View Details"
                 >
-                    <Eye className="w-5 h-5" />
+                    <Eye className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
             </div>
 

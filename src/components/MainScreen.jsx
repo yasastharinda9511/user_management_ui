@@ -10,7 +10,8 @@ import {
     Car,
     UserCircle,
     Building2,
-    Loader2
+    Loader2,
+    Menu
 } from 'lucide-react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,6 +37,9 @@ const MainScreen = () => {
     const [isResizing, setIsResizing] = useState(false);
     const [lastExpandedWidth, setLastExpandedWidth] = useState(264);
     const sidebarCollapsed = sidebarWidth <= 80; // Derived state
+
+    // Mobile menu state
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -224,11 +228,30 @@ const MainScreen = () => {
 
     return (
         <div className="h-screen w-screen bg-gray-100">
-            {/* Sidebar - Resizable */}
+            {/* Mobile Menu Button */}
+            <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                aria-label="Toggle menu"
+            >
+                {mobileMenuOpen ? <XIcon className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+
+            {/* Mobile Overlay */}
+            {mobileMenuOpen && (
+                <div
+                    className="md:hidden fixed inset-0 bg-black/50 z-30"
+                    onClick={() => setMobileMenuOpen(false)}
+                />
+            )}
+
+            {/* Sidebar - Resizable on desktop, drawer on mobile */}
             <div
-                className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-10 flex flex-col ${
+                className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-40 flex flex-col ${
                     isResizing ? '' : 'transition-all duration-300'
-                }`}
+                } ${
+                    mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                } md:translate-x-0`}
                 style={{ width: `${sidebarWidth}px` }}
             >
                 {/* Sidebar Header */}
@@ -272,6 +295,7 @@ const MainScreen = () => {
                                 key={tab.path}
                                 onClick={() => {
                                     navigate(tab.path);
+                                    setMobileMenuOpen(false); // Close mobile menu on navigation
                                 }}
                                 className={`relative w-full flex items-center ${sidebarCollapsed ? 'justify-center' : 'space-x-3'} px-4 py-3 text-left rounded-lg transition-colors ${
                                     location.pathname === tab.path
@@ -338,11 +362,11 @@ const MainScreen = () => {
                     )}
                 </div>
 
-                {/* Resize Handle - Centered grip */}
+                {/* Resize Handle - Centered grip (hidden on mobile) */}
                 <div
                     onMouseDown={handleResizeMouseDown}
                     onTouchStart={handleResizeMouseDown}
-                    className={`absolute top-1/2 -translate-y-1/2 -right-1.5 h-12 w-3 rounded-r-md flex items-center justify-center ${
+                    className={`hidden md:flex absolute top-1/2 -translate-y-1/2 -right-1.5 h-12 w-3 rounded-r-md items-center justify-center ${
                         isResizing ? 'bg-blue-500' : 'bg-gray-300 hover:bg-gray-400'
                     } cursor-col-resize transition-colors z-20 shadow-md`}
                     title="Drag to resize sidebar"
@@ -356,24 +380,31 @@ const MainScreen = () => {
                 </div>
             </div>
 
-            {/* Main content area - starts right after sidebar */}
+            {/* Main content area - starts right after sidebar on desktop, full width on mobile */}
             <div
                 className={`flex flex-col min-h-screen ${isResizing ? '' : 'transition-all duration-300'}`}
-                style={{ marginLeft: `${sidebarWidth}px` }}
             >
+                <style>{`
+                    @media (min-width: 768px) {
+                        .main-content-wrapper {
+                            margin-left: ${sidebarWidth}px;
+                        }
+                    }
+                `}</style>
+
                 {/* Header */}
-                <header className="bg-white border-b border-gray-200 px-6 py-4 h-16 flex-shrink-0">
-                    <div className="flex items-center justify-between h-full">
+                <header className="main-content-wrapper bg-white border-b border-gray-200 px-4 md:px-6 py-2 md:py-4 h-auto md:h-16 flex-shrink-0">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-0 md:h-full">
                         {/* Enhanced Global Search */}
-                        <div className="flex-1 flex justify-center">
+                        <div className="w-full md:flex-1 md:flex md:justify-center order-2 md:order-1">
                             <div className="relative max-w-2xl w-full" ref={searchRef}>
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 z-10" />
                                 <input
                                     type="text"
-                                    placeholder="Search vehicles, customers, suppliers... (Ctrl+K)"
+                                    placeholder="Search..."
                                     value={searchQuery}
                                     onChange={handleSearchChange}
-                                    className="pl-11 pr-20 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full transition-all"
+                                    className="pl-11 pr-12 md:pr-20 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full transition-all text-sm md:text-base"
                                 />
                                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-2 z-10">
                                     {isSearching && (
@@ -498,7 +529,7 @@ const MainScreen = () => {
                         </div>
 
                         {/* Right side icons */}
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-2 md:space-x-4 w-full md:w-auto justify-between md:justify-end order-1 md:order-2">
                             <button
                                 onClick={() => navigate('/notifications')}
                                 className="relative p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
@@ -529,7 +560,7 @@ const MainScreen = () => {
                 </header>
 
                 {/* Page content - starts immediately after header */}
-                <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+                <div className="main-content-wrapper flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
                     {/* Outlet renders the child route components */}
                     <Outlet />
                 </div>

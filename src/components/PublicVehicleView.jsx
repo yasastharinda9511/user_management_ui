@@ -177,14 +177,14 @@ const PublicVehicleView = () => {
             <div className="min-h-screen bg-gray-50">
                 {/* Header */}
                 <div className="bg-white border-b border-gray-200">
-                    <div className="max-w-7xl mx-auto px-4 py-6">
-                        <div className="flex items-center gap-3">
+                    <div className="max-w-7xl mx-auto px-4 py-4 md:py-6">
+                        <div className="flex items-center gap-2 md:gap-3">
                             <img
                                 src="/tarragon.jpg"
                                 alt="Tarragon.lk Logo"
-                                className="w-12 h-12 rounded-lg object-cover"
+                                className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover"
                             />
-                            <h1 className="text-2xl font-bold text-gray-900">Tarragon.lk</h1>
+                            <h1 className="text-xl md:text-2xl font-bold text-gray-900">Tarragon.lk</h1>
                         </div>
                     </div>
                 </div>
@@ -248,10 +248,10 @@ const PublicVehicleView = () => {
                             {vehicle.images?.length > 0 && (
                                 <button
                                     onClick={handleDownloadImage}
-                                    className="absolute top-4 right-4 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all hover:scale-105"
+                                    className="absolute top-2 right-2 md:top-4 md:right-4 p-2 md:p-3 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all hover:scale-105"
                                     title="Download image"
                                 >
-                                    <Download className="w-5 h-5 text-gray-700" />
+                                    <Download className="w-4 h-4 md:w-5 md:h-5 text-gray-700" />
                                 </button>
                             )}
                         </div>
@@ -282,18 +282,18 @@ const PublicVehicleView = () => {
                         )}
 
                         {/* Vehicle Details */}
-                        <div className="p-6">
-                            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                        <div className="p-4 md:p-6">
+                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                                 {vehicle.year_of_manufacture} {vehicle.make} {vehicle.model}
                             </h2>
                             {vehicle.trim_level && (
-                                <p className="text-lg text-gray-600 mb-2">Trim: {vehicle.trim_level}</p>
+                                <p className="text-base md:text-lg text-gray-600 mb-2">Trim: {vehicle.trim_level}</p>
                             )}
                             {vehicle.code && (
-                                <p className="text-sm text-gray-500 mb-6">Vehicle Code: {vehicle.code}</p>
+                                <p className="text-sm text-gray-500 mb-4 md:mb-6">Vehicle Code: {vehicle.code}</p>
                             )}
 
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
                                 <div className="flex items-center gap-3">
                                     <Calendar className="w-5 h-5 text-gray-400" />
                                     <div>
@@ -352,20 +352,20 @@ const PublicVehicleView = () => {
                             </div>
 
                             {/* Call to Action */}
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                                <h3 className="text-xl font-bold text-gray-900 mb-4">Interested in this vehicle?</h3>
-                                <p className="text-gray-600 mb-4">Contact us for more information and to schedule a viewing.</p>
-                                <div className="flex gap-4">
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 md:p-6">
+                                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 md:mb-4">Interested in this vehicle?</h3>
+                                <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4">Contact us for more information and to schedule a viewing.</p>
+                                <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                                     <a
                                         href="tel:+94123456789"
-                                        className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                        className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto"
                                     >
                                         <Phone className="w-5 h-5" />
                                         Call Us
                                     </a>
                                     <a
                                         href="mailto:info@carservice.com"
-                                        className="flex items-center gap-2 px-6 py-3 bg-white border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                                        className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors w-full sm:w-auto"
                                     >
                                         <Mail className="w-5 h-5" />
                                         Email Us
