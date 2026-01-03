@@ -169,10 +169,6 @@ const PurchaseTracking = () => {
         if (!destination) return;
 
         // Dropped in the same position
-        if (source.droppableId === destination.droppableId && source.index === destination.index) {
-            return;
-        }
-
         const sourceColumn = columns[source.droppableId];
         const destColumn = columns[destination.droppableId];
         const sourceItems = Array.from(sourceColumn);
@@ -194,6 +190,8 @@ const PurchaseTracking = () => {
 
         // Update backend
         try {
+
+            if (source.droppableId === destination.droppableId) return;
             await dispatch(updateVehiclePurchase({
                 vehicleId: removed.vehicle.id,
                 purchaseData: {

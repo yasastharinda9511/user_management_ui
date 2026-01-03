@@ -195,6 +195,9 @@ const ShippingTracking = () => {
 
         // Update backend
         try {
+
+            if (source.droppableId === destination.droppableId ) return ;
+
             await dispatch(updateVehicleShipping({
                 vehicleId: removed.vehicle.id,
                 shippingData: {
@@ -204,6 +207,7 @@ const ShippingTracking = () => {
             })).unwrap();
 
             showNotification('success', 'Success', `Vehicle moved to ${SHIPPING_STATUSES.find(s => s.id === destination.droppableId)?.label}`);
+
         } catch (error) {
             // Revert on error
             setColumns(columns);
