@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Car, Truck, Package, Eye, MapPin, Ship, History, ChevronLeft, ChevronRight, Trash2, ShoppingCart, Copy, Check, Star} from 'lucide-react';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getStatusColor} from "../../common/CommonLogics.js";
 import { vehicleService} from "../../../api/index.js";
 import presignedUrlCache from "../../../utils/presignedUrlCache.js";
@@ -12,6 +12,7 @@ import { selectPermissions } from "../../../state/authSlice.js";
 import { hasPermission } from "../../../utils/permissionUtils.js";
 import { PERMISSIONS } from "../../../utils/permissions.js";
 import ShareButton from "../../common/ShareButton.jsx";
+import { useNotification } from "../../../contexts/NotificationContext.jsx";
 
 const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     const [imageUrls, setImageUrls] = useState([]);
@@ -26,6 +27,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     const [isFeatured, setIsFeatured] = useState(car.vehicle.is_featured || false);
     const [updatingFeatured, setUpdatingFeatured] = useState(false);
     const permissions = useSelector(selectPermissions);
+    const { showNotification } = useNotification();
 
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
@@ -177,9 +179,12 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
             const newFeaturedStatus = !isFeatured;
             await vehicleService.updateFeaturedStatus(car.vehicle.id, newFeaturedStatus);
             setIsFeatured(newFeaturedStatus);
+            const message = isFeatured ? 'Vehicle is featured successfully' : 'Vehicle is unfeatured successfully';
+            console.log(message);
+            showNotification('success', '', message)
         } catch (error) {
             console.error('Failed to update featured status:', error);
-            alert('Failed to update featured status. Please try again.');
+            showNotification('error', '', 'Failed to update featured status. Please try again.')
         } finally {
             setUpdatingFeatured(false);
         }
