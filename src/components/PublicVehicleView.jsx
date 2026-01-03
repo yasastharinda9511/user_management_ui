@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {shareService, vehicleService} from '../api/index.js';
-import { Car, Calendar, Palette, Gauge, Phone, Mail, FileText, Award, Hash, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Car, Calendar, Palette, Gauge, Phone, Mail, FileText, Award, Hash, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import LoadingOverlay from './common/LoadingOverlay.jsx';
 
 const PublicVehicleView = () => {
@@ -66,6 +66,30 @@ const PublicVehicleView = () => {
 
     const handleThumbnailClick = (index) => {
         setCurrentImageIndex(index);
+    };
+
+    const handleDownloadImage = async () => {
+        if (!vehicle?.images?.[currentImageIndex]) return;
+
+        const imageUrl = vehicle.images[currentImageIndex].image_url;
+        const fileName = `${vehicle.make}_${vehicle.model}_${currentImageIndex + 1}.jpg`;
+
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Failed to download image:', error);
+            // Fallback: open in new tab
+            window.open(imageUrl, '_blank');
+        }
     };
 
     // Touch swipe handlers
@@ -213,10 +237,22 @@ const PublicVehicleView = () => {
                                     <Car className="w-24 h-24 text-gray-600" />
                                 </div>
                             )}
+                            {/* Featured Badge */}
                             {vehicle.is_featured && (
-                                <div className="absolute top-4 right-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                <div className="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
                                     Featured
                                 </div>
+                            )}
+
+                            {/* Download Button */}
+                            {vehicle.images?.length > 0 && (
+                                <button
+                                    onClick={handleDownloadImage}
+                                    className="absolute top-4 right-4 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all hover:scale-105"
+                                    title="Download image"
+                                >
+                                    <Download className="w-5 h-5 text-gray-700" />
+                                </button>
                             )}
                         </div>
 
