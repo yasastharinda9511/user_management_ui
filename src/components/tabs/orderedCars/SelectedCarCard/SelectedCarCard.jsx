@@ -738,6 +738,20 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                         </span>
                                     )}
                                 </div>
+
+                                {/* Price Labels */}
+                                <div className="flex items-center gap-2 flex-wrap pt-2">
+                                    {(editedData.vehicle?.auction_price || vehicle.current.auction_price) ? (
+                                        <span className="px-3 py-1 text-sm font-medium rounded-full border bg-purple-100 text-purple-800 border-purple-200">
+                                            Auction: {(editedData.vehicle?.currency || vehicle.current.currency || 'LKR')} {(editedData.vehicle?.auction_price || vehicle.current.auction_price)?.toLocaleString()}
+                                        </span>
+                                    ) : null}
+                                    {(editedData.vehicle?.price_quoted || vehicle.current.price_quoted) ? (
+                                        <span className="px-3 py-1 text-sm font-medium rounded-full border bg-blue-100 text-blue-800 border-blue-200">
+                                            Quoted: {(editedData.vehicle?.currency || vehicle.current.currency || 'LKR')} {(editedData.vehicle?.price_quoted || vehicle.current.price_quoted)?.toLocaleString()}
+                                        </span>
+                                    ) : null}
+                                </div>
                             </div>
 
                             {/* Make Logo */}

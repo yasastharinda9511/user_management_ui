@@ -37,6 +37,8 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
         chassis_id: '',
         condition_status: 'UNREGISTERED',
         auction_grade: '',
+        auction_price: '',
+        quoted_price: '',
         cif_value: '',
         currency: 'LKR'
     });
@@ -357,6 +359,8 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
             chassis_id: '',
             condition_status: 'UNREGISTERED',
             auction_grade: '',
+            auction_price: '',
+            quoted_price: '',
             cif_value: '',
             currency: 'LKR'
         });
@@ -387,11 +391,15 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
         // Prepare the vehicle data to match your API
 
         try{
+            // Prepare vehicleData with proper field mapping for backend
+            const { quoted_price, ...restForm } = vehicleForm;
             const vehicleData = {
-                ...vehicleForm,
+                ...restForm,
                 code: vehicleForm.code, // Keep as text
                 year_of_manufacture: parseInt(vehicleForm.year_of_manufacture),
                 mileage_km: vehicleForm.mileage_km ? parseInt(vehicleForm.mileage_km) : 0,
+                auction_price: parseFloat(vehicleForm.auction_price) || 0,
+                price_quoted: parseFloat(vehicleForm.quoted_price) || 0, // Backend expects price_quoted
                 cif_value: parseFloat(vehicleForm.cif_value) || 0
             };
 
@@ -762,6 +770,30 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                             onChange={(e) => handleFormChange('auction_grade', e.target.value.toUpperCase())}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., 4/B, 4.5/B, 5/A, 5AA, 6AA"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Auction Price</label>
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            value={vehicleForm.auction_price}
+                                            onChange={(e) => handleFormChange('auction_price', e.target.value)}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="e.g., 1500000.00"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Quoted Price</label>
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            value={vehicleForm.quoted_price}
+                                            onChange={(e) => handleFormChange('quoted_price', e.target.value)}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="e.g., 2000000.00"
                                         />
                                     </div>
 
