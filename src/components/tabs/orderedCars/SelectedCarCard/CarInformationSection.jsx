@@ -83,7 +83,7 @@ const CarInformationSection = ({editedData, editingSection, vehicle, updateField
             />
             <EditableField
                 label="Vehicle Code"
-                value={`ORD-${editedData.vehicle?.code || vehicle.code || 'N/A'}`}
+                value={`${editedData.vehicle?.code || vehicle.code || 'N/A'}`}
                 section="vehicle"
                 field="code"
                 isEditing={editingSection !== null}
