@@ -469,12 +469,6 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         return tt_charges + charges + duty + clearing + lc_cost + otherExpenses;
     };
 
-// Centralized callback function
-    const updateTotalCost = () => {
-        const newTotal = calculateTotalCost(editedData.financials, editedData.purchase);
-        updateField("financials","total_cost_lkr", newTotal);
-    };
-
     // Define sections with editable fields using the extracted configuration
 
     const onTouchStart = (e) => {
@@ -775,16 +769,13 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
 
                                 {/* Price Labels */}
                                 <div className="flex items-center gap-2 flex-wrap pt-2">
-                                    {(editedData.vehicle?.auction_price || vehicle.current.auction_price) ? (
-                                        <span className="px-3 py-1 text-sm font-medium rounded-full border bg-purple-100 text-purple-800 border-purple-200">
-                                            Auction: {(editedData.vehicle?.currency || vehicle.current.currency || 'LKR')} {(editedData.vehicle?.auction_price || vehicle.current.auction_price)?.toLocaleString()}
-                                        </span>
-                                    ) : null}
-                                    {(editedData.vehicle?.price_quoted || vehicle.current.price_quoted) ? (
-                                        <span className="px-3 py-1 text-sm font-medium rounded-full border bg-blue-100 text-blue-800 border-blue-200">
-                                            Quoted: {(editedData.vehicle?.currency || vehicle.current.currency || 'LKR')} {(editedData.vehicle?.price_quoted || vehicle.current.price_quoted)?.toLocaleString()}
-                                        </span>
-                                    ) : null}
+                                    <span className="px-3 py-1 text-sm font-medium rounded-full border bg-purple-100 text-purple-800 border-purple-200">
+                                        Auction: {(editedData.vehicle?.currency || vehicle.current.currency || 'LKR')} {(editedData.vehicle?.auction_price || 0)?.toLocaleString()}
+                                    </span>
+                                    <span className="px-3 py-1 text-sm font-medium rounded-full border bg-blue-100 text-blue-800 border-blue-200">
+                                        Quoted: LKR {(editedData.vehicle?.price_quoted || 0)?.toLocaleString()}
+                                    </span>
+
                                 </div>
                             </div>
 

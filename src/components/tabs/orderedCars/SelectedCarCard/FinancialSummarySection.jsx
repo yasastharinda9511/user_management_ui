@@ -68,42 +68,42 @@ const FinancialSummarySection = ({editedData, editingSection, financials, update
     return(<div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
         <EditableField
             label="Payements(TT)"
-            value={formatCurrency(editedData.financials?.tt_lkr || financials.tt_lkr)}
+            value={formatCurrency(editedData.financials?.tt_lkr)}
             section="financials"
             field="tt_lkr"
             type="number"
             isEditing={editingSection !== null}
-            currentValue={editedData.financials?.tt_lkr || financials.tt_lkr || 0}
+            currentValue={editedData.financials?.tt_lkr || 0}
             updateField={updateField}
         />
         <EditableField
             label="Charges (LKR)"
-            value={formatCurrency(editedData.financials?.charges_lkr || financials.charges_lkr)}
+            value={formatCurrency(editedData.financials?.charges_lkr)}
             section="financials"
             field="charges_lkr"
             type="number"
             isEditing={editingSection !== null}
-            currentValue={editedData.financials?.charges_lkr || financials.charges_lkr || 0}
+            currentValue={editedData.financials?.charges_lkr || '0'}
             updateField={updateField}
         />
         <EditableField
             label="Duty (LKR)"
-            value={formatCurrency(editedData.financials?.duty_lkr || financials.duty_lkr)}
+            value={formatCurrency(editedData.financials?.duty_lkr )}
             section="financials"
             field="duty_lkr"
             type="number"
             isEditing={editingSection !== null}
-            currentValue={editedData.financials?.duty_lkr || financials.duty_lkr || 0}
+            currentValue={editedData.financials?.duty_lkr || 0}
             updateField={updateField}
         />
         <EditableField
             label="Clearing (LKR)"
-            value={formatCurrency(editedData.financials?.clearing_lkr || financials.clearing_lkr)}
+            value={formatCurrency(editedData.financials?.clearing_lkr)}
             section="financials"
             field="clearing_lkr"
             type="number"
             isEditing={editingSection !== null}
-            currentValue={editedData.financials?.clearing_lkr || financials.clearing_lkr || 0}
+            currentValue={editedData.financials?.clearing_lkr || 0}
             updateField={updateField}
         />
 

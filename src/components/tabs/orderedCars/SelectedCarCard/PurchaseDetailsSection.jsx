@@ -45,60 +45,60 @@ const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateFie
 
             <EditableField
                 label="Purchase Date"
-                value={formatDate(editedData.purchase?.purchase_date || purchase.purchase_date)}
+                value={formatDate(editedData.purchase?.purchase_date )}
                 section="purchase"
                 field="purchase_date"
                 type="date"
                 isEditing={editingSection !== null}
-                currentValue={editedData.purchase?.purchase_date || purchase.purchase_date || ''}
+                currentValue={editedData.purchase?.purchase_date || ''}
                 updateField={updateField}
             />
             <EditableField
                 label="Purchase Status"
-                value={editedData.purchase?.purchase_status || purchase.purchase_status || 'LC_PENDING'}
+                value={editedData.purchase?.purchase_status || 'LC_PENDING'}
                 section="purchase"
                 field="purchase_status"
                 options={['LC_PENDING', 'LC_OPENED', 'LC_RECEIVED', 'CANCELLED']}
                 isEditing={editingSection !== null}
-                currentValue={editedData.purchase?.purchase_status || purchase.purchase_status || 'LC_PENDING'}
+                currentValue={editedData.purchase?.purchase_status ||  'LC_PENDING'}
                 updateField={updateField}
             />
             <EditableField
                 label="LC Bank"
-                value={editedData.purchase?.lc_bank || purchase.lc_bank}
+                value={editedData.purchase?.lc_bank || 'N/A'}
                 section="purchase"
                 field="lc_bank"
                 isEditing={editingSection !== null}
-                currentValue={editedData.purchase?.lc_bank || purchase.lc_bank || ''}
+                currentValue={editedData.purchase?.lc_bank || ''}
                 updateField={updateField}
             />
             <EditableField
                 label="LC Number"
-                value={editedData.purchase?.lc_number || purchase.lc_number}
+                value={editedData.purchase?.lc_number || ''}
                 section="purchase"
                 field="lc_number"
                 isEditing={editingSection !== null}
-                currentValue={editedData.purchase?.lc_number || purchase.lc_number || ''}
+                currentValue={editedData.purchase?.lc_number || ''}
                 updateField={updateField}
             />
             <EditableField
                 label="LC Cost"
-                value={formatCurrency(editedData.purchase?.lc_cost_jpy || purchase.lc_cost_jpy, 'LKR')}
+                value={formatCurrency(editedData.purchase?.lc_cost_jpy , 'LKR')}
                 section="purchase"
                 field="lc_cost_jpy"
                 type="number"
                 isEditing={editingSection !== null}
-                currentValue={editedData.purchase?.lc_cost_jpy || purchase.lc_cost_jpy || 0}
+                currentValue={editedData.purchase?.lc_cost_jpy ||  0}
                 updateField={updateField}
             />
             <EditableField
                 label="Purchase Remarks"
-                value={editedData.purchase?.purchase_remarks || purchase.purchase_remarks}
+                value={editedData.purchase?.purchase_remarks || ''}
                 section="purchase"
                 field="purchase_remarks"
                 type="textarea"
                 isEditing={editingSection !== null}
-                currentValue={editedData.purchase?.purchase_remarks || purchase.purchase_remarks || ''}
+                currentValue={editedData.purchase?.purchase_remarks || ''}
                 updateField={updateField}
             />
 

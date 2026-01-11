@@ -29,42 +29,42 @@ const SalesInformationSection = ({editedData, editingSection, sales, updateField
         <div className="space-y-3">
             <EditableField
                 label="Sale Status"
-                value={editedData.sales?.sale_status || sales.sale_status || 'AVAILABLE'}
+                value={editedData.sales?.sale_status || 'AVAILABLE'}
                 section="sales"
                 field="sale_status"
                 options={['AVAILABLE', 'SOLD', 'RESERVED']}
                 isEditing={editingSection !== null}
-                currentValue={editedData.sales?.sale_status || sales.sale_status || 'AVAILABLE'}
+                currentValue={editedData.sales?.sale_status || 'AVAILABLE'}
                 updateField={updateField}
             />
             <EditableField
                 label="Sold Date"
-                value={formatDate(editedData.sales?.sold_date || sales.sold_date)}
+                value={formatDate(editedData.sales?.sold_date)}
                 section="sales"
                 field="sold_date"
                 type="date"
                 isEditing={editingSection !== null}
-                currentValue={editedData.sales?.sold_date || sales.sold_date || ''}
+                currentValue={editedData.sales?.sold_date ||''}
                 updateField={updateField}
             />
             <EditableField
                 label="Revenue (LKR)"
-                value={formatCurrency(editedData.sales?.revenue || sales.revenue)}
+                value={formatCurrency(editedData.sales?.revenue)}
                 section="sales"
                 field="revenue"
                 type="number"
                 isEditing={editingSection !== null}
-                currentValue={editedData.sales?.revenue || sales.revenue || 0}
+                currentValue={editedData.sales?.revenue || 0}
                 updateField={updateField}
             />
             <EditableField
                 label="Profit (LKR)"
-                value={formatCurrency(editedData.sales?.profit || sales.profit)}
+                value={formatCurrency(editedData.sales?.profit)}
                 section="sales"
                 field="profit"
                 type="number"
                 isEditing={editingSection !== null}
-                currentValue={editedData.sales?.profit || sales.profit || 0}
+                currentValue={editedData.sales?.profit || 0}
                 updateField={updateField}
             />
 
