@@ -6,11 +6,9 @@ const EditableField = React.memo(({ label, value, section, field, type = "text",
 
     useEffect(() => {
         // Format with commas for currency and number types
-        console.log("called editable field");
         if ((type === 'number' || type === 'currency') && currentValue) {
             setInputValue(formatNumberWithCommas(currentValue));
         } else {
-            console.log(currentValue);
             setInputValue(currentValue?.toString() || '');
         }
     }, [currentValue, type]);

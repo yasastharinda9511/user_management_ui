@@ -171,7 +171,6 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                 sortedImages.map(async (img) => {
                     try {
                         const url = await presignedUrlCache.getCachedVehicleImage(img.vehicle_id, img.filename);
-                        console.log('Fetched image URL:', url);
                         return url || null;
                     } catch (error) {
                         console.error('Error fetching vehicle image', img.filename, error);
@@ -289,6 +288,12 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         const totalCost = parseFloat(financials.current?.total_cost_lkr) || 0;
         const calculatedProfit = revenue - totalCost;
 
+        console.log('Initial Profit Calculation:', {
+            revenue,
+            totalCost,
+            calculatedProfit
+        });
+
         setEditedData({
             vehicle: { ...vehicle.current },
             shipping: { ...shipping.current },
@@ -372,6 +377,8 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                     setOriginalData(prev =>({
                         ...prev,
                         ["purchase"]: editedData.purchase,
+                        ["financials"]: editedData.financials,
+                        ["sales"]: editedData.sales,
                     }));
                     showNotification('success', 'Success', `${SELECTED_VEHICLE_CARD_OPTIONS.PURCHASE_DETAILS} Updated Successfully`);
                     break;
@@ -384,6 +391,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                     setOriginalData(prev =>({
                         ...prev,
                         ["financials"]: editedData.financials,
+                        ["sales"]: editedData.sales,
                     }));
                     showNotification('success', 'Success', `${SELECTED_VEHICLE_CARD_OPTIONS.FINANCIAL_SUMMARY} Updated Successfully`);
                     break;
@@ -437,19 +445,36 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
 
                 // Recalculate profit when total cost changes
                 const revenue = parseFloat(prev.sales?.revenue) || 0;
+                const calculatedProfit = revenue - newTotalCost;
                 updatedData.sales = {
                     ...prev.sales,
-                    profit: revenue - newTotalCost
+                    profit: calculatedProfit
                 };
+
+                console.log('Profit Recalculation (cost change):', {
+                    section,
+                    field,
+                    revenue,
+                    newTotalCost,
+                    calculatedProfit
+                });
             }
 
-            if (section === "sales") {
+            // Recalculate profit when revenue is updated in sales section
+            if (section === "sales" && field === "revenue") {
                 const totalCost = parseFloat(prev.financials?.total_cost_lkr) || 0;
                 const revenue = parseFloat(value) || 0;
+                const calculatedProfit = revenue - totalCost;
                 updatedData.sales = {
                     ...updatedSection,
-                    profit: revenue - totalCost
+                    profit: calculatedProfit
                 };
+
+                console.log('Profit Recalculation (revenue change):', {
+                    revenue,
+                    totalCost,
+                    calculatedProfit
+                });
             }
 
             return updatedData;
