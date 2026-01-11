@@ -66,6 +66,17 @@ const FinancialSummarySection = ({editedData, editingSection, financials, update
     };
 
     return(<div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+        {/* LC Cost - Read-only from Purchase section */}
+        <div className="flex justify-between py-2 px-3 bg-blue-50 rounded border border-blue-100">
+            <span className="text-sm text-gray-600">LC Cost (LKR):</span>
+            <span className="text-sm font-medium text-gray-900">
+                {formatCurrency(
+                    (editedData.purchase?.lc_cost_jpy || 0) * (editedData.purchase?.exchange_rate || 0),
+                    'LKR'
+                )}
+            </span>
+        </div>
+
         <EditableField
             label="Payements(TT)"
             value={formatCurrency(editedData.financials?.tt_lkr)}
@@ -106,17 +117,6 @@ const FinancialSummarySection = ({editedData, editingSection, financials, update
             currentValue={editedData.financials?.clearing_lkr || 0}
             updateField={updateField}
         />
-
-        {/* LC Cost - Read-only from Purchase section */}
-        <div className="flex justify-between py-2 px-3 bg-blue-50 rounded border border-blue-100">
-            <span className="text-sm text-gray-600">LC Cost (LKR):</span>
-            <span className="text-sm font-medium text-gray-900">
-                {formatCurrency(
-                    (editedData.purchase?.lc_cost_jpy || 0) * (editedData.purchase?.exchange_rate || 0),
-                    'LKR'
-                )}
-            </span>
-        </div>
 
         {/* Other Expenses Section */}
         <div className="border-t pt-3">
