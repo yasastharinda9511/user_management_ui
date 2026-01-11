@@ -413,31 +413,65 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                 [field]: value
             }
 
-            if (section === "financials"){
-                updatedSection.total_cost_lkr = calculateTotalCost(updatedSection);
-            }
-
-            return {
+            // Create updated data with the new section
+            const updatedData = {
                 ...prev,
                 [section]: updatedSection,
             };
+
+            // Recalculate total cost when financials or purchase sections are updated
+            if (section === "financials" || section === "purchase") {
+                const financialsToUse = section === "financials" ? updatedSection : prev.financials;
+                const purchaseToUse = section === "purchase" ? updatedSection : prev.purchase;
+
+                updatedData.financials = {
+                    ...financialsToUse,
+                    total_cost_lkr: calculateTotalCost(financialsToUse, purchaseToUse)
+                };
+            }
+
+            return updatedData;
         });
     }, []);
 
-    const calculateTotalCost = (financials) => {
-        const tt_charges = parseFloat(financials?.tt_lkr)
+    const calculateTotalCost = (financials, purchase) => {
+        const tt_charges = parseFloat(financials?.tt_lkr) || 0;
         const charges = parseFloat(financials?.charges_lkr) || 0;
         const duty = parseFloat(financials?.duty_lkr) || 0;
         const clearing = parseFloat(financials?.clearing_lkr) || 0;
-        const otherExpenses = parseFloat(financials?.other_expenses_lkr) || 0;
+        const lc_cost = parseFloat(purchase?.lc_cost_jpy) || 0;
 
-        console.log(tt_charges + charges + duty + clearing + otherExpenses)
-        return tt_charges + charges + duty + clearing + otherExpenses;
+        // Handle other_expenses_lkr as JSON object or number
+        let otherExpenses = 0;
+        if (financials?.other_expenses_lkr) {
+            if (typeof financials.other_expenses_lkr === 'object') {
+                // Sum all values in the JSON object
+                otherExpenses = Object.values(financials.other_expenses_lkr).reduce(
+                    (sum, val) => sum + (parseFloat(val) || 0),
+                    0
+                );
+            } else {
+                // Handle old format where it's a single number
+                otherExpenses = parseFloat(financials.other_expenses_lkr) || 0;
+            }
+        }
+
+        console.log('Total Cost Breakdown:', {
+            tt_charges,
+            charges,
+            duty,
+            clearing,
+            lc_cost,
+            otherExpenses,
+            total: tt_charges + charges + duty + clearing + lc_cost + otherExpenses
+        });
+
+        return tt_charges + charges + duty + clearing + lc_cost + otherExpenses;
     };
 
 // Centralized callback function
     const updateTotalCost = () => {
-        const newTotal = calculateTotalCost(editedData.financials);
+        const newTotal = calculateTotalCost(editedData.financials, editedData.purchase);
         updateField("financials","total_cost_lkr", newTotal);
     };
 

@@ -82,8 +82,8 @@ const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateFie
                 updateField={updateField}
             />
             <EditableField
-                label="LC Cost (JPY)"
-                value={formatCurrency(editedData.purchase?.lc_cost_jpy || purchase.lc_cost_jpy, 'JPY')}
+                label="LC Cost"
+                value={formatCurrency(editedData.purchase?.lc_cost_jpy || purchase.lc_cost_jpy, 'LKR')}
                 section="purchase"
                 field="lc_cost_jpy"
                 type="number"
