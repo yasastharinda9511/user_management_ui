@@ -111,7 +111,10 @@ const FinancialSummarySection = ({editedData, editingSection, financials, update
         <div className="flex justify-between py-2 px-3 bg-blue-50 rounded border border-blue-100">
             <span className="text-sm text-gray-600">LC Cost (LKR):</span>
             <span className="text-sm font-medium text-gray-900">
-                {formatCurrency(editedData.purchase?.lc_cost_jpy || 0, 'LKR')}
+                {formatCurrency(
+                    (editedData.purchase?.lc_cost_jpy || 0) * (editedData.purchase?.exchange_rate || 0),
+                    'LKR'
+                )}
             </span>
         </div>
 

@@ -57,16 +57,17 @@ const SalesInformationSection = ({editedData, editingSection, sales, updateField
                 currentValue={editedData.sales?.revenue || 0}
                 updateField={updateField}
             />
-            <EditableField
-                label="Profit (LKR)"
-                value={formatCurrency(editedData.sales?.profit)}
-                section="sales"
-                field="profit"
-                type="number"
-                isEditing={editingSection !== null}
-                currentValue={editedData.sales?.profit || 0}
-                updateField={updateField}
-            />
+
+            {/* Profit - Calculated field (Read-only) */}
+            <div className="flex justify-between py-2 px-3 bg-green-50 rounded border border-green-100">
+                <span className="text-sm text-gray-600">Profit (LKR):</span>
+                <span className={`text-sm font-bold ${(editedData.sales?.profit || 0) >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                    {formatCurrency(editedData.sales?.profit || 0)}
+                </span>
+            </div>
+            <p className="text-xs text-gray-500 italic">
+                Automatically calculated: Revenue - Total Cost
+            </p>
 
             {/* Customer Information */}
             <div className="border-t pt-3 mt-3">

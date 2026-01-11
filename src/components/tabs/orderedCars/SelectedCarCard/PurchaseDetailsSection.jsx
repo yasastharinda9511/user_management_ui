@@ -83,12 +83,22 @@ const PurchaseDetailsSection = ({editedData, editingSection, purchase, updateFie
             />
             <EditableField
                 label="LC Cost"
-                value={formatCurrency(editedData.purchase?.lc_cost_jpy , 'LKR')}
+                value={formatCurrency(editedData.purchase?.lc_cost_jpy , editedData.vehicle?.currency || 'LKR')}
                 section="purchase"
                 field="lc_cost_jpy"
                 type="number"
                 isEditing={editingSection !== null}
                 currentValue={editedData.purchase?.lc_cost_jpy ||  0}
+                updateField={updateField}
+            />
+            <EditableField
+                label="Exchange Rate"
+                value={editedData.purchase?.exchange_rate || 0}
+                section="purchase"
+                field="exchange_rate"
+                type="number"
+                isEditing={editingSection !== null}
+                currentValue={editedData.purchase?.exchange_rate || 0}
                 updateField={updateField}
             />
             <EditableField

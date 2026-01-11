@@ -284,11 +284,16 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         images.current = selectedCar.vehicle_image;
         documents.current = selectedCar.vehicle_documents;
 
+        // Calculate initial profit
+        const revenue = parseFloat(sales.current?.revenue) || 0;
+        const totalCost = parseFloat(financials.current?.total_cost_lkr) || 0;
+        const calculatedProfit = revenue - totalCost;
+
         setEditedData({
             vehicle: { ...vehicle.current },
             shipping: { ...shipping.current },
             financials: { ...financials.current },
-            sales: { ...sales.current },
+            sales: { ...sales.current, profit: calculatedProfit },
             purchase: { ...purchase.current },
             images:{...images.current},
             documents: { ...documents.current },
@@ -424,9 +429,26 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                 const financialsToUse = section === "financials" ? updatedSection : prev.financials;
                 const purchaseToUse = section === "purchase" ? updatedSection : prev.purchase;
 
+                const newTotalCost = calculateTotalCost(financialsToUse, purchaseToUse);
                 updatedData.financials = {
                     ...financialsToUse,
-                    total_cost_lkr: calculateTotalCost(financialsToUse, purchaseToUse)
+                    total_cost_lkr: newTotalCost
+                };
+
+                // Recalculate profit when total cost changes
+                const revenue = parseFloat(prev.sales?.revenue) || 0;
+                updatedData.sales = {
+                    ...prev.sales,
+                    profit: revenue - newTotalCost
+                };
+            }
+
+            if (section === "sales") {
+                const totalCost = parseFloat(prev.financials?.total_cost_lkr) || 0;
+                const revenue = parseFloat(value) || 0;
+                updatedData.sales = {
+                    ...updatedSection,
+                    profit: revenue - totalCost
                 };
             }
 
@@ -439,7 +461,11 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         const charges = parseFloat(financials?.charges_lkr) || 0;
         const duty = parseFloat(financials?.duty_lkr) || 0;
         const clearing = parseFloat(financials?.clearing_lkr) || 0;
-        const lc_cost = parseFloat(purchase?.lc_cost_jpy) || 0;
+        const lc_cost_jpy = parseFloat(purchase?.lc_cost_jpy) || 0;
+        const exchange_rate = parseFloat(purchase?.exchange_rate) || 0;
+
+        // Convert LC cost from JPY to LKR using exchange rate
+        const lc_cost_lkr = lc_cost_jpy * exchange_rate;
 
         // Handle other_expenses_lkr as JSON object or number
         let otherExpenses = 0;
@@ -461,12 +487,14 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             charges,
             duty,
             clearing,
-            lc_cost,
+            lc_cost_jpy,
+            exchange_rate,
+            lc_cost_lkr,
             otherExpenses,
-            total: tt_charges + charges + duty + clearing + lc_cost + otherExpenses
+            total: tt_charges + charges + duty + clearing + lc_cost_lkr + otherExpenses
         });
 
-        return tt_charges + charges + duty + clearing + lc_cost + otherExpenses;
+        return tt_charges + charges + duty + clearing + lc_cost_lkr + otherExpenses;
     };
 
     // Define sections with editable fields using the extracted configuration
