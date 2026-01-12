@@ -349,6 +349,19 @@ const vehicleService = {
         );
 
         return { data: counts };
+    },
+
+    /**
+     * Set an image as primary for a vehicle
+     * @param {number} vehicleId - Vehicle ID
+     * @param {number} imageId - Image ID
+     * @returns {Promise} - Update response
+     */
+    setImageAsPrimary: async (vehicleId, imageId) => {
+        const response = await carServiceApi.put(`/vehicles/${vehicleId}/images/${imageId}/set-primary`);
+        // Invalidate cache for this vehicle's images
+        presignedUrlCache.invalidateVehicleImages(vehicleId);
+        return response.data;
     }
 };
 

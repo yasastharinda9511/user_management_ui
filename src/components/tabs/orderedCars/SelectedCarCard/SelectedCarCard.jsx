@@ -165,13 +165,20 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             }
 
             const images = [...selectedCar.vehicle_image];
-            const sortedImages = images.sort((a, b) => a.display_order - b.display_order);
+            // Sort by: primary first, then by display_order
+            const sortedImages = images.sort((a, b) => {
+                // Primary images come first
+                if (a.is_primary && !b.is_primary) return -1;
+                if (!a.is_primary && b.is_primary) return 1;
+                // If both primary or both not primary, sort by display_order
+                return a.display_order - b.display_order;
+            });
 
             const urls = await Promise.all(
                 sortedImages.map(async (img) => {
                     try {
                         const url = await presignedUrlCache.getCachedVehicleImage(img.vehicle_id, img.filename);
-                        return url || null;
+                        return { url: url || null, imageData: img };
                     } catch (error) {
                         console.error('Error fetching vehicle image', img.filename, error);
                         return null;
@@ -180,7 +187,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             );
 
             // Filter out failed (null) results
-            setImageUrls(urls.filter(Boolean));
+            setImageUrls(urls.filter(item => item && item.url));
             setLoadingImages(false);
         };
 
@@ -607,11 +614,30 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         }
     };
 
+    const handleSetAsPrimary = async (imageId, index) => {
+        try {
+            setLoadingImages(true);
+            await vehicleService.setImageAsPrimary(vehicle.current.id, imageId);
+            showNotification('success', 'Success', 'Primary image updated successfully');
+
+            // Invalidate cache and refresh vehicle data
+            presignedUrlCache.invalidateVehicleImages(vehicle.current.id);
+            await dispatch(fetchVehicleById(id));
+
+            // Set the newly primary image as the current image
+            setCurrentImageIndex(0); // Primary image will be first after re-sort
+        } catch (error) {
+            console.error('Error setting primary image:', error);
+            showNotification('error', 'Error', 'Failed to set primary image: ' + error.message);
+            setLoadingImages(false);
+        }
+    };
+
     const handleDownloadImage = async (imageIndex = null) => {
         try {
             const index = imageIndex !== null ? imageIndex : currentImageIndex;
-            const image = imageUrls[index];
-            const response = await fetch(image);
+            const imageItem = imageUrls[index];
+            const response = await fetch(imageItem.url);
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -695,7 +721,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                     ) : (
                                         <>
                                             <img
-                                                src={imageUrls[currentImageIndex]}
+                                                src={imageUrls[currentImageIndex]?.url}
                                                 alt={`${editedData.vehicle?.make || vehicle.current.make} ${editedData.vehicle?.model || vehicle.current.model} - Image ${currentImageIndex + 1}`}
                                                 className="w-full h-64 object-contain transition-opacity duration-300 cursor-pointer hover:opacity-90"
                                                 onClick={() => setShowImageViewer(true)}
@@ -749,33 +775,57 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
 
                                 {/* Thumbnail Bar */}
                                 <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
-                                    {imageUrls.length > 0 && imageUrls.map((imageUrl, index) => (
+                                    {imageUrls.length > 0 && imageUrls.map((imageItem, index) => (
                                         <div
                                             key={index}
                                             className={`group relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
                                                 index === currentImageIndex
                                                     ? 'border-blue-600 ring-2 ring-blue-200'
+                                                    : imageItem.imageData.is_primary
+                                                    ? 'border-yellow-500 ring-2 ring-yellow-200'
                                                     : 'border-gray-300 hover:border-gray-400'
                                             }`}
                                             onClick={() => setCurrentImageIndex(index)}
                                         >
                                             <img
-                                                src={imageUrl}
+                                                src={imageItem.url}
                                                 alt={`Thumbnail ${index + 1}`}
                                                 className="w-full h-full object-cover"
                                             />
-                                            {/* Download Overlay */}
-                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            {/* Primary Badge */}
+                                            {imageItem.imageData.is_primary && (
+                                                <div className="absolute top-0.5 left-0.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-[10px] px-1 py-0.5 rounded flex items-center gap-0.5 shadow-md">
+                                                    <Star className="w-2 h-2 fill-white" />
+                                                    <span className="font-bold">Primary</span>
+                                                </div>
+                                            )}
+
+                                            {/* Action Overlay */}
+                                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
                                                 <button
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         handleDownloadImage(index);
                                                     }}
-                                                    className="p-2 bg-white/90 hover:bg-white rounded-full text-blue-600 transition-all transform hover:scale-110 shadow-lg"
+                                                    className="p-1.5 bg-white/90 hover:bg-white rounded-full text-blue-600 transition-all transform hover:scale-110 shadow-lg"
                                                     title="Download this image"
                                                 >
-                                                    <Download className="w-4 h-4" />
+                                                    <Download className="w-3 h-3" />
                                                 </button>
+                                                {!imageItem.imageData.is_primary && (
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleSetAsPrimary(imageItem.imageData.id, index);
+                                                        }}
+                                                        className="p-1.5 bg-yellow-500/90 hover:bg-yellow-500 rounded-full text-white transition-all transform hover:scale-110 shadow-lg"
+                                                        title="Set as primary image"
+                                                    >
+                                                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                        </svg>
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
@@ -1050,7 +1100,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         {/* Image Viewer */}
         {showImageViewer && (
             <ImageViewer
-                images={imageUrls}
+                images={imageUrls.map(item => item.url)}
                 initialIndex={currentImageIndex}
                 onClose={() => setShowImageViewer(false)}
             />

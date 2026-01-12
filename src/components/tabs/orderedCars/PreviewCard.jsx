@@ -91,10 +91,11 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 return;
             }
 
-            const sortedImages = [...car.vehicle_image].sort((a, b) =>
-                +a.display_order - +b.display_order
+            const sortedImages = [...car.vehicle_image].sort(
+                (a, b) =>
+                    Number(b.is_primary) - Number(a.is_primary) ||
+                    Number(a.display_order) - Number(b.display_order)
             );
-
             try {
                 const urlPromises = sortedImages.map(async (image) => {
                     return await presignedUrlCache.getCachedVehicleImage(image.vehicle_id, image.filename);
