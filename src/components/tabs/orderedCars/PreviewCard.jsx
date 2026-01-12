@@ -243,10 +243,10 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                         )}
                         {/* Featured Badge */}
 
-                        <div className="absolute top-2 left-2 px-2 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full flex items-center gap-1 shadow-lg">
+                        {isFeatured && <div className="absolute top-2 left-2 px-2 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full flex items-center gap-1 shadow-lg">
                             <Star className="w-3 h-3 fill-white" />
                             Featured
-                        </div>
+                        </div>}
 
                     </div>
 
