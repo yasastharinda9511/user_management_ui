@@ -641,7 +641,9 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                 <div className="p-6">
                     <div className="flex justify-between items-start mb-6">
                         <div className="flex items-center space-x-3">
-                            <h2 className="text-2xl font-bold text-gray-900">Deal Details</h2>
+                            <h2 className="text-2xl font-bold text-gray-900">
+                                {`${selectedCar?.vehicle?.code} | ${selectedCar?.vehicle?.make} | ${selectedCar?.vehicle?.model}`}
+                            </h2>
                             <button
                                 onClick={() => setShowShippingHistory(true)}
                                 className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
