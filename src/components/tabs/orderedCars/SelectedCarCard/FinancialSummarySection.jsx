@@ -4,7 +4,7 @@ import {formatCurrency} from "../../../../utils/common.js";
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
 
 const FinancialSummarySection = ({editedData, editingSection, financials, updateField} ) => {
-    const [showOtherExpenses, setShowOtherExpenses] = useState(false);
+    const [showOtherExpenses, setShowOtherExpenses] = useState(true);
     const [newExpenseName, setNewExpenseName] = useState('');
     const [newExpenseAmount, setNewExpenseAmount] = useState('');
 
