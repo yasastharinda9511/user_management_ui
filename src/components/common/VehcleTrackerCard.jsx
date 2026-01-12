@@ -22,8 +22,10 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
         }
 
         setLoadingImages(true);
-        const sortedImages = [...vehicle.vehicle_image].sort((a, b) =>
-            +a.display_order - +b.display_order
+        const sortedImages = [...vehicle.vehicle_image].sort(
+            (a, b) =>
+                Number(b.is_primary) - Number(a.is_primary) ||
+                Number(a.display_order) - Number(b.display_order)
         );
 
         try {
