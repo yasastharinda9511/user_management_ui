@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import {Draggable} from "@hello-pangea/dnd";
-import {Eye, Package, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Car} from "lucide-react";
+import {
+    Eye, Package, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Car,
+    Star,
+} from 'lucide-react';
 import presignedUrlCache from '../../utils/presignedUrlCache.js';
+import {vehicleService} from '../../api/index.js';
+import {useNotification} from '../../contexts/NotificationContext.jsx';
 
 const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [imageUrls, setImageUrls] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [loadingImages, setLoadingImages] = useState(false);
+    const [isFeatured, setIsFeatured] = useState(vehicle.vehicle.is_featured || false);
+    const {showNotification} = useNotification();
 
     useEffect(() => {
         if (isExpanded && imageUrls.length === 0) {
@@ -54,6 +61,18 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
         setCurrentImageIndex((prev) => (prev === imageUrls.length - 1 ? 0 : prev + 1));
     };
 
+    const handleFeature = async (vehicleId) => {
+        try {
+            const response = await vehicleService.updateFeaturedStatus(vehicleId , isFeatured);
+            setIsFeatured(!isFeatured);
+            const message = response.message;
+            showNotification('success', '', message)
+        }catch (error) {
+            console.error(error);
+            showNotification('error', '', error)
+        }
+    }
+
     return (
         <Draggable draggableId={`vehicle-${vehicle.vehicle.id}`} index={index}>
             {(provided, snapshot) => (
@@ -98,6 +117,21 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
                                 title="View Details"
                             >
                                 <Eye className="w-4 h-4 text-blue-600" />
+                            </button>
+
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleFeature(vehicle.vehicle.id);
+                                }}
+                                className="p-1 hover:bg-blue-50 rounded transition-colors"
+                                title="View Details"
+                            >
+                                <Star
+                                    className={`w-4 h-4 ${
+                                        isFeatured ? "text-blue-600 fill-blue-600" : "text-gray-400"
+                                    }`}
+                                />
                             </button>
                             <Package className="w-4 h-4 text-gray-400" />
                         </div>

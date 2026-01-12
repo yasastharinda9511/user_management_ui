@@ -180,7 +180,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
             const newFeaturedStatus = !isFeatured;
             await vehicleService.updateFeaturedStatus(car.vehicle.id, newFeaturedStatus);
             setIsFeatured(newFeaturedStatus);
-            const message = isFeatured ? 'Vehicle is featured successfully' : 'Vehicle is unfeatured successfully';
+            const message = newFeaturedStatus ? 'Vehicle is featured successfully' : 'Vehicle is unfeatured successfully';
             console.log(message);
             showNotification('success', '', message)
         } catch (error) {
