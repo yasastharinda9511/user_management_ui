@@ -27,6 +27,14 @@ const SalesInformationSection = ({editedData, editingSection, sales, updateField
 
     return (
         <div className="space-y-3">
+            {/* Total Cost - Read-only from Financials section */}
+            <div className="flex justify-between py-2 px-3 bg-blue-50 rounded border border-blue-100">
+                <span className="text-sm text-gray-600">Total Cost (LKR):</span>
+                <span className="text-sm font-medium text-gray-900">
+                    {formatCurrency(editedData.financials?.total_cost_lkr || 0)}
+                </span>
+            </div>
+
             <EditableField
                 label="Sale Status"
                 value={editedData.sales?.sale_status || 'AVAILABLE'}
@@ -57,14 +65,6 @@ const SalesInformationSection = ({editedData, editingSection, sales, updateField
                 currentValue={editedData.sales?.revenue || 0}
                 updateField={updateField}
             />
-
-            {/* Total Cost - Read-only from Financials section */}
-            <div className="flex justify-between py-2 px-3 bg-blue-50 rounded border border-blue-100">
-                <span className="text-sm text-gray-600">Total Cost (LKR):</span>
-                <span className="text-sm font-medium text-gray-900">
-                    {formatCurrency(editedData.financials?.total_cost_lkr || 0)}
-                </span>
-            </div>
 
             {/* Profit - Calculated field (Read-only) */}
             <div className="flex justify-between py-2 px-3 bg-green-50 rounded border border-green-100">

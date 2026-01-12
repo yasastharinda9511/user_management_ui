@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {Draggable} from "@hello-pangea/dnd";
 import {Eye, Package, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Car} from "lucide-react";
-import { vehicleService } from '../../api/index.js';
 import presignedUrlCache from '../../utils/presignedUrlCache.js';
 
 const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(true);
     const [imageUrls, setImageUrls] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [loadingImages, setLoadingImages] = useState(false);
