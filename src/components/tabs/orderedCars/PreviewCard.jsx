@@ -195,10 +195,10 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     if (viewMode === 'list') {
         return (
             <>
-            <div key={car.id} className={`bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-sm border-l-2 border-blue-300 overflow-hidden hover:shadow-lg hover:border-blue-400 transition-all relative h-auto md:h-64 ${isDeleting ? 'deleting' : ''}`}>
+            <div key={car.id} className={`bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-sm border-l-2 border-blue-300 dark:border-blue-600 overflow-hidden hover:shadow-lg hover:border-blue-400 dark:hover:border-blue-500 transition-all relative h-auto md:h-64 ${isDeleting ? 'deleting' : ''}`}>
                 <div className="flex flex-col md:flex-row h-full">
                     {/* Car Image */}
-                    <div className="md:w-64 h-48 md:h-full bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden flex-shrink-0 relative group">
+                    <div className="md:w-64 h-48 md:h-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 overflow-hidden flex-shrink-0 relative group">
                         {imageUrls.length > 0 ? (
                             <img
                                 src={imageUrls[currentImageIndex]}
@@ -206,8 +206,8 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                             />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
-                                <Car className="w-16 h-16 text-blue-300" />
+                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+                                <Car className="w-16 h-16 text-blue-300 dark:text-blue-500" />
                             </div>
                         )}
                         {/* Navigation Arrows */}
@@ -259,7 +259,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                     <div className="flex items-start gap-2 md:gap-3">
                                         {/* Make Logo */}
                                         {makeLogoUrl && (
-                                            <div className="w-12 h-12 flex-shrink-0 bg-white border border-gray-200 rounded-lg p-1.5 flex items-center justify-center">
+                                            <div className="w-12 h-12 flex-shrink-0 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-1.5 flex items-center justify-center">
                                                 <img
                                                     src={makeLogoUrl}
                                                     alt={`${car.vehicle.make} logo`}
@@ -269,9 +269,9 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                             </div>
                                         )}
                                         <div>
-                                            <h3 className="text-base md:text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{car.vehicle.make}</h3>
-                                            <p className="text-xs md:text-sm text-gray-700 font-medium">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
-                                            <p className="text-xs text-gray-600">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
+                                            <h3 className="text-base md:text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">{car.vehicle.make}</h3>
+                                            <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300 font-medium">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
+                                            <p className="text-xs text-gray-600 dark:text-gray-400">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-3">
@@ -295,7 +295,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                                 e.stopPropagation();
                                                 setShowShippingHistory(true);
                                             }}
-                                            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                                            className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full transition-colors"
                                             title="View shipping history"
                                         >
                                             <History className="w-4 h-4" />
@@ -305,7 +305,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                                 e.stopPropagation();
                                                 setShowPurchaseHistory(true);
                                             }}
-                                            className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"
+                                            className="p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-full transition-colors"
                                             title="View purchase history"
                                         >
                                             <ShoppingCart className="w-4 h-4" />
@@ -317,19 +317,19 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                                     <div className="flex items-center text-sm">
                                         <Package className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
-                                        <span className="text-gray-600 min-w-[80px]">Code:  </span>
-                                        <span className="font-semibold text-blue-700">{car.vehicle.code ? `${car.vehicle.code}` : 'N/A'}</span>
+                                        <span className="text-gray-600 dark:text-gray-400 min-w-[80px]">Code:  </span>
+                                        <span className="font-semibold text-blue-700 dark:text-blue-400">{car.vehicle.code ? `${car.vehicle.code}` : 'N/A'}</span>
                                         {car.vehicle.code && (
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleCopyToClipboard(`${car.vehicle.code}`, 'vehicleCode');
                                                 }}
-                                                className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                                className="ml-2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
                                                 title="Copy Vehicle Code"
                                             >
                                                 {copiedField === 'vehicleCode' ? (
-                                                    <Check className="w-3.5 h-3.5 text-green-600" />
+                                                    <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
                                                 ) : (
                                                     <Copy className="w-3.5 h-3.5" />
                                                 )}
@@ -339,18 +339,18 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
 
                                     <div className="flex items-center text-sm">
                                         <Car className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
-                                        <span className="text-gray-600 min-w-[80px]">Chassis:</span>
-                                        <span className="font-mono text-xs text-gray-900">{car.vehicle.chassis_id}</span>
+                                        <span className="text-gray-600 dark:text-gray-400 min-w-[80px]">Chassis:</span>
+                                        <span className="font-mono text-xs text-gray-900 dark:text-gray-200">{car.vehicle.chassis_id}</span>
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleCopyToClipboard(car.vehicle.chassis_id, 'chassisId');
                                             }}
-                                            className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                            className="ml-2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
                                             title="Copy Chassis Number"
                                         >
                                             {copiedField === 'chassisId' ? (
-                                                <Check className="w-3.5 h-3.5 text-green-600" />
+                                                <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
                                             ) : (
                                                 <Copy className="w-3.5 h-3.5" />
                                             )}
@@ -358,31 +358,31 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                     </div>
 
                                     <div className="flex items-center text-sm">
-                                        <Ship className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" />
-                                        <span className="text-gray-600 min-w-[80px]">Shipped:</span>
-                                        <span className="text-gray-900">{formatDate(car.vehicle.created_at)}</span>
+                                        <Ship className="w-4 h-4 text-blue-500 dark:text-blue-400 mr-2 flex-shrink-0" />
+                                        <span className="text-gray-600 dark:text-gray-400 min-w-[80px]">Shipped:</span>
+                                        <span className="text-gray-900 dark:text-gray-200">{formatDate(car.vehicle.created_at)}</span>
                                     </div>
 
                                     <div className="flex items-center text-sm">
-                                        <MapPin className="w-4 h-4 text-red-500 mr-2 flex-shrink-0" />
-                                        <span className="text-gray-600 min-w-[80px]">Location:</span>
-                                        <span className="text-gray-900">{car.vehicle_shipping.departure_harbour}</span>
+                                        <MapPin className="w-4 h-4 text-red-500 dark:text-red-400 mr-2 flex-shrink-0" />
+                                        <span className="text-gray-600 dark:text-gray-400 min-w-[80px]">Location:</span>
+                                        <span className="text-gray-900 dark:text-gray-200">{car.vehicle_shipping.departure_harbour}</span>
                                     </div>
 
                                     {car.vehicle_shipping && (
                                         <div className="flex items-center text-sm">
-                                            <Truck className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" />
-                                            <span className="text-gray-600 min-w-[80px]">Vessel:</span>
-                                            <span className="text-gray-900 text-xs">{car.vehicle_shipping.vessel_name}</span>
+                                            <Truck className="w-4 h-4 text-purple-500 dark:text-purple-400 mr-2 flex-shrink-0" />
+                                            <span className="text-gray-600 dark:text-gray-400 min-w-[80px]">Vessel:</span>
+                                            <span className="text-gray-900 dark:text-gray-200 text-xs">{car.vehicle_shipping.vessel_name}</span>
                                         </div>
                                     )}
                                 </div>
                             </div>
 
                             {/* Footer - Price Section */}
-                            <div className="flex md:flex-col justify-between md:justify-start items-end md:items-end md:ml-6 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-gray-100 md:pl-6">
+                            <div className="flex md:flex-col justify-between md:justify-start items-end md:items-end md:ml-6 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-gray-100 dark:border-gray-700 md:pl-6">
                                 <div className="text-sm">
-                                    <div className="text-lg font-bold text-blue-600">{car.vehicle.price}</div>
+                                    <div className="text-lg font-bold text-blue-600 dark:text-blue-400">{car.vehicle.price}</div>
                                 </div>
                             </div>
                         </div>
@@ -393,7 +393,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 {hasPermission(permissions, PERMISSIONS.CAR_DELETE) && (
                     <button
                         onClick={handleDeleteClick}
-                        className="absolute top-2 right-2 md:top-3 md:right-3 p-1.5 md:p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors z-10"
+                        className="absolute top-2 right-2 md:top-3 md:right-3 p-1.5 md:p-2 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full transition-colors z-10"
                         title="Delete Vehicle"
                     >
                         <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
@@ -407,12 +407,12 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                         disabled={updatingFeatured}
                         className={`absolute bottom-2 right-20 md:bottom-3 md:right-28 p-1.5 md:p-2 rounded-full transition-colors ${
                             isFeatured
-                                ? 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50'
-                                : 'text-gray-600 hover:text-gray-700 hover:bg-gray-50'
+                                ? 'text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/30'
+                                : 'text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                         } ${updatingFeatured ? 'opacity-50 cursor-not-allowed' : ''}`}
                         title={isFeatured ? 'Remove from featured' : 'Mark as featured'}
                     >
-                        <Star className={`w-4 h-4 md:w-5 md:h-5 ${isFeatured ? 'fill-yellow-600' : ''}`} />
+                        <Star className={`w-4 h-4 md:w-5 md:h-5 ${isFeatured ? 'fill-yellow-600 dark:fill-yellow-400' : ''}`} />
                     </button>
                 )}
 
@@ -424,7 +424,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 {/* Details Button - Bottom Right Corner */}
                 <button
                     onClick={() => handleViewDetails(car)}
-                    className="absolute bottom-2 right-2 md:bottom-3 md:right-3 p-1.5 md:p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-colors"
+                    className="absolute bottom-2 right-2 md:bottom-3 md:right-3 p-1.5 md:p-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full transition-colors"
                     title="View Details"
                 >
                     <Eye className="w-4 h-4 md:w-5 md:h-5" />
@@ -471,9 +471,9 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
     // Grid View Layout (Default)
     return (
         <>
-        <div key={car.id} className={`bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-sm border-t-2 border-blue-300 overflow-hidden hover:shadow-xl hover:border-blue-400 hover:-translate-y-1 transition-all duration-300 h-[600px] flex flex-col ${isDeleting ? 'deleting' : ''}`}>
+        <div key={car.id} className={`bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-sm border-t-2 border-blue-300 dark:border-blue-600 overflow-hidden hover:shadow-xl hover:border-blue-400 dark:hover:border-blue-500 hover:-translate-y-1 transition-all duration-300 h-[600px] flex flex-col ${isDeleting ? 'deleting' : ''}`}>
             {/* Car Image */}
-            <div className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden relative group">
+            <div className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 overflow-hidden relative group">
                 {imageUrls.length > 0 ? (
                     <img
                         src={imageUrls[currentImageIndex]}
@@ -481,8 +481,8 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
-                        <Car className="w-16 h-16 text-blue-300" />
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+                        <Car className="w-16 h-16 text-blue-300 dark:text-blue-500" />
                     </div>
                 )}
                 {/* Navigation Arrows */}
@@ -532,7 +532,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                     <div className="flex items-start gap-3 flex-1">
                         {/* Make Logo */}
                         {makeLogoUrl && (
-                            <div className="w-12 h-12 flex-shrink-0 bg-white border border-gray-200 rounded-lg p-1.5 flex items-center justify-center">
+                            <div className="w-12 h-12 flex-shrink-0 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-1.5 flex items-center justify-center">
                                 <img
                                     src={makeLogoUrl}
                                     alt={`${car.vehicle.make} logo`}
@@ -542,9 +542,9 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                             </div>
                         )}
                         <div className="flex-1">
-                            <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{car.vehicle.make}</h3>
-                            <p className="text-sm text-gray-700 font-medium">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
-                            <p className="text-xs text-gray-600">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
+                            <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">{car.vehicle.make}</h3>
+                            <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{car.vehicle.year_of_manufacture} • {car.vehicle.color} • {car.vehicle.trimLevel}</p>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">Grade: {car.vehicle.auction_grade} • {car.vehicle.mileage_km} km</p>
                         </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -568,7 +568,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                 e.stopPropagation();
                                 setShowShippingHistory(true);
                             }}
-                            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                            className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full transition-colors"
                             title="View shipping history"
                         >
                             <History className="w-4 h-4" />
@@ -578,7 +578,7 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                 e.stopPropagation();
                                 setShowPurchaseHistory(true);
                             }}
-                            className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"
+                            className="p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-full transition-colors"
                             title="View purchase history"
                         >
                             <ShoppingCart className="w-4 h-4" />
@@ -589,20 +589,20 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                 {/* Details Grid */}
                 <div className="space-y-3 mb-4 flex-1 overflow-auto">
                     <div className="flex items-center text-sm">
-                        <Package className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" />
-                        <span className="text-gray-600 min-w-[80px]">Code:  </span>
-                        <span className="font-semibold text-blue-600">{car.vehicle.code ? `${car.vehicle.code}` : 'N/A'}</span>
+                        <Package className="w-4 h-4 text-blue-500 dark:text-blue-400 mr-2 flex-shrink-0" />
+                        <span className="text-gray-600 dark:text-gray-400 min-w-[80px]">Code:  </span>
+                        <span className="font-semibold text-blue-600 dark:text-blue-400">{car.vehicle.code ? `${car.vehicle.code}` : 'N/A'}</span>
                         {car.vehicle.code && (
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleCopyToClipboard(`${car.vehicle.code}`, 'vehicleCode');
                                 }}
-                                className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                className="ml-2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
                                 title="Copy Vehicle Code"
                             >
                                 {copiedField === 'vehicleCode' ? (
-                                    <Check className="w-3.5 h-3.5 text-green-600" />
+                                    <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
                                 ) : (
                                     <Copy className="w-3.5 h-3.5" />
                                 )}
@@ -612,18 +612,18 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
 
                     <div className="flex items-center text-sm">
                         <Car className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
-                        <span className="text-gray-600 min-w-[80px]">Chassis:</span>
-                        <span className="font-mono text-xs text-gray-900">{car.vehicle.chassis_id}</span>
+                        <span className="text-gray-600 dark:text-gray-400 min-w-[80px]">Chassis:</span>
+                        <span className="font-mono text-xs text-gray-900 dark:text-gray-200">{car.vehicle.chassis_id}</span>
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleCopyToClipboard(car.vehicle.chassis_id, 'chassisId');
                             }}
-                            className="ml-2 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                            className="ml-2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
                             title="Copy Chassis Number"
                         >
                             {copiedField === 'chassisId' ? (
-                                <Check className="w-3.5 h-3.5 text-green-600" />
+                                <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
                             ) : (
                                 <Copy className="w-3.5 h-3.5" />
                             )}
@@ -631,36 +631,36 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                     </div>
 
                     <div className="flex items-center text-sm">
-                        <Ship className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" />
-                        <span className="text-gray-600 min-w-[80px]">Shipped:</span>
-                        <span className="text-gray-900">{formatDate(car.vehicle.created_at)}</span>
+                        <Ship className="w-4 h-4 text-blue-500 dark:text-blue-400 mr-2 flex-shrink-0" />
+                        <span className="text-gray-600 dark:text-gray-400 min-w-[80px]">Shipped:</span>
+                        <span className="text-gray-900 dark:text-gray-200">{formatDate(car.vehicle.created_at)}</span>
                     </div>
 
                     <div className="flex items-center text-sm">
-                        <MapPin className="w-4 h-4 text-red-500 mr-2 flex-shrink-0" />
-                        <span className="text-gray-600 min-w-[80px]">Location:</span>
-                        <span className="text-gray-900">{car.vehicle_shipping.departure_harbour}</span>
+                        <MapPin className="w-4 h-4 text-red-500 dark:text-red-400 mr-2 flex-shrink-0" />
+                        <span className="text-gray-600 dark:text-gray-400 min-w-[80px]">Location:</span>
+                        <span className="text-gray-900 dark:text-gray-200">{car.vehicle_shipping.departure_harbour}</span>
                     </div>
 
                     {car.vehicle_shipping && (
                         <div className="flex items-center text-sm">
-                            <Truck className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" />
-                            <span className="text-gray-600 min-w-[80px]">Vessel:</span>
-                            <span className="text-gray-900 text-xs">{car.vehicle_shipping.vessel_name}</span>
+                            <Truck className="w-4 h-4 text-purple-500 dark:text-purple-400 mr-2 flex-shrink-0" />
+                            <span className="text-gray-600 dark:text-gray-400 min-w-[80px]">Vessel:</span>
+                            <span className="text-gray-900 dark:text-gray-200 text-xs">{car.vehicle_shipping.vessel_name}</span>
                         </div>
                     )}
                 </div>
 
                 {/* Footer */}
-                <div className="flex justify-center items-start gap-1 pt-4 border-t border-gray-100 mt-auto">
+                <div className="flex justify-center items-start gap-1 pt-4 border-t border-gray-100 dark:border-gray-700 mt-auto">
                     <div className="text-sm flex-shrink-0">
-                        <div className="text-base sm:text-lg font-bold text-blue-600">{car.vehicle.price}</div>
+                        <div className="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400">{car.vehicle.price}</div>
                     </div>
                     <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                         {hasPermission(permissions, PERMISSIONS.CAR_DELETE) && (
                             <button
                                 onClick={handleDeleteClick}
-                                className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                                className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
                                 title="Delete"
                             >
                                 <Trash2 className="w-4 h-4" />
@@ -672,17 +672,17 @@ const PreviewCard= ({car , handleViewDetails, onDelete, viewMode = 'grid'})=>{
                                 disabled={updatingFeatured}
                                 className={`flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                                     isFeatured
-                                        ? 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50'
-                                        : 'text-gray-600 hover:text-gray-700 hover:bg-gray-50'
+                                        ? 'text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/30'
+                                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                                 } ${updatingFeatured ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 title={isFeatured ? 'Remove from featured' : 'Mark as featured'}
                             >
-                                <Star className={`w-4 h-4 ${isFeatured ? 'fill-yellow-600' : ''}`} />
+                                <Star className={`w-4 h-4 ${isFeatured ? 'fill-yellow-600 dark:fill-yellow-400' : ''}`} />
                             </button>
                         )}
                         <button
                             onClick={() => handleViewDetails(car)}
-                            className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
                             title="View Details"
                         >
                             <Eye className="w-4 h-4" />

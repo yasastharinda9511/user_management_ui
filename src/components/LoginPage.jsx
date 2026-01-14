@@ -106,10 +106,10 @@ const LoginPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
             {showConfirmation && (
-                <div className="absolute inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 max-w-sm w-full mx-4 p-6 relative">
+                <div className="absolute inset-0 backdrop-blur-sm bg-white/30 dark:bg-gray-900/50 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 max-w-sm w-full mx-4 p-6 relative">
                         {/* Close button */}
                         <button
                             onClick={closeConfirmation}
@@ -119,21 +119,21 @@ const LoginPage = () => {
 
                         {/* Success content */}
                         <div className="text-center">
-                            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                                <CheckCircle className="w-8 h-8 text-blue-600" />
+                            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
+                                <CheckCircle className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                             </div>
 
-                            <h2 className="text-xl font-bold text-gray-900 mb-3">
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                                 Account Created!
                             </h2>
 
-                            <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                                Welcome <span className="font-semibold text-gray-900">{user?.email || 'to our platform'}</span>!
+                            <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+                                Welcome <span className="font-semibold text-gray-900 dark:text-white">{user?.email || 'to our platform'}</span>!
                                 Your account has been created successfully.
                             </p>
 
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                                <p className="text-xs text-blue-800">
+                            <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-3 mb-4">
+                                <p className="text-xs text-blue-800 dark:text-blue-300">
                                     <CheckCircle className="w-3 h-3 inline mr-1" />
                                     Auto-closing in a few seconds
                                 </p>
@@ -141,7 +141,7 @@ const LoginPage = () => {
 
                             <button
                                 onClick={closeConfirmation}
-                                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2.5 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
+                                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2.5 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all text-sm"
                             >
                                 Continue to Sign In
                             </button>
@@ -157,24 +157,24 @@ const LoginPage = () => {
                         alt="Tarragon.lk Logo"
                         className="w-20 h-20 mx-auto mb-4 rounded-lg object-cover"
                     />
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                         Tarragon.lk
                     </h1>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-gray-400">
                         {isLogin ? 'Sign in to your account' : 'Create your account'}
                     </p>
                 </div>
 
                 {/* Main Card */}
-                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
                     {/* Tab Switcher */}
-                    <div className="flex border-b border-gray-100">
+                    <div className="flex border-b border-gray-100 dark:border-gray-700">
                         <button
                             onClick={() => setIsLogin(true)}
                             className={`flex-1 py-4 px-6 text-sm font-medium transition-all ${
                                 isLogin
-                                    ? 'bg-gray-100 text-gray-900 border-b-2 border-blue-500'
-                                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border-b-2 border-blue-500'
+                                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                             }`}
                         >
                             Sign In
@@ -183,8 +183,8 @@ const LoginPage = () => {
                             onClick={() => setIsLogin(false)}
                             className={`flex-1 py-4 px-6 text-sm font-medium transition-all ${
                                 !isLogin
-                                    ? 'bg-gray-100 text-gray-900 border-b-2 border-blue-500'
-                                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border-b-2 border-blue-500'
+                                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                             }`}
                         >
                             Sign Up
@@ -214,7 +214,7 @@ const LoginPage = () => {
                             <div className="space-y-6">
                                 {/* Email Field */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Email Address
                                     </label>
                                     <div className="relative">
@@ -225,7 +225,7 @@ const LoginPage = () => {
                                             value={loginForm.email}
                                             onChange={handleLoginChange}
                                             required
-                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                             placeholder="Enter your email"
                                         />
                                     </div>
@@ -233,7 +233,7 @@ const LoginPage = () => {
 
                                 {/* Password Field */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Password
                                     </label>
                                     <div className="relative">
@@ -244,13 +244,13 @@ const LoginPage = () => {
                                             value={loginForm.password}
                                             onChange={handleLoginChange}
                                             required
-                                            className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                            className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                             placeholder="Enter your password"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                         >
                                             {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                         </button>
@@ -261,7 +261,7 @@ const LoginPage = () => {
                                 <button
                                     onClick={handleLogin}
                                     disabled={authLoading}
-                                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
                                 >
                                     {authLoading ? (
                                         <>
@@ -279,7 +279,7 @@ const LoginPage = () => {
                                 {/* Name Fields */}
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             First Name
                                         </label>
                                         <input
@@ -288,12 +288,12 @@ const LoginPage = () => {
                                             value={registerForm.firstName}
                                             onChange={handleRegisterChange}
                                             required
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                                             placeholder="First name"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Last Name
                                         </label>
                                         <input
@@ -302,7 +302,7 @@ const LoginPage = () => {
                                             value={registerForm.lastName}
                                             onChange={handleRegisterChange}
                                             required
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                                             placeholder="Last name"
                                         />
                                     </div>
@@ -310,7 +310,7 @@ const LoginPage = () => {
 
                                 {/* Email Field */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Email Address
                                     </label>
                                     <div className="relative">
@@ -321,7 +321,7 @@ const LoginPage = () => {
                                             value={registerForm.email}
                                             onChange={handleRegisterChange}
                                             required
-                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                                             placeholder="Enter your email"
                                         />
                                     </div>
@@ -329,7 +329,7 @@ const LoginPage = () => {
 
                                 {/* Phone Field */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Phone Number
                                     </label>
                                     <input
@@ -337,7 +337,7 @@ const LoginPage = () => {
                                         name="phone"
                                         value={registerForm.phone}
                                         onChange={handleRegisterChange}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                                         placeholder="Enter your phone number"
                                     />
                                 </div>
@@ -345,7 +345,7 @@ const LoginPage = () => {
                                 {/* Password Fields */}
                                 <div className="grid grid-cols-1 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Password
                                         </label>
                                         <div className="relative">
@@ -356,13 +356,13 @@ const LoginPage = () => {
                                                 value={registerForm.password}
                                                 onChange={handleRegisterChange}
                                                 required
-                                                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                                                className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                                                 placeholder="Create a password"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                             >
                                                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                             </button>
@@ -370,7 +370,7 @@ const LoginPage = () => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Confirm Password
                                         </label>
                                         <div className="relative">
@@ -381,7 +381,7 @@ const LoginPage = () => {
                                                 value={registerForm.confirmPassword}
                                                 onChange={handleRegisterChange}
                                                 required
-                                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                                                className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                                                 placeholder="Confirm your password"
                                             />
                                         </div>
@@ -390,7 +390,7 @@ const LoginPage = () => {
 
                                 {/* Password Strength Indicator */}
                                 {registerForm.password && (
-                                    <div className="text-xs text-gray-600">
+                                    <div className="text-xs text-gray-600 dark:text-gray-400">
                                         Password strength: {
                                         registerForm.password.length < 8 ?
                                             <span className="text-red-500">Weak</span> :
@@ -405,7 +405,7 @@ const LoginPage = () => {
                                 <button
                                     onClick={handleRegister}
                                     disabled={registerLoading}
-                                    className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                                    className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
                                 >
                                     {registerLoading ? (
                                         <>
@@ -421,12 +421,12 @@ const LoginPage = () => {
 
                         {/* Footer */}
                         <div className="mt-8 text-center">
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
                                 {isLogin ? "Don't have an account? " : "Already have an account? "}
                                 <button
                                     onClick={() => setIsLogin(!isLogin)}
                                     className={`font-medium hover:underline ${
-                                        isLogin ? 'text-purple-600' : 'text-blue-600'
+                                        isLogin ? 'text-purple-600 dark:text-purple-400' : 'text-blue-600 dark:text-blue-400'
                                     }`}
                                 >
                                     {isLogin ? 'Sign up' : 'Sign in'}

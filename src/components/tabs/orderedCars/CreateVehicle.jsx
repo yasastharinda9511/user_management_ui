@@ -473,14 +473,14 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                 isVisible={notification.show}
                 onClose={hideNotification}
             />
-            <div className={`modal-backdrop fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
-                <div className={`modal-content bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto ${isClosing ? 'closing' : ''}`}>
+            <div className={`modal-backdrop fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
+                <div className={`modal-content bg-white dark:bg-gray-800 rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto ${isClosing ? 'closing' : ''}`}>
                     <div className="p-6">
                         <div className="flex justify-between items-start mb-6">
-                            <h2 className="text-2xl font-bold text-gray-900">Add New Vehicle</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Add New Vehicle</h2>
                             <button
                                 onClick={handleClose}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                             >
                                 <X className="w-6 h-6" />
                             </button>
@@ -488,25 +488,25 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
                         <div className="space-y-8">
                             {/* Vehicle Information Section */}
-                            <div className="bg-blue-50 rounded-lg p-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                    <Car className="w-5 h-5 mr-2 text-blue-600" />
+                            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                                    <Car className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
                                     Vehicle Information
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Vehicle Code *</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Vehicle Code *</label>
                                         <input
                                             type="text"
                                             value={vehicleForm.code}
                                             onChange={(e) => handleFormChange('code', e.target.value.toUpperCase())}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., VEH001"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Make *</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Make *</label>
                                         <div className="flex gap-2">
                                             <select
                                                 value={vehicleForm.make}
@@ -515,7 +515,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                     handleFormChange('model', '');
                                                 }}
                                                 disabled={loadingMakes}
-                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
                                             >
                                                 <option value="">{loadingMakes ? 'Loading makes...' : 'Select Make'}</option>
                                                 {availableCars.map((car) => (
@@ -525,7 +525,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => setShowAddMake(!showAddMake)}
-                                                className="text-blue-600 hover:text-blue-700 transition-colors flex items-center justify-center"
+                                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center justify-center"
                                                 title="Add New Make"
                                             >
                                                 <Plus className="w-5 h-5" />
@@ -534,8 +534,8 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
                                         {/* Inline Add Make Form */}
                                         {showAddMake && (
-                                            <div className="mt-2 p-3 bg-white border border-blue-200 rounded-lg">
-                                                <label className="block text-xs font-medium text-gray-700 mb-1">New Make Name</label>
+                                            <div className="mt-2 p-3 bg-white dark:bg-gray-700 border border-blue-200 dark:border-blue-700 rounded-lg">
+                                                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">New Make Name</label>
                                                 <input
                                                     type="text"
                                                     value={newMakeName}
@@ -546,7 +546,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                         }
                                                     }}
                                                     placeholder="e.g., Tesla"
-                                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-2"
+                                                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-2"
                                                 />
                                                 <div className="flex gap-2">
                                                     <button
@@ -562,7 +562,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                             setShowAddMake(false);
                                                             setNewMakeName('');
                                                         }}
-                                                        className="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium"
+                                                        className="flex-1 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors text-sm font-medium"
                                                     >
                                                         Cancel
                                                     </button>
@@ -572,12 +572,12 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Model *</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Model *</label>
                                         <div className="flex gap-2">
                                             <select
                                                 value={vehicleForm.model}
                                                 onChange={(e) => handleFormChange('model', e.target.value)}
-                                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
                                                 disabled={!vehicleForm.make || loadingModels}
                                             >
                                                 <option value="">
@@ -593,7 +593,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                 type="button"
                                                 onClick={() => setShowAddModel(!showAddModel)}
                                                 disabled={!vehicleForm.make}
-                                                className="text-blue-600 hover:text-blue-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                                                 title="Add New Model"
                                             >
                                                 <Plus className="w-5 h-5" />
@@ -602,24 +602,24 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
 
                                         {/* Inline Add Model Form */}
                                         {showAddModel && (
-                                            <div className="mt-2 p-3 bg-white border border-blue-200 rounded-lg space-y-3">
+                                            <div className="mt-2 p-3 bg-white dark:bg-gray-700 border border-blue-200 dark:border-blue-700 rounded-lg space-y-3">
                                                 <div className="grid grid-cols-2 gap-2">
                                                     <div>
-                                                        <label className="block text-xs font-medium text-gray-700 mb-1">Model Name *</label>
+                                                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Model Name *</label>
                                                         <input
                                                             type="text"
                                                             value={newModelData.model_name}
                                                             onChange={(e) => setNewModelData(prev => ({...prev, model_name: e.target.value}))}
                                                             placeholder="e.g., Camry"
-                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                         />
                                                     </div>
                                                     <div>
-                                                        <label className="block text-xs font-medium text-gray-700 mb-1">Body Type</label>
+                                                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Body Type</label>
                                                         <select
                                                             value={newModelData.body_type}
                                                             onChange={(e) => setNewModelData(prev => ({...prev, body_type: e.target.value}))}
-                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                         >
                                                             <option value="">Select</option>
                                                             {bodyTypes.map(type => (
@@ -628,11 +628,11 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                         </select>
                                                     </div>
                                                     <div>
-                                                        <label className="block text-xs font-medium text-gray-700 mb-1">Fuel Type</label>
+                                                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Fuel Type</label>
                                                         <select
                                                             value={newModelData.fuel_type}
                                                             onChange={(e) => setNewModelData(prev => ({...prev, fuel_type: e.target.value}))}
-                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                         >
                                                             <option value="">Select</option>
                                                             {fuelTypes.map(type => (
@@ -641,11 +641,11 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                         </select>
                                                     </div>
                                                     <div>
-                                                        <label className="block text-xs font-medium text-gray-700 mb-1">Transmission</label>
+                                                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Transmission</label>
                                                         <select
                                                             value={newModelData.transmission_type}
                                                             onChange={(e) => setNewModelData(prev => ({...prev, transmission_type: e.target.value}))}
-                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                         >
                                                             <option value="">Select</option>
                                                             {transmissionTypes.map(type => (
@@ -654,13 +654,13 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                         </select>
                                                     </div>
                                                     <div className="col-span-2">
-                                                        <label className="block text-xs font-medium text-gray-700 mb-1">Engine Size (CC)</label>
+                                                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Engine Size (CC)</label>
                                                         <input
                                                             type="number"
                                                             value={newModelData.engine_size_cc}
                                                             onChange={(e) => setNewModelData(prev => ({...prev, engine_size_cc: e.target.value}))}
                                                             placeholder="e.g., 2500"
-                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                         />
                                                     </div>
                                                 </div>
@@ -684,7 +684,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                                                                 engine_size_cc: ''
                                                             });
                                                         }}
-                                                        className="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium"
+                                                        className="flex-1 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors text-sm font-medium"
                                                     >
                                                         Cancel
                                                     </button>

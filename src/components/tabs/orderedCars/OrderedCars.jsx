@@ -19,6 +19,7 @@ import {selectPermissions} from "../../../state/authSlice.js";
 import {PERMISSIONS} from "../../../utils/permissions.js";
 import {hasPermission} from "../../../utils/permissionUtils.js";
 import LoadingOverlay from "../../common/LoadingOverlay.jsx";
+import settingsService from "../../../utils/settingsService.js";
 
 const OrderedCars = () => {
     const dispatch = useDispatch();
@@ -26,7 +27,12 @@ const OrderedCars = () => {
     const [selectedCar, setSelectedCar] = useState(null);
     const [showCreateOrder, setShowCreateOrder] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
-    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+    // Initialize viewMode with local preference first, then global default
+    const [viewMode, setViewMode] = useState(() => {
+        const localPref = localStorage.getItem("viewMode");
+        if (localPref) return localPref;
+        return settingsService.getSetting('defaultViewMode') || 'grid';
+    });
     const filters = useSelector(selectFilters);
     const pageLimit = useSelector(selectPageLimit);
     const permissions = useSelector(selectPermissions);
@@ -50,15 +56,21 @@ const OrderedCars = () => {
     } = useSelector(state => state.vehicles);
 
     useEffect(() => {
-        if (localStorage.getItem("viewMode")){
-            setViewMode(localStorage.getItem("viewMode"));
-        }
         dispatch(fetchVehicles({
             page: currentPage,
             limit: pageLimit,
             filters: filters // Pass filters to API
         }))
     }, [dispatch, currentPage, pageLimit, filters]); // Added pageLimit to dependency array
+
+    // Apply global default items per page setting on mount if not customized
+    useEffect(() => {
+        const defaultItemsPerPage = settingsService.getSetting('defaultItemsPerPage');
+        // Only apply if current pageLimit is the default (10) and global setting is different
+        if (pageLimit === 10 && defaultItemsPerPage !== 10) {
+            dispatch(setPageLimit(defaultItemsPerPage));
+        }
+    }, []); // Run only on mount
 
     useEffect(() => {
         if (shouldRefresh) {

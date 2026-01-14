@@ -227,11 +227,11 @@ const MainScreen = () => {
     const tabs = getAccessibleTabs(permissions);
 
     return (
-        <div className="h-screen w-screen bg-gray-100">
+        <div className="h-screen w-screen bg-gray-100 dark:bg-gray-900">
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 aria-label="Toggle menu"
             >
                 {mobileMenuOpen ? <XIcon className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -247,7 +247,7 @@ const MainScreen = () => {
 
             {/* Sidebar - Resizable on desktop, drawer on mobile */}
             <div
-                className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-40 flex flex-col ${
+                className={`fixed top-0 left-0 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-40 flex flex-col ${
                     isResizing ? '' : 'transition-all duration-300'
                 } ${
                     mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
@@ -255,7 +255,7 @@ const MainScreen = () => {
                 style={{ width: `${sidebarWidth}px` }}
             >
                 {/* Sidebar Header */}
-                <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
+                <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-700">
                     <div className="flex items-center space-x-3">
                         <img
                             src="/tarragon.jpg"
@@ -263,7 +263,7 @@ const MainScreen = () => {
                             className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
                         />
                         {!sidebarCollapsed && (
-                            <span className="text-xl font-bold text-gray-900">Tarragon.lk</span>
+                            <span className="text-xl font-bold text-gray-900 dark:text-white">Tarragon.lk</span>
                         )}
                     </div>
                     <button
@@ -299,8 +299,8 @@ const MainScreen = () => {
                                 }}
                                 className={`relative w-full flex items-center ${sidebarCollapsed ? 'justify-center' : 'space-x-3'} px-4 py-3 text-left rounded-lg transition-colors ${
                                     location.pathname === tab.path
-                                        ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700'
+                                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                                 }`}
                                 title={sidebarCollapsed ? tab.label : ''}
                             >
@@ -326,21 +326,21 @@ const MainScreen = () => {
                 </nav>
 
                 {/* User info and logout */}
-                <div className="border-t border-gray-200 p-4 flex-shrink-0">
+                <div className="border-t border-gray-200 dark:border-gray-700 p-4 flex-shrink-0">
                     {!sidebarCollapsed ? (
                         <>
                             <div className="flex items-center space-x-3 mb-4">
-                                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                    <span className="text-sm font-medium text-blue-600">{getAvatarNameFromUsername(user)}</span>
+                                <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">{getAvatarNameFromUsername(user)}</span>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 truncate">{user.first_name} {user.last_name} </p>
-                                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{user.first_name} {user.last_name} </p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
                                 </div>
                             </div>
                             <button
                                 onClick={handleLogoutClick}
-                                className="w-full flex items-center space-x-3 px-4 py-2 text-left text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
+                                className="w-full flex items-center space-x-3 px-4 py-2 text-left text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white rounded-lg transition-colors"
                             >
                                 <LogOut className="w-4 h-4" />
                                 <span className="text-sm">Sign out</span>
@@ -348,12 +348,12 @@ const MainScreen = () => {
                         </>
                     ) : (
                         <div className="flex flex-col items-center space-y-4">
-                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                <span className="text-sm font-medium text-blue-600">{getAvatarNameFromUsername(user)}</span>
+                            <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">{getAvatarNameFromUsername(user)}</span>
                             </div>
                             <button
                                 onClick={handleLogoutClick}
-                                className="p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
+                                className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white rounded-lg transition-colors"
                                 title="Sign out"
                             >
                                 <LogOut className="w-4 h-4" />
@@ -393,18 +393,18 @@ const MainScreen = () => {
                 `}</style>
 
                 {/* Header */}
-                <header className="main-content-wrapper bg-white border-b border-gray-200 px-4 md:px-6 py-2 md:py-4 h-auto md:h-16 flex-shrink-0">
+                <header className="main-content-wrapper bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 md:px-6 py-2 md:py-4 h-auto md:h-16 flex-shrink-0">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-0 md:h-full">
                         {/* Enhanced Global Search */}
                         <div className="w-full md:flex-1 md:flex md:justify-center order-2 md:order-1">
                             <div className="relative max-w-2xl w-full" ref={searchRef}>
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 z-10" />
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5 z-10" />
                                 <input
                                     type="text"
                                     placeholder="Search..."
                                     value={searchQuery}
                                     onChange={handleSearchChange}
-                                    className="pl-11 pr-12 md:pr-20 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full transition-all text-sm md:text-base"
+                                    className="pl-11 pr-12 md:pr-20 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full transition-all text-sm md:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                 />
                                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-2 z-10">
                                     {isSearching && (
@@ -425,7 +425,7 @@ const MainScreen = () => {
 
                                 {/* Search Results Dropdown */}
                                 {showSearchDropdown && searchQuery && (
-                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-2xl border border-gray-200 max-h-96 overflow-y-auto z-50">
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto z-50">
                                         {!isSearching && (
                                             <>
                                                 {/* Vehicles */}
@@ -560,7 +560,7 @@ const MainScreen = () => {
                 </header>
 
                 {/* Page content - starts immediately after header */}
-                <div className="main-content-wrapper flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+                <div className="main-content-wrapper flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50 dark:bg-gray-900">
                     {/* Outlet renders the child route components */}
                     <Outlet />
                 </div>

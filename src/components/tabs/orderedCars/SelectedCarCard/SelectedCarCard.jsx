@@ -662,17 +662,17 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             isVisible={notification.show}
             onClose={hideNotification}
         />
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
                 <div className="p-6">
                     <div className="flex justify-between items-start mb-6">
                         <div className="flex items-center space-x-3">
-                            <h2 className="text-2xl font-bold text-gray-900">
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                                 {`${selectedCar?.vehicle?.code} | ${selectedCar?.vehicle?.make} | ${selectedCar?.vehicle?.model}`}
                             </h2>
                             <button
                                 onClick={() => setShowShippingHistory(true)}
-                                className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                                className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
                                 title="View shipping history"
                             >
                                 <History className="w-3.5 h-3.5" />
@@ -680,7 +680,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                             </button>
                             <button
                                 onClick={() => setShowPurchaseHistory(true)}
-                                className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
+                                className="flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
                                 title="View purchase history"
                             >
                                 <ShoppingCart className="w-3.5 h-3.5" />
@@ -695,7 +695,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                             />
                             <button
                                 onClick={closeModal}
-                                className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl font-bold"
                             >
                                 ×
                             </button>
@@ -709,14 +709,14 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                             <div className="relative mb-4 group">
                                 <div
                                     ref={imageContainerRef}
-                                    className="relative overflow-hidden rounded-lg bg-gray-100"
+                                    className="relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700"
                                     onTouchStart={onImageTouchStart}
                                     onTouchMove={onImageTouchMove}
                                     onTouchEnd={onImageTouchEnd}
                                 >
                                     {loadingImages ? (
                                         <div className="w-full h-64 flex items-center justify-center">
-                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
                                         </div>
                                     ) : (
                                         <>
@@ -780,10 +780,10 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                             key={index}
                                             className={`group relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
                                                 index === currentImageIndex
-                                                    ? 'border-blue-600 ring-2 ring-blue-200'
+                                                    ? 'border-blue-600 dark:border-blue-400 ring-2 ring-blue-200 dark:ring-blue-800'
                                                     : imageItem.imageData.is_primary
-                                                    ? 'border-yellow-500 ring-2 ring-yellow-200'
-                                                    : 'border-gray-300 hover:border-gray-400'
+                                                    ? 'border-yellow-500 dark:border-yellow-400 ring-2 ring-yellow-200 dark:ring-yellow-800'
+                                                    : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
                                             }`}
                                             onClick={() => setCurrentImageIndex(index)}
                                         >
@@ -834,11 +834,11 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                     <button
                                         onClick={() => fileInputRef.current?.click()}
                                         disabled={uploading}
-                                        className="flex-shrink-0 w-16 h-16 rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-500 transition-all flex items-center justify-center bg-gray-50 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="flex-shrink-0 w-16 h-16 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all flex items-center justify-center bg-gray-50 dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 disabled:opacity-50 disabled:cursor-not-allowed"
                                         title="Add images"
                                     >
                                         {uploading ? (
-                                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 dark:border-blue-400"></div>
                                         ) : (
                                             <Plus className="w-6 h-6 text-gray-400" />
                                         )}
@@ -857,7 +857,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                             </div>
 
                             <div className="space-y-2">
-                                <h3 className="text-xl font-semibold text-gray-900">
+                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                                     {editedData.vehicle?.make || vehicle.current.make} {editedData.vehicle?.model || vehicle.current.model}
                                 </h3>
                                 <div className="flex items-center gap-2 flex-wrap">
@@ -874,10 +874,10 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
 
                                 {/* Price Labels */}
                                 <div className="flex items-center gap-2 flex-wrap pt-2">
-                                    <span className="px-3 py-1 text-sm font-medium rounded-full border bg-purple-100 text-purple-800 border-purple-200">
+                                    <span className="px-3 py-1 text-sm font-medium rounded-full border bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-700">
                                         Auction: {(editedData.vehicle?.currency || vehicle.current.currency || 'LKR')} {(editedData.vehicle?.auction_price || 0)?.toLocaleString()}
                                     </span>
-                                    <span className="px-3 py-1 text-sm font-medium rounded-full border bg-blue-100 text-blue-800 border-blue-200">
+                                    <span className="px-3 py-1 text-sm font-medium rounded-full border bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-700">
                                         Quoted: LKR {(editedData.vehicle?.price_quoted || 0)?.toLocaleString()}
                                     </span>
 
@@ -887,9 +887,9 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                             {/* Make Logo */}
                             {makeLogoUrl && (
                                 <div className="flex items-start pt-4">
-                                    <div className="w-20 h-20 flex items-center justify-center bg-white border border-gray-200 rounded-lg p-2">
+                                    <div className="w-20 h-20 flex items-center justify-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-2">
                                         {loadingMakeLogo ? (
-                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
                                         ) : (
                                             <img
                                                 src={makeLogoUrl}
@@ -913,7 +913,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                         onClick={() => goToSection(index)}
                                         disabled={editingSection !== null}
                                         className={`w-2 h-2 rounded-full transition-colors ${
-                                            index === currentSection ? 'bg-blue-600' : 'bg-gray-300'
+                                            index === currentSection ? 'bg-blue-600 dark:bg-blue-400' : 'bg-gray-300 dark:bg-gray-600'
                                         } ${editingSection !== null ? 'cursor-not-allowed opacity-50' : ''}`}
                                     />
                                 ))}
@@ -924,14 +924,14 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                 <div className="text-center flex-1">
                                     <h4 className={`font-semibold text-lg transition-all ${
                                         editingSection === currentSection
-                                            ? 'text-blue-600 bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent'
-                                            : 'text-gray-900'
+                                            ? 'text-blue-600 dark:text-blue-400 bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-400 dark:to-blue-300 bg-clip-text text-transparent'
+                                            : 'text-gray-900 dark:text-white'
                                     }`}>
                                         {editingSection === currentSection && '✏️ '}
                                         {sections[currentSection]?.title}
                                     </h4>
                                     <p className={`text-sm transition-colors ${
-                                        editingSection === currentSection ? 'text-blue-500 font-medium' : 'text-gray-500'
+                                        editingSection === currentSection ? 'text-blue-500 dark:text-blue-400 font-medium' : 'text-gray-500 dark:text-gray-400'
                                     }`}>
                                         {editingSection === currentSection ? 'Editing Mode' : `${currentSection + 1} of ${sections.length}`}
                                     </p>
@@ -1015,14 +1015,14 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                     disabled={currentSection === 0 || editingSection !== null}
                                     className={`px-4 py-2 rounded-lg text-sm font-medium ${
                                         currentSection === 0 || editingSection !== null
-                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                            : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                                            ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                                            : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50'
                                     }`}
                                 >
                                     ← Previous
                                 </button>
 
-                                <span className="text-sm text-gray-500">
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
                                     {editingSection !== null ? 'Editing mode' : 'Swipe to navigate'}
                                 </span>
 
@@ -1031,8 +1031,8 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                     disabled={currentSection === sections.length - 1 || editingSection !== null}
                                     className={`px-4 py-2 rounded-lg text-sm font-medium ${
                                         currentSection === sections.length - 1 || editingSection !== null
-                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                            : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                                            ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                                            : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50'
                                     }`}
                                 >
                                     Next →
@@ -1047,11 +1047,11 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         {/* View Customer Modal (View Mode) */}
         {showViewCustomerModal && (
             loadingCustomer ? (
-                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg p-6">
+                <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
                         <div className="flex items-center space-x-3">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                            <span className="text-gray-700">Loading customer details...</span>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
+                            <span className="text-gray-700 dark:text-gray-300">Loading customer details...</span>
                         </div>
                     </div>
                 </div>

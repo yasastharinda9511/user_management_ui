@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Users, Mail, Phone, User, MapPin, CheckCircle, XCircle, RefreshCw, Edit, Plus, Tag, Search, Trash2 } from 'lucide-react';
+import { Users, Mail, Phone, User, MapPin, CheckCircle, XCircle, RefreshCw, Edit, Plus, Tag, Search, Trash2, LayoutGrid, List } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import {
@@ -27,6 +27,8 @@ import ViewCustomerModal from './ViewCustomerModal.jsx';
 import ConfirmationModal from '../../common/ConfirmationModal';
 import Notification from '../../common/Notification';
 import LoadingOverlay from '../../common/LoadingOverlay.jsx';
+import CustomerCard from './CustomerCard.jsx';
+import settingsService from '../../../utils/settingsService.js';
 
 const Customers = () => {
     const dispatch = useDispatch();
@@ -43,6 +45,12 @@ const Customers = () => {
     const totalCustomers = useSelector(selectTotalCustomers);
     const permissions = useSelector(selectPermissions);
 
+    // Initialize viewMode with local preference first, then global default
+    const [viewMode, setViewMode] = useState(() => {
+        const localPref = localStorage.getItem('customerViewMode');
+        if (localPref) return localPref;
+        return settingsService.getSetting('defaultViewMode') || 'grid';
+    });
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [editingCustomer, setEditingCustomer] = useState(null);
     const [viewingCustomer, setViewingCustomer] = useState(null);
@@ -56,6 +64,11 @@ const Customers = () => {
         title: '',
         message: ''
     });
+
+    const toggleViewMode = (mode) => {
+        setViewMode(mode);
+        localStorage.setItem('customerViewMode', mode);
+    };
 
     // Debounce search term to avoid excessive API calls
     useEffect(() => {
@@ -71,6 +84,15 @@ const Customers = () => {
     useEffect(() => {
         dispatch(fetchCustomers({ page: currentPage, limit: pageLimit, search: debouncedSearchTerm }));
     }, [dispatch, currentPage, pageLimit, debouncedSearchTerm]);
+
+    // Apply global default items per page setting on mount if not customized
+    useEffect(() => {
+        const defaultItemsPerPage = settingsService.getSetting('defaultItemsPerPage');
+        // Only apply if current pageLimit is the default (10) and global setting is different
+        if (pageLimit === 10 && defaultItemsPerPage !== 10) {
+            dispatch(setPageLimit(defaultItemsPerPage));
+        }
+    }, []); // Run only on mount
 
     // Check if navigated with selected customer from search
     useEffect(() => {
@@ -159,13 +181,38 @@ const Customers = () => {
                     </p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="text-sm text-gray-600">
-                        Total Customers: <span className="font-semibold text-gray-900">{totalCustomers}</span>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                        Total Customers: <span className="font-semibold text-gray-900 dark:text-white">{totalCustomers}</span>
+                    </div>
+                    {/* View Mode Toggle */}
+                    <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+                        <button
+                            onClick={() => toggleViewMode('grid')}
+                            className={`p-2 rounded-md transition-colors ${
+                                viewMode === 'grid'
+                                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                            }`}
+                            title="Grid View"
+                        >
+                            <LayoutGrid className="w-4 h-4" />
+                        </button>
+                        <button
+                            onClick={() => toggleViewMode('list')}
+                            className={`p-2 rounded-md transition-colors ${
+                                viewMode === 'list'
+                                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                            }`}
+                            title="List View"
+                        >
+                            <List className="w-4 h-4" />
+                        </button>
                     </div>
                     <button
                         onClick={handleRefresh}
                         disabled={loading}
-                        className="flex items-center space-x-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center space-x-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                         <span>Refresh</span>
@@ -240,42 +287,58 @@ const Customers = () => {
                 </div>
             )}
 
-            {/* Customers Table */}
+            {/* Customers Content - Grid or List View */}
             {!loading && customers.length > 0 && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Customer
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Contact
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Address
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Type
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Status
-                                    </th>
-                                    {hasAnyActionPermission && (
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Actions
-                                        </th>
-                                    )}
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {customers.map((customer) => (
-                                    <tr
-                                        key={customer.id || customer.customer_id}
-                                        onClick={() => setViewingCustomer(customer)}
-                                        className="hover:bg-gray-50 transition-colors cursor-pointer"
-                                    >
+                <>
+                    {viewMode === 'grid' ? (
+                        /* Grid View */
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {customers.map((customer) => (
+                                <CustomerCard
+                                    key={customer.id || customer.customer_id}
+                                    customer={customer}
+                                    viewMode={viewMode}
+                                    onEdit={(customer) => setEditingCustomer(customer)}
+                                    onView={(customer) => setViewingCustomer(customer)}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        /* List/Table View */
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead className="bg-gray-50 dark:bg-gray-900/50">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Customer
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Contact
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Address
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Type
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Status
+                                            </th>
+                                            {hasAnyActionPermission && (
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                    Actions
+                                                </th>
+                                            )}
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                        {customers.map((customer) => (
+                                            <tr
+                                                key={customer.id || customer.customer_id}
+                                                onClick={() => setViewingCustomer(customer)}
+                                                className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                                            >
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="flex-shrink-0 h-10 w-10">
@@ -373,14 +436,16 @@ const Customers = () => {
                                             </td>
                                         )}
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Pagination Controls */}
                     {totalPages > 1 && (
-                        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg mt-4">
                             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                                 {/* Left side - Showing info */}
                                 <div className="text-sm text-gray-700">
@@ -461,7 +526,7 @@ const Customers = () => {
                             </div>
                         </div>
                     )}
-                </div>
+                </>
             )}
 
             {/* Stats Cards */}

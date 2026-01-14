@@ -25,12 +25,23 @@ import Suppliers from "./components/tabs/suppliers/Suppliers.jsx";
 import PurchaseTracking from "./components/tabs/purchaseTracking/PurchaseTracking.jsx";
 import Notifications from "./components/tabs/notifications/Notifications.jsx";
 import PublicVehicleView from "./components/PublicVehicleView.jsx";
+import settingsService from "./utils/settingsService.js";
 
 function App() {
     const dispatch = useDispatch();
 
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const accessToken = useSelector(state => state.auth.accessToken);
+
+    // Initialize dark mode on app load
+    useEffect(() => {
+        const darkMode = settingsService.getSetting('darkMode');
+        if (darkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, []);
 
     useEffect(() => {
         if (!isAuthenticated) {

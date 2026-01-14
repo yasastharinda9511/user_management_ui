@@ -20,6 +20,7 @@ import SupplierCard from './SupplierCard';
 import CreateSupplier from './CreateSupplier';
 import ViewSupplierModal from './ViewSupplierModal';
 import LoadingOverlay from '../../common/LoadingOverlay.jsx';
+import settingsService from '../../../utils/settingsService.js';
 
 const Suppliers = () => {
     const dispatch = useDispatch();
@@ -32,18 +33,29 @@ const Suppliers = () => {
     const totalSuppliers = useSelector(selectTotalSuppliers);
     const permissions = useSelector(selectPermissions);
 
-    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+    // Initialize viewMode with local preference first, then global default
+    const [viewMode, setViewMode] = useState(() => {
+        const localPref = localStorage.getItem('supplierViewMode');
+        if (localPref) return localPref;
+        return settingsService.getSetting('defaultViewMode') || 'grid';
+    });
     const [searchQuery, setSearchQuery] = useState('');
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [selectedSupplier, setSelectedSupplier] = useState(null);
     const [viewingSupplier, setViewingSupplier] = useState(null);
 
     useEffect(() => {
-        if (localStorage.getItem('supplierViewMode')) {
-            setViewMode(localStorage.getItem('supplierViewMode'));
-        }
         dispatch(fetchSuppliers({ page: currentPage, limit: pageLimit, search: searchQuery }));
     }, [dispatch, currentPage, pageLimit, searchQuery]);
+
+    // Apply global default items per page setting on mount if not customized
+    useEffect(() => {
+        const defaultItemsPerPage = settingsService.getSetting('defaultItemsPerPage');
+        // Only apply if current pageLimit is the default (12) and global setting is different
+        if (pageLimit === 12 && defaultItemsPerPage !== 12) {
+            dispatch(setPageLimit(defaultItemsPerPage));
+        }
+    }, []); // Run only on mount
 
     // Check if navigated with selected supplier from search
     useEffect(() => {
