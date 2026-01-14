@@ -209,29 +209,30 @@ const CustomerCard = ({ customer, viewMode = 'grid', onEdit, onView }) => {
 
                 {/* Content */}
                 <div className="p-4 space-y-3">
-                    {customer.other_contacts && (
+
                         <div className="text-sm text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-gray-700 pb-2">
-                            {customer.other_contacts}
+                            {customer.other_contacts || ''}
                         </div>
-                    )}
-                    {customer.email && (
+
                         <div className="flex items-center text-sm">
                             <Mail className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2 flex-shrink-0" />
-                            <span className="text-gray-600 dark:text-gray-300 truncate">{customer.email}</span>
+                            <span className="text-gray-600 dark:text-gray-300 truncate">{customer.email || ""}</span>
                         </div>
-                    )}
-                    {customer.contact_number && (
+
+
                         <div className="flex items-center text-sm">
                             <Phone className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2 flex-shrink-0" />
-                            <span className="text-gray-600 dark:text-gray-300">{customer.contact_number}</span>
+                            <span className="text-gray-600 dark:text-gray-300">{customer.contact_number || ""}</span>
                         </div>
-                    )}
-                    {customer.address && (
-                        <div className="flex items-start text-sm">
-                            <MapPin className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2 flex-shrink-0 mt-0.5" />
-                            <span className="text-gray-600 dark:text-gray-300 line-clamp-2">{customer.address}</span>
-                        </div>
-                    )}
+
+
+                    <div className="flex items-start text-sm">
+                        <MapPin
+                            className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5"/>
+                        <span className="text-gray-600 dark:text-gray-300 max-h-[20px] overflow-hidden">
+                            {customer.address || ''}
+                        </span>
+                    </div>
                 </div>
 
                 {/* Footer */}
