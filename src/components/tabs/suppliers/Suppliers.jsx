@@ -110,20 +110,20 @@ const Suppliers = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Suppliers Management</h1>
-                    <p className="text-gray-600 mt-2">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Suppliers Management</h1>
+                    <p className="text-gray-600 dark:text-gray-400 mt-2">
                         Manage auction houses, dealers, and other vehicle suppliers
                     </p>
                 </div>
                 <div className="flex items-center gap-4">
                     {/* View Mode Toggle */}
-                    <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                    <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                         <button
                             onClick={() => toggleViewMode('grid')}
                             className={`p-2 rounded transition-colors ${
                                 viewMode === 'grid'
-                                    ? 'bg-white text-blue-600 shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                             }`}
                             title="Grid View"
                         >
@@ -133,8 +133,8 @@ const Suppliers = () => {
                             onClick={() => toggleViewMode('list')}
                             className={`p-2 rounded transition-colors ${
                                 viewMode === 'list'
-                                    ? 'bg-white text-blue-600 shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                             }`}
                             title="List View"
                         >
@@ -159,29 +159,29 @@ const Suppliers = () => {
             </div>
 
             {/* Search and Filters */}
-            <div className="bg-white rounded-lg shadow p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
                 <div className="flex flex-col sm:flex-row gap-4">
                     {/* Search */}
                     <div className="flex-1">
                         <div className="relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                             <input
                                 type="text"
                                 placeholder="Search suppliers by name, email, or location..."
                                 value={searchQuery}
                                 onChange={handleSearch}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                             />
                         </div>
                     </div>
 
                     {/* Items per page */}
                     <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-600">Show:</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Show:</span>
                         <select
                             value={pageLimit}
                             onChange={(e) => handlePageLimitChange(e.target.value)}
-                            className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                         >
                             <option value="12">12</option>
                             <option value="24">24</option>
@@ -198,10 +198,10 @@ const Suppliers = () => {
 
                 {/* Empty State */}
                 {!loading && suppliers.length === 0 && (
-                <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <Building2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No suppliers found</h3>
-                    <p className="text-gray-600 mb-4">
+                <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <Building2 className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No suppliers found</h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
                         {searchQuery ? 'Try adjusting your search terms' : 'Get started by adding your first supplier'}
                     </p>
                     {!searchQuery && hasPermission(permissions, PERMISSIONS.SUPPLIER_CREATE) && (
@@ -237,14 +237,14 @@ const Suppliers = () => {
             {/* Pagination */}
             {!loading && totalPages > 1 && (
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
                         Showing {((currentPage - 1) * pageLimit) + 1} to {Math.min(currentPage * pageLimit, totalSuppliers)} of {totalSuppliers} suppliers
                     </div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1}
-                            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800"
                         >
                             Previous
                         </button>
@@ -262,7 +262,7 @@ const Suppliers = () => {
                                         className={`px-4 py-2 rounded-lg ${
                                             currentPage === pageNumber
                                                 ? 'bg-blue-600 text-white'
-                                                : 'border border-gray-300 hover:bg-gray-50'
+                                                : 'border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800'
                                         }`}
                                     >
                                         {pageNumber}
@@ -272,14 +272,14 @@ const Suppliers = () => {
                                 pageNumber === currentPage - 2 ||
                                 pageNumber === currentPage + 2
                             ) {
-                                return <span key={pageNumber} className="px-2">...</span>;
+                                return <span key={pageNumber} className="px-2 text-gray-500 dark:text-gray-400">...</span>;
                             }
                             return null;
                         })}
                         <button
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
-                            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800"
                         >
                             Next
                         </button>

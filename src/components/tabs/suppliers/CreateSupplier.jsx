@@ -85,7 +85,7 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
 
     return (
         <div className={`modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
-            <div className={`modal-content bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden ${isClosing ? 'closing' : ''}`}>
+            <div className={`modal-content bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden ${isClosing ? 'closing' : ''}`}>
                 {/* Header */}
                 <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white">
                     <div className="flex items-center justify-between">
@@ -114,7 +114,7 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
                     {error && (
-                        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg">
                             {error}
                         </div>
                     )}
@@ -122,7 +122,7 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                     <div className="space-y-4">
                         {/* Supplier Name */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Supplier Name <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -131,14 +131,14 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                                 value={formData.supplier_name}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                 placeholder="e.g., USS Auction Tokyo"
                             />
                         </div>
 
                         {/* Supplier Type */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Supplier Type <span className="text-red-500">*</span>
                             </label>
                             <select
@@ -146,7 +146,7 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                                 value={formData.supplier_type}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                             >
                                 {SUPPLIER_TYPES.map(type => (
                                     <option key={type} value={type}>{type}</option>
@@ -158,7 +158,7 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Email */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Email
                                 </label>
                                 <input
@@ -166,14 +166,14 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     placeholder="email@example.com"
                                 />
                             </div>
 
                             {/* Contact Number */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Contact Number
                                 </label>
                                 <input
@@ -181,7 +181,7 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                                     name="contact_number"
                                     value={formData.contact_number}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     placeholder="+81-3-1234-5678"
                                 />
                             </div>
@@ -189,7 +189,7 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
 
                         {/* Country */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Country <span className="text-red-500">*</span>
                             </label>
                             <select
@@ -197,7 +197,7 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                                 value={formData.country}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                             >
                                 {COUNTRIES.map(country => (
                                     <option key={country} value={country}>{country}</option>
@@ -207,7 +207,7 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
 
                         {/* Address */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Address
                             </label>
                             <textarea
@@ -215,19 +215,19 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                                 value={formData.address}
                                 onChange={handleChange}
                                 rows="2"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                 placeholder="Full address"
                             />
                         </div>
 
                         {/* Optional Fields */}
-                        <div className="border-t border-gray-200 pt-4 mt-4">
-                            <h3 className="text-sm font-medium text-gray-700 mb-3">Optional Information</h3>
+                        <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Optional Information</h3>
 
                             <div className="space-y-4">
                                 {/* Supplier Title */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                         Title/Position
                                     </label>
                                     <input
@@ -235,14 +235,14 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                                         name="supplier_title"
                                         value={formData.supplier_title}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         placeholder="e.g., Sales Manager"
                                     />
                                 </div>
 
                                 {/* Other Contacts */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                         Other Contacts
                                     </label>
                                     <textarea
@@ -250,7 +250,7 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                                         value={formData.other_contacts}
                                         onChange={handleChange}
                                         rows="2"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         placeholder="Additional contact information"
                                     />
                                 </div>
@@ -263,9 +263,9 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                                         id="is_active"
                                         checked={formData.is_active}
                                         onChange={handleChange}
-                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                        className="w-4 h-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700"
                                     />
-                                    <label htmlFor="is_active" className="ml-2 text-sm text-gray-700">
+                                    <label htmlFor="is_active" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                                         Active supplier
                                     </label>
                                 </div>
@@ -274,11 +274,11 @@ const CreateSupplier = ({ supplier = null, onClose, onSaved }) => {
                     </div>
 
                     {/* Footer */}
-                    <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
+                    <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                         <button
                             type="button"
                             onClick={handleClose}
-                            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                             Cancel
                         </button>

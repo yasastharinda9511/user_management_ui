@@ -175,8 +175,8 @@ const Customers = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Customers</h1>
-                    <p className="text-gray-600 mt-2">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Customers</h1>
+                    <p className="text-gray-600 dark:text-gray-400 mt-2">
                         Manage and view all customers in the system
                     </p>
                 </div>
@@ -230,17 +230,17 @@ const Customers = () => {
             </div>
 
             {/* Search Bar */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Search className="h-5 w-5 text-gray-400" />
+                        <Search className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                     </div>
                     <input
                         type="text"
                         placeholder="Search customers by name, email, phone, or type..."
                         value={searchTerm}
                         onChange={handleSearch}
-                        className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                     />
                     {/* Show loading indicator when debouncing or loading */}
                     {(searchTerm !== debouncedSearchTerm || (loading && searchTerm)) && (
@@ -257,10 +257,10 @@ const Customers = () => {
 
                 {/* Error State */}
             {error && !loading && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
                     <div className="flex items-center">
-                        <XCircle className="w-5 h-5 text-red-600 mr-2" />
-                        <p className="text-red-800">Error: {error}</p>
+                        <XCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" />
+                        <p className="text-red-800 dark:text-red-300">Error: {error}</p>
                     </div>
                 </div>
             )}
@@ -268,11 +268,11 @@ const Customers = () => {
             {/* No Customers */}
             {!loading && !error && customers.length === 0 && (
                 <div className="text-center py-12">
-                    <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    <Users className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                         {searchTerm ? 'No customers found' : 'No customers yet'}
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-gray-400">
                         {searchTerm ? 'Try adjusting your search criteria.' : 'Get started by adding your first customer.'}
                     </p>
                     {!searchTerm && (
@@ -349,12 +349,12 @@ const Customers = () => {
                                                     </div>
                                                 </div>
                                                 <div className="ml-4">
-                                                    <div className="text-sm font-medium text-gray-900">
+                                                    <div className="text-sm font-medium text-gray-900 dark:text-white">
                                                         {customer.customer_title ? `${customer.customer_title} ` : ''}
                                                         {customer.customer_name}
                                                     </div>
                                                     {customer.other_contacts && (
-                                                        <div className="text-sm text-gray-500">
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400">
                                                             {customer.other_contacts}
                                                         </div>
                                                     )}
@@ -364,22 +364,22 @@ const Customers = () => {
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="space-y-1">
                                                 {customer.email && (
-                                                    <div className="flex items-center text-sm text-gray-900">
-                                                        <Mail className="w-4 h-4 text-gray-400 mr-2" />
+                                                    <div className="flex items-center text-sm text-gray-900 dark:text-gray-200">
+                                                        <Mail className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2" />
                                                         {customer.email}
                                                     </div>
                                                 )}
                                                 {customer.contact_number && (
-                                                    <div className="flex items-center text-sm text-gray-500">
-                                                        <Phone className="w-4 h-4 text-gray-400 mr-2" />
+                                                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                                        <Phone className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2" />
                                                         {customer.contact_number}
                                                     </div>
                                                 )}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="flex items-start text-sm text-gray-900">
-                                                <MapPin className="w-4 h-4 text-gray-400 mr-2 mt-0.5 flex-shrink-0" />
+                                            <div className="flex items-start text-sm text-gray-900 dark:text-gray-200">
+                                                <MapPin className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2 mt-0.5 flex-shrink-0" />
                                                 <span className="line-clamp-2">
                                                     {customer.address || 'N/A'}
                                                 </span>
@@ -387,22 +387,22 @@ const Customers = () => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {customer.customer_type ? (
-                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400">
                                                     <Tag className="w-3 h-3 mr-1" />
                                                     {customer.customer_type}
                                                 </span>
                                             ) : (
-                                                <span className="text-xs text-gray-400 italic">No type</span>
+                                                <span className="text-xs text-gray-400 dark:text-gray-500 italic">No type</span>
                                             )}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {customer.is_active ? (
-                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
                                                     <CheckCircle className="w-3 h-3 mr-1" />
                                                     Active
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400">
                                                     <XCircle className="w-3 h-3 mr-1" />
                                                     Inactive
                                                 </span>
@@ -417,7 +417,7 @@ const Customers = () => {
                                                                 e.stopPropagation();
                                                                 setEditingCustomer(customer);
                                                             }}
-                                                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
+                                                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
                                                         >
                                                             <Edit className="w-3 h-3 mr-1" />
                                                             Edit
@@ -426,7 +426,7 @@ const Customers = () => {
                                                     {hasPermission(permissions, PERMISSIONS.CUSTOMER_DELETE) && (
                                                         <button
                                                             onClick={(e) => handleDeleteClick(customer, e)}
-                                                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors"
+                                                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                                                         >
                                                             <Trash2 className="w-3 h-3 mr-1" />
                                                             Delete
@@ -448,7 +448,7 @@ const Customers = () => {
                         <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg mt-4">
                             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                                 {/* Left side - Showing info */}
-                                <div className="text-sm text-gray-700">
+                                <div className="text-sm text-gray-700 dark:text-gray-300">
                                     Showing <span className="font-medium">{(currentPage - 1) * pageLimit + 1}</span> to{' '}
                                     <span className="font-medium">{Math.min(currentPage * pageLimit, totalCustomers)}</span> of{' '}
                                     <span className="font-medium">{totalCustomers}</span> customers
@@ -459,7 +459,7 @@ const Customers = () => {
                                     <button
                                         onClick={() => handlePageChange(currentPage - 1)}
                                         disabled={currentPage === 1}
-                                        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         Previous
                                     </button>
@@ -481,7 +481,7 @@ const Customers = () => {
                                                         className={`px-3 py-2 text-sm font-medium rounded-lg ${
                                                             currentPage === pageNumber
                                                                 ? 'bg-blue-600 text-white'
-                                                                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                                                : 'text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
                                                         }`}
                                                     >
                                                         {pageNumber}
@@ -491,7 +491,7 @@ const Customers = () => {
                                                 pageNumber === currentPage - 2 ||
                                                 pageNumber === currentPage + 2
                                             ) {
-                                                return <span key={pageNumber} className="px-2 text-gray-500">...</span>;
+                                                return <span key={pageNumber} className="px-2 text-gray-500 dark:text-gray-400">...</span>;
                                             }
                                             return null;
                                         })}
@@ -500,7 +500,7 @@ const Customers = () => {
                                     <button
                                         onClick={() => handlePageChange(currentPage + 1)}
                                         disabled={currentPage === totalPages}
-                                        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         Next
                                     </button>
@@ -508,14 +508,14 @@ const Customers = () => {
 
                                 {/* Right side - Items per page selector */}
                                 <div className="flex items-center gap-2">
-                                    <label htmlFor="pageLimit" className="text-sm font-medium text-gray-700">
+                                    <label htmlFor="pageLimit" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                         Items per page:
                                     </label>
                                     <select
                                         id="pageLimit"
                                         value={pageLimit}
                                         onChange={(e) => handlePageLimitChange(e.target.value)}
-                                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                     >
                                         <option value="10">10</option>
                                         <option value="20">20</option>
@@ -532,44 +532,44 @@ const Customers = () => {
             {/* Stats Cards */}
             {!loading && customers.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600">Active Customers</p>
-                                <p className="text-2xl font-bold text-gray-900 mt-2">
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Customers</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
                                     {activeCustomersCount}
                                 </p>
                             </div>
-                            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                                <CheckCircle className="w-6 h-6 text-green-600" />
+                            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                                <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600">Inactive Customers</p>
-                                <p className="text-2xl font-bold text-gray-900 mt-2">
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Inactive Customers</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
                                     {totalCustomers - activeCustomersCount}
                                 </p>
                             </div>
-                            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                                <XCircle className="w-6 h-6 text-red-600" />
+                            <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                                <XCircle className="w-6 h-6 text-red-600 dark:text-red-400" />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600">Total Customers</p>
-                                <p className="text-2xl font-bold text-gray-900 mt-2">
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Customers</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
                                     {totalCustomers}
                                 </p>
                             </div>
-                            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <Users className="w-6 h-6 text-blue-600" />
+                            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                                <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                             </div>
                         </div>
                     </div>

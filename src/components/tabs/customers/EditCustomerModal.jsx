@@ -104,26 +104,26 @@ const EditCustomerModal = ({ customer, onClose }) => {
             {/* Modal container */}
             <div className="flex min-h-full items-center justify-center p-4">
                 {/* Modal panel */}
-                <div className={`modal-content relative bg-white rounded-lg shadow-xl transform transition-all w-full max-w-2xl ${isClosing ? 'closing' : ''}`}>
+                <div className={`modal-content relative bg-white dark:bg-gray-800 rounded-lg shadow-xl transform transition-all w-full max-w-2xl ${isClosing ? 'closing' : ''}`}>
                     {/* Header */}
-                    <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <div className="bg-gray-50 dark:bg-gray-900/50 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <User className="w-6 h-6 text-blue-600" />
+                                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                                    <User className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900">
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                         Edit Customer
                                     </h3>
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
                                         Update customer details and information
                                     </p>
                                 </div>
                             </div>
                             <button
                                 onClick={handleClose}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                             >
                                 <X className="w-6 h-6" />
                             </button>
@@ -135,28 +135,28 @@ const EditCustomerModal = ({ customer, onClose }) => {
                         <div className="space-y-6">
                             {/* Customer ID (read-only) */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Customer ID
                                 </label>
                                 <input
                                     type="text"
                                     value={customer.id || customer.customer_id || 'N/A'}
                                     disabled
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
                                 />
                             </div>
 
                             {/* Title and Name */}
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Title
                                     </label>
                                     <select
                                         name="customer_title"
                                         value={formData.customer_title}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                     >
                                         <option value="">Select</option>
                                         <option value="Mr">Mr</option>
@@ -167,7 +167,7 @@ const EditCustomerModal = ({ customer, onClose }) => {
                                 </div>
 
                                 <div className="md:col-span-3">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Customer Name *
                                     </label>
                                     <input
@@ -176,7 +176,7 @@ const EditCustomerModal = ({ customer, onClose }) => {
                                         value={formData.customer_name}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         placeholder="Enter customer name"
                                     />
                                 </div>
@@ -185,7 +185,7 @@ const EditCustomerModal = ({ customer, onClose }) => {
                             {/* Contact Information */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         <div className="flex items-center space-x-2">
                                             <Phone className="w-4 h-4" />
                                             <span>Contact Number</span>
@@ -196,13 +196,13 @@ const EditCustomerModal = ({ customer, onClose }) => {
                                         name="contact_number"
                                         value={formData.contact_number}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         placeholder="1234567890"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         <div className="flex items-center space-x-2">
                                             <Mail className="w-4 h-4" />
                                             <span>Email</span>
@@ -213,7 +213,7 @@ const EditCustomerModal = ({ customer, onClose }) => {
                                         name="email"
                                         value={formData.email}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         placeholder="customer@example.com"
                                     />
                                 </div>
@@ -221,7 +221,7 @@ const EditCustomerModal = ({ customer, onClose }) => {
 
                             {/* Address */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     <div className="flex items-center space-x-2">
                                         <MapPin className="w-4 h-4" />
                                         <span>Address</span>
@@ -232,14 +232,14 @@ const EditCustomerModal = ({ customer, onClose }) => {
                                     value={formData.address}
                                     onChange={handleInputChange}
                                     rows={3}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     placeholder="Enter customer address"
                                 />
                             </div>
 
                             {/* Other Contacts */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Other Contacts
                                 </label>
                                 <input
@@ -247,7 +247,7 @@ const EditCustomerModal = ({ customer, onClose }) => {
                                     name="other_contacts"
                                     value={formData.other_contacts}
                                     onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     placeholder="Additional contact information"
                                 />
                             </div>
@@ -255,7 +255,7 @@ const EditCustomerModal = ({ customer, onClose }) => {
                             {/* Customer Type and Status */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         <div className="flex items-center space-x-2">
                                             <Tag className="w-4 h-4" />
                                             <span>Customer Type</span>
@@ -265,7 +265,7 @@ const EditCustomerModal = ({ customer, onClose }) => {
                                         name="customer_type"
                                         value={formData.customer_type}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                     >
                                         <option value="">Select type</option>
                                         <option value="INDIVIDUAL">Individual</option>
@@ -274,7 +274,7 @@ const EditCustomerModal = ({ customer, onClose }) => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Status
                                     </label>
                                     <button
@@ -282,8 +282,8 @@ const EditCustomerModal = ({ customer, onClose }) => {
                                         onClick={handleToggleActive}
                                         className={`w-full px-3 py-2 rounded-lg font-medium text-sm transition-colors ${
                                             formData.is_active
-                                                ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                                                : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50'
+                                                : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50'
                                         }`}
                                     >
                                         {formData.is_active ? 'Active' : 'Inactive'}
@@ -293,11 +293,11 @@ const EditCustomerModal = ({ customer, onClose }) => {
                         </div>
 
                         {/* Footer */}
-                        <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
+                        <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className={`modal-content px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors ${isClosing ? 'closing' : ''}`}
+                                className={`modal-content px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors ${isClosing ? 'closing' : ''}`}
                             >
                                 Cancel
                             </button>
