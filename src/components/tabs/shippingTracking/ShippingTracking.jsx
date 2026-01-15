@@ -290,19 +290,19 @@ const ShippingTracking = () => {
                 <div className="mb-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                 <Ship className="w-8 h-8 text-blue-600" />
                                 Shipping Tracking
                             </h1>
-                            <p className="text-gray-600 mt-1">Drag and drop vehicles to update shipping status</p>
+                            <p className="text-gray-600 dark:text-gray-400 mt-1">Drag and drop vehicles to update shipping status</p>
                         </div>
                         <div className="flex items-center gap-2 relative">
                             <button
                                 onClick={() => setFeaturedOnly(!featuredOnly)}
                                 className={`px-4 py-2 border rounded-lg transition-colors flex items-center gap-2 ${
                                     featuredOnly
-                                        ? 'bg-yellow-100 border-yellow-300 text-yellow-800 hover:bg-yellow-200'
-                                        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                                        ? 'bg-yellow-100 border-yellow-300 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:border-yellow-700 dark:text-yellow-400 dark:hover:bg-yellow-900/50'
+                                        : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                                 }`}
                             >
                                 <Star className={`w-4 h-4 ${featuredOnly ? 'fill-yellow-500' : ''}`} />
@@ -310,7 +310,7 @@ const ShippingTracking = () => {
                             </button>
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
-                                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+                                className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2"
                             >
                                 <FilterIcon className="w-4 h-4" />
                                 Filters
@@ -353,7 +353,7 @@ const ShippingTracking = () => {
                                             onScroll={handleScroll}
                                             {...provided.droppableProps}
                                             className={`flex-1 overflow-y-auto rounded-lg p-2 transition-colors custom-scrollbar ${
-                                                snapshot.isDraggingOver ? 'bg-blue-50 ring-2 ring-blue-300' : 'bg-gray-50'
+                                                snapshot.isDraggingOver ? 'bg-blue-50 dark:bg-blue-900/30 ring-2 ring-blue-300 dark:ring-blue-700' : 'bg-gray-50 dark:bg-gray-800'
                                             }`}
                                         >
                                             {columns[status.id]?.length > 0 ? (
@@ -361,7 +361,7 @@ const ShippingTracking = () => {
                                                     <VehicleTrackerCard key={vehicle.vehicle.id} vehicle={vehicle} index={index} handleViewDetails={() =>handleViewDetails(vehicle)} />
                                                 ))
                                             ) : (
-                                                <div className="flex flex-col items-center justify-center h-32 text-gray-400">
+                                                <div className="flex flex-col items-center justify-center h-32 text-gray-400 dark:text-gray-500">
                                                     <AlertCircle className="w-8 h-8 mb-2" />
                                                     <p className="text-sm">No vehicles</p>
                                                 </div>
@@ -380,7 +380,7 @@ const ShippingTracking = () => {
                     {isLoadingMore && (
                         <div className="flex items-center justify-center py-4">
                             <Loader2 className="w-6 h-6 text-blue-500 animate-spin mr-2" />
-                            <span className="text-sm text-gray-600">Loading more vehicles...</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-400">Loading more vehicles...</span>
                         </div>
                     )}
                 </div>

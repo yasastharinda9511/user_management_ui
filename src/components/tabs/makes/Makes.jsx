@@ -131,17 +131,17 @@ const Makes = () => {
                 {/* Header */}
                 <div className="flex justify-between items-center">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                             <Car className="w-8 h-8 text-blue-600" />
                             Vehicle Makes
                         </h1>
-                        <p className="text-gray-600 mt-1">Manage vehicle manufacturers and brands</p>
+                        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage vehicle manufacturers and brands</p>
                     </div>
                     <div className="flex gap-2">
                         <button
                             onClick={fetchMakes}
                             disabled={loading}
-                            className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+                            className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2"
                         >
                             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                             Refresh
@@ -157,15 +157,15 @@ const Makes = () => {
                 </div>
 
                 {/* Search */}
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
                     <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
                         <input
                             type="text"
                             placeholder="Search makes by name or country..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                         />
                     </div>
                 </div>
@@ -191,9 +191,9 @@ const Makes = () => {
 
                     {/* Empty State */}
                     {!loading && filteredMakes.length === 0 && (
-                        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-                            <Car className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                            <p className="text-gray-500 text-lg">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center">
+                            <Car className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                            <p className="text-gray-500 dark:text-gray-400 text-lg">
                                 {searchTerm ? 'No makes found matching your search' : 'No makes available'}
                             </p>
                             {!searchTerm && (
@@ -210,11 +210,11 @@ const Makes = () => {
                 </div>
 
                 {/* Stats */}
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
-                    <div className="text-sm text-gray-600">
-                        Total Makes: <span className="font-semibold text-gray-900">{makes.length}</span>
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                        Total Makes: <span className="font-semibold text-gray-900 dark:text-white">{makes.length}</span>
                         {searchTerm && (
-                            <> | Filtered: <span className="font-semibold text-gray-900">{filteredMakes.length}</span></>
+                            <> | Filtered: <span className="font-semibold text-gray-900 dark:text-white">{filteredMakes.length}</span></>
                         )}
                     </div>
                 </div>
@@ -223,11 +223,11 @@ const Makes = () => {
             {/* Add Make Modal */}
             {showAddModal && (
                 <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg max-w-md w-full p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4">Add New Make</h2>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Add New Make</h2>
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Make Name
                                 </label>
                                 <input
@@ -236,7 +236,7 @@ const Makes = () => {
                                     onChange={(e) => setNewMakeName(e.target.value)}
                                     onKeyPress={(e) => e.key === 'Enter' && handleAddMake()}
                                     placeholder="e.g., Tesla"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     autoFocus
                                 />
                             </div>
@@ -252,7 +252,7 @@ const Makes = () => {
                                         setShowAddModal(false);
                                         setNewMakeName('');
                                     }}
-                                    className="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                                    className="flex-1 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
                                 >
                                     Cancel
                                 </button>
@@ -265,11 +265,11 @@ const Makes = () => {
             {/* Edit Make Modal */}
             {showEditModal && (
                 <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg max-w-md w-full p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4">Edit Make</h2>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Edit Make</h2>
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Make Name
                                 </label>
                                 <input
@@ -278,7 +278,7 @@ const Makes = () => {
                                     onChange={(e) => setNewMakeName(e.target.value)}
                                     onKeyPress={(e) => e.key === 'Enter' && handleEditMake()}
                                     placeholder="e.g., Tesla"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     autoFocus
                                 />
                             </div>
@@ -295,7 +295,7 @@ const Makes = () => {
                                         setNewMakeName('');
                                         setSelectedMake(null);
                                     }}
-                                    className="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                                    className="flex-1 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
                                 >
                                     Cancel
                                 </button>

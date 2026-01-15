@@ -80,16 +80,16 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className={`bg-white rounded-lg p-3 mb-2 shadow-sm border border-gray-200 hover:shadow-md transition-shadow ${
+                    className={`bg-white dark:bg-gray-800 rounded-lg p-3 mb-2 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow ${
                         snapshot.isDragging ? 'shadow-lg ring-2 ring-blue-400' : ''
                     }`}
                 >
                     <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
-                            <h4 className="font-semibold text-gray-900 text-sm">
+                            <h4 className="font-semibold text-gray-900 dark:text-white text-sm">
                                 {vehicle.vehicle.make} {vehicle.vehicle.model}
                             </h4>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
                                 {vehicle.vehicle.year_of_manufacture} • {vehicle.vehicle.color}
                             </p>
                         </div>
@@ -99,13 +99,13 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
                                     e.stopPropagation();
                                     setIsExpanded(!isExpanded);
                                 }}
-                                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
                                 title={isExpanded ? "Hide Photos" : "Show Photos"}
                             >
                                 {isExpanded ? (
-                                    <ChevronUp className="w-4 h-4 text-gray-600" />
+                                    <ChevronUp className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                                 ) : (
-                                    <ChevronDown className="w-4 h-4 text-gray-600" />
+                                    <ChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                                 )}
                             </button>
                             <button
@@ -113,10 +113,10 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
                                     e.stopPropagation();
                                     handleViewDetails(vehicle);
                                 }}
-                                className="p-1 hover:bg-blue-50 rounded transition-colors"
+                                className="p-1 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded transition-colors"
                                 title="View Details"
                             >
-                                <Eye className="w-4 h-4 text-blue-600" />
+                                <Eye className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                             </button>
 
                             <button
@@ -124,33 +124,33 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
                                     e.stopPropagation();
                                     handleFeature(vehicle.vehicle.id);
                                 }}
-                                className="p-1 hover:bg-blue-50 rounded transition-colors"
+                                className="p-1 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded transition-colors"
                                 title="View Details"
                             >
                                 <Star
                                     className={`w-4 h-4 ${
-                                        isFeatured ? "text-blue-600 fill-blue-600" : "text-gray-400"
+                                        isFeatured ? "text-blue-600 dark:text-blue-400 fill-blue-600 dark:fill-blue-400" : "text-gray-400"
                                     }`}
                                 />
                             </button>
-                            <Package className="w-4 h-4 text-gray-400" />
+                            <Package className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                         </div>
                     </div>
 
-                    <div className="space-y-1 text-xs text-gray-600">
+                    <div className="space-y-1 text-xs text-gray-600 dark:text-gray-300">
                         <div className="flex justify-between">
-                            <span className="text-gray-500">Chassis:</span>
+                            <span className="text-gray-500 dark:text-gray-400">Chassis:</span>
                             <span className="font-mono">{vehicle.vehicle.chassis_id}</span>
                         </div>
                         {vehicle.vehicle_shipping?.vessel_name && (
                             <div className="flex justify-between">
-                                <span className="text-gray-500">Vessel:</span>
+                                <span className="text-gray-500 dark:text-gray-400">Vessel:</span>
                                 <span>{vehicle.vehicle_shipping.vessel_name}</span>
                             </div>
                         )}
                         {vehicle.vehicle_shipping?.departure_harbour && (
                             <div className="flex justify-between">
-                                <span className="text-gray-500">From:</span>
+                                <span className="text-gray-500 dark:text-gray-400">From:</span>
                                 <span>{vehicle.vehicle_shipping.departure_harbour}</span>
                             </div>
                         )}
@@ -158,12 +158,12 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
 
                     {/* Expanded Photos Section */}
                     {isExpanded && (
-                        <div className="mt-3 pt-3 border-t border-gray-200">
+                        <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                             {loadingImages ? (
-                                <div className="flex items-center justify-center h-32 bg-gray-50 rounded">
+                                <div className="flex items-center justify-center h-32 bg-gray-50 dark:bg-gray-700 rounded">
                                     <div className="text-center">
                                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                                        <p className="text-xs text-gray-500">Loading photos...</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">Loading photos...</p>
                                     </div>
                                 </div>
                             ) : imageUrls.length > 0 ? (
@@ -178,15 +178,15 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
                                         <>
                                             <button
                                                 onClick={handlePreviousImage}
-                                                className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 hover:bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
                                             >
-                                                <ChevronLeft className="w-4 h-4 text-gray-700" />
+                                                <ChevronLeft className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                                             </button>
                                             <button
                                                 onClick={handleNextImage}
-                                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 hover:bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
                                             >
-                                                <ChevronRight className="w-4 h-4 text-gray-700" />
+                                                <ChevronRight className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                                             </button>
                                             {/* Image counter */}
                                             <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-black/60 text-white text-xs rounded-full">
@@ -196,9 +196,9 @@ const VehicleTrackerCard = ({ vehicle, index, handleViewDetails }) => {
                                     )}
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-32 bg-gray-50 rounded">
-                                    <Car className="w-8 h-8 text-gray-300 mb-2" />
-                                    <p className="text-xs text-gray-500">No photos available</p>
+                                <div className="flex flex-col items-center justify-center h-32 bg-gray-50 dark:bg-gray-700 rounded">
+                                    <Car className="w-8 h-8 text-gray-300 dark:text-gray-500 mb-2" />
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">No photos available</p>
                                 </div>
                             )}
                         </div>

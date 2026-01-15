@@ -81,11 +81,11 @@ const MakeCard = ({ make, onEdit, onDelete, onLogoUploaded }) => {
     };
 
     return (
-        <div className="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow overflow-hidden">
             {/* Logo Section */}
-            <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+            <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
                 {loadingLogo ? (
-                    <RefreshCw className="w-12 h-12 text-gray-400 animate-spin" />
+                    <RefreshCw className="w-12 h-12 text-gray-400 dark:text-gray-500 animate-spin" />
                 ) : logoUrl && !logoError ? (
                     <img
                         src={logoUrl}
@@ -95,8 +95,8 @@ const MakeCard = ({ make, onEdit, onDelete, onLogoUploaded }) => {
                     />
                 ) : (
                     <div className="flex flex-col items-center justify-center">
-                        <ImageIcon className="w-16 h-16 text-gray-300 mb-2" />
-                        <p className="text-sm text-gray-400">No logo</p>
+                        <ImageIcon className="w-16 h-16 text-gray-300 dark:text-gray-600 mb-2" />
+                        <p className="text-sm text-gray-400 dark:text-gray-500">No logo</p>
                     </div>
                 )}
 
@@ -104,13 +104,13 @@ const MakeCard = ({ make, onEdit, onDelete, onLogoUploaded }) => {
                 <button
                     onClick={triggerFileInput}
                     disabled={uploadingLogo}
-                    className="absolute bottom-2 right-2 p-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    className="absolute bottom-2 right-2 p-2 bg-white dark:bg-gray-700 rounded-lg shadow-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
                     title="Upload logo"
                 >
                     {uploadingLogo ? (
                         <RefreshCw className="w-4 h-4 text-blue-600 animate-spin" />
                     ) : (
-                        <Upload className="w-4 h-4 text-gray-600" />
+                        <Upload className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                     )}
                 </button>
                 <input
@@ -126,11 +126,11 @@ const MakeCard = ({ make, onEdit, onDelete, onLogoUploaded }) => {
             <div className="p-4">
                 <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
-                        <h3 className="text-lg font-bold text-gray-900 mb-1">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                             {make.make_name}
                         </h3>
                         {make.country_origin && (
-                            <p className="text-sm text-gray-500 flex items-center gap-1">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                                 <span>🌍</span>
                                 {make.country_origin}
                             </p>
@@ -140,8 +140,8 @@ const MakeCard = ({ make, onEdit, onDelete, onLogoUploaded }) => {
                         <span
                             className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                 make.is_active
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-red-100 text-red-800'
+                                    ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400'
+                                    : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400'
                             }`}
                         >
                             {make.is_active ? (
@@ -160,7 +160,7 @@ const MakeCard = ({ make, onEdit, onDelete, onLogoUploaded }) => {
                 </div>
 
                 {/* Stats */}
-                <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                <div className="flex items-center gap-4 mb-4 text-sm text-gray-600 dark:text-gray-400">
                     <div className="flex items-center gap-1">
                         <Car className="w-4 h-4" />
                         <span>{make.models?.length || 0} models</span>
@@ -168,17 +168,17 @@ const MakeCard = ({ make, onEdit, onDelete, onLogoUploaded }) => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-2 pt-3 border-t border-gray-100">
+                <div className="flex gap-2 pt-3 border-t border-gray-100 dark:border-gray-700">
                     <button
                         onClick={() => onEdit(make)}
-                        className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2"
+                        className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors flex items-center justify-center gap-2"
                     >
                         <Edit2 className="w-4 h-4" />
                         Edit
                     </button>
                     <button
                         onClick={() => onDelete(make)}
-                        className="flex-1 px-3 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+                        className="flex-1 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors flex items-center justify-center gap-2"
                     >
                         <Trash2 className="w-4 h-4" />
                         Delete
