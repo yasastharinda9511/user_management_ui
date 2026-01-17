@@ -31,16 +31,16 @@ const NotificationCard = ({ notification, index }) => {
             case 'warning':
                 return <AlertCircle className="w-5 h-5 text-yellow-600" />;
             default:
-                return <Info className="w-5 h-5 text-gray-600" />;
+                return <Info className="w-5 h-5 text-gray-600 dark:text-gray-400" />;
         }
     };
 
     const getPriorityBadge = (priority) => {
         const styles = {
-            high: 'bg-red-100 text-red-800 border-red-200',
-            urgent: 'bg-red-100 text-red-800 border-red-200',
-            normal: 'bg-blue-100 text-blue-800 border-blue-200',
-            low: 'bg-gray-100 text-gray-800 border-gray-200'
+            high: 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800',
+            urgent: 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800',
+            normal: 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+            low: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600'
         };
 
         return (
@@ -68,9 +68,9 @@ const NotificationCard = ({ notification, index }) => {
     };
 
     return (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
             <div className="flex items-start gap-4">
-                <div className="p-3 rounded-lg bg-gray-50">
+                <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
                     {getNotificationIcon(notification.notification_type, notification.priority)}
                 </div>
 
@@ -78,41 +78,41 @@ const NotificationCard = ({ notification, index }) => {
                     <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                                <h3 className="font-semibold text-gray-900">
+                                <h3 className="font-semibold text-gray-900 dark:text-white">
                                     {notification.notification_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                                 </h3>
                                 {getPriorityBadge(notification.priority)}
                             </div>
-                            <p className="text-sm text-gray-600">{payload.message}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{payload.message}</p>
                         </div>
                     </div>
 
                     {/* Vehicle Details */}
                     {(payload.vehicle_code || payload.make || payload.model) && (
-                        <div className="bg-gray-50 rounded-lg p-3 mb-2">
+                        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-2">
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
                                 {payload.vehicle_code && (
                                     <div>
-                                        <span className="text-gray-500">Vehicle:</span>
-                                        <span className="ml-1 font-medium text-gray-900">{payload.vehicle_code}</span>
+                                        <span className="text-gray-500 dark:text-gray-400">Vehicle:</span>
+                                        <span className="ml-1 font-medium text-gray-900 dark:text-white">{payload.vehicle_code}</span>
                                     </div>
                                 )}
                                 {payload.make && payload.model && (
                                     <div>
-                                        <span className="text-gray-500">Model:</span>
-                                        <span className="ml-1 font-medium text-gray-900">{payload.make} {payload.model}</span>
+                                        <span className="text-gray-500 dark:text-gray-400">Model:</span>
+                                        <span className="ml-1 font-medium text-gray-900 dark:text-white">{payload.make} {payload.model}</span>
                                     </div>
                                 )}
                                 {payload.year && (
                                     <div>
-                                        <span className="text-gray-500">Year:</span>
-                                        <span className="ml-1 font-medium text-gray-900">{payload.year}</span>
+                                        <span className="text-gray-500 dark:text-gray-400">Year:</span>
+                                        <span className="ml-1 font-medium text-gray-900 dark:text-white">{payload.year}</span>
                                     </div>
                                 )}
                                 {payload.chassis_id && (
                                     <div>
-                                        <span className="text-gray-500">Chassis:</span>
-                                        <span className="ml-1 font-medium text-gray-900">{payload.chassis_id}</span>
+                                        <span className="text-gray-500 dark:text-gray-400">Chassis:</span>
+                                        <span className="ml-1 font-medium text-gray-900 dark:text-white">{payload.chassis_id}</span>
                                     </div>
                                 )}
                             </div>
@@ -122,18 +122,18 @@ const NotificationCard = ({ notification, index }) => {
                     {/* Status Changes */}
                     {(payload.old_status && payload.new_status) && (
                         <div className="flex items-center gap-2 mb-2">
-                                <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded border border-gray-300">
+                                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded border border-gray-300 dark:border-gray-600">
                                     {payload.old_status.replace(/_/g, ' ')}
                                 </span>
                             <span className="text-gray-400">→</span>
-                            <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded border border-green-300">
+                            <span className="px-2 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-xs font-medium rounded border border-green-300 dark:border-green-800">
                                     {payload.new_status.replace(/_/g, ' ')}
                                 </span>
                         </div>
                     )}
 
                     {/* Customer/Supplier Info */}
-                    <div className="flex items-center justify-between text-xs text-gray-500">
+                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                         <div className="flex items-center gap-3">
                             {payload.customer_name && (
                                 <span>Customer: {payload.customer_name}</span>

@@ -153,9 +153,9 @@ const Dashboard = () => {
                  payload[0].payload.name.includes('Expenses'));
 
             return (
-                <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-lg">
-                    <p className="font-medium text-gray-900">{payload[0].name}</p>
-                    <p className="text-sm text-gray-600">
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-lg">
+                    <p className="font-medium text-gray-900 dark:text-white">{payload[0].name}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                         {isCurrency ? formatCurrency(payload[0].value) : payload[0].value}
                     </p>
                 </div>
@@ -165,22 +165,22 @@ const Dashboard = () => {
     };
 
     const StatCard = ({ title, value, icon: Icon, color, trend, trendValue, subtitle }) => (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 rounded-lg ${color.bg}`}>
-                    <Icon className={`w-6 h-6 ${color.text}`} />
+                <div className={`p-3 rounded-lg ${color.bg} ${color.darkBg || ''}`}>
+                    <Icon className={`w-6 h-6 ${color.text} ${color.darkText || ''}`} />
                 </div>
                 {trend && (
-                    <div className={`flex items-center gap-1 text-sm font-medium ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                    <div className={`flex items-center gap-1 text-sm font-medium ${trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                         {trend === 'up' ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                         {trendValue}
                     </div>
                 )}
             </div>
             <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-                <p className="text-3xl font-bold text-gray-900">{value}</p>
-                {subtitle && <p className="text-xs text-gray-500 mt-2">{subtitle}</p>}
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{title}</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
+                {subtitle && <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{subtitle}</p>}
             </div>
         </div>
     );
@@ -201,8 +201,8 @@ const Dashboard = () => {
             {/* Header */}
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
-                    <p className="text-gray-600 mt-1">Monitor your vehicle inventory and business metrics</p>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard Overview</h1>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">Monitor your vehicle inventory and business metrics</p>
                 </div>
                 <button
                     onClick={fetchData}
@@ -220,14 +220,14 @@ const Dashboard = () => {
                     title="Total Vehicles"
                     value={insights.totalVehicles}
                     icon={Car}
-                    color={{ bg: 'bg-blue-100', text: 'text-blue-600' }}
+                    color={{ bg: 'bg-blue-100', darkBg: 'dark:bg-blue-900/50', text: 'text-blue-600', darkText: 'dark:text-blue-400' }}
                     subtitle={`${insights.availableCount} available for sale`}
                 />
                 <StatCard
                     title="Sold Vehicles"
                     value={insights.soldCount}
                     icon={DollarSign}
-                    color={{ bg: 'bg-green-100', text: 'text-green-600' }}
+                    color={{ bg: 'bg-green-100', darkBg: 'dark:bg-green-900/50', text: 'text-green-600', darkText: 'dark:text-green-400' }}
                     trend="up"
                     trendValue={`${insights.soldRate}%`}
                     subtitle="Sales conversion rate"
@@ -236,49 +236,49 @@ const Dashboard = () => {
                     title="In Transit"
                     value={insights.inTransitCount}
                     icon={Ship}
-                    color={{ bg: 'bg-purple-100', text: 'text-purple-600' }}
+                    color={{ bg: 'bg-purple-100', darkBg: 'dark:bg-purple-900/50', text: 'text-purple-600', darkText: 'dark:text-purple-400' }}
                     subtitle={`${insights.deliveredCount} delivered`}
                 />
                 <StatCard
                     title="Total Expenses"
                     value={formatCurrency(insights.totalExpenses)}
                     icon={BarChart3}
-                    color={{ bg: 'bg-orange-100', text: 'text-orange-600' }}
+                    color={{ bg: 'bg-orange-100', darkBg: 'dark:bg-orange-900/50', text: 'text-orange-600', darkText: 'dark:text-orange-400' }}
                     subtitle="Duties, charges & clearing"
                 />
             </div>
 
             {/* Secondary Metrics */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-                    <p className="text-sm text-gray-600 mb-1">Available</p>
-                    <p className="text-2xl font-bold text-green-600">{insights.availableCount}</p>
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Available</p>
+                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">{insights.availableCount}</p>
                 </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-                    <p className="text-sm text-gray-600 mb-1">Reserved</p>
-                    <p className="text-2xl font-bold text-yellow-600">{insights.reservedCount}</p>
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Reserved</p>
+                    <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{insights.reservedCount}</p>
                 </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-                    <p className="text-sm text-gray-600 mb-1">Processing</p>
-                    <p className="text-2xl font-bold text-orange-600">{insights.processingCount}</p>
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Processing</p>
+                    <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{insights.processingCount}</p>
                 </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-                    <p className="text-sm text-gray-600 mb-1">Arrived</p>
-                    <p className="text-2xl font-bold text-purple-600">{insights.arrivedCount}</p>
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Arrived</p>
+                    <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{insights.arrivedCount}</p>
                 </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-                    <p className="text-sm text-gray-600 mb-1">Cleared</p>
-                    <p className="text-2xl font-bold text-blue-600">{insights.clearedCount}</p>
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Cleared</p>
+                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{insights.clearedCount}</p>
                 </div>
             </div>
 
             {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Sales Status Chart */}
-                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
                     <div className="mb-6">
-                        <h3 className="text-lg font-semibold text-gray-900">Sales Status Distribution</h3>
-                        <p className="text-sm text-gray-600 mt-1">Current inventory status breakdown</p>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Sales Status Distribution</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Current inventory status breakdown</p>
                     </div>
                     <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
@@ -307,8 +307,8 @@ const Dashboard = () => {
                                     style={{ backgroundColor: item.color }}
                                 />
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm text-gray-600 truncate">{item.name}</p>
-                                    <p className="text-lg font-bold text-gray-900">{item.value}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{item.name}</p>
+                                    <p className="text-lg font-bold text-gray-900 dark:text-white">{item.value}</p>
                                 </div>
                             </div>
                         ))}
@@ -316,10 +316,10 @@ const Dashboard = () => {
                 </div>
 
                 {/* Shipping Status Chart */}
-                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
                     <div className="mb-6">
-                        <h3 className="text-lg font-semibold text-gray-900">Shipping Status</h3>
-                        <p className="text-sm text-gray-600 mt-1">Current shipping pipeline overview</p>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Shipping Status</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Current shipping pipeline overview</p>
                     </div>
                     <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
@@ -348,8 +348,8 @@ const Dashboard = () => {
                                     style={{ backgroundColor: item.color }}
                                 />
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm text-gray-600 truncate">{item.name}</p>
-                                    <p className="text-lg font-bold text-gray-900">{item.value}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{item.name}</p>
+                                    <p className="text-lg font-bold text-gray-900 dark:text-white">{item.value}</p>
                                 </div>
                             </div>
                         ))}
@@ -360,17 +360,17 @@ const Dashboard = () => {
             {/* Additional Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Vehicle Brands Chart */}
-                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
                     <div className="mb-6">
-                        <h3 className="text-lg font-semibold text-gray-900">Vehicle Brands</h3>
-                        <p className="text-sm text-gray-600 mt-1">Inventory breakdown by manufacturer</p>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Vehicle Brands</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Inventory breakdown by manufacturer</p>
                     </div>
                     <div className="flex justify-center">
                         <ResponsiveContainer width="80%" height={250}>
                             <BarChart data={vehicleStatsSummary.data}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
+                                <CartesianGrid strokeDasharray="3 3" className="dark:opacity-30" />
+                                <XAxis dataKey="name" tick={{ fill: 'currentColor' }} className="text-gray-600 dark:text-gray-400" />
+                                <YAxis tick={{ fill: 'currentColor' }} className="text-gray-600 dark:text-gray-400" />
                                 <Tooltip content={<CustomTooltip />} />
                                 <Bar dataKey="value" radius={[8, 8, 0, 0]} barSize={30}>
                                     {vehicleStatsSummary.data.map((entry, index) => (
@@ -383,17 +383,17 @@ const Dashboard = () => {
                 </div>
 
                 {/* Financial Breakdown Chart */}
-                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
                     <div className="mb-6">
-                        <h3 className="text-lg font-semibold text-gray-900">Financial Breakdown</h3>
-                        <p className="text-sm text-gray-600 mt-1">Total expenses by category</p>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Financial Breakdown</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Total expenses by category</p>
                     </div>
                     <div className="flex justify-center">
                         <ResponsiveContainer width="80%" height={250}>
                             <BarChart data={financialSummary.data}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
+                                <CartesianGrid strokeDasharray="3 3" className="dark:opacity-30" />
+                                <XAxis dataKey="name" tick={{ fill: 'currentColor' }} className="text-gray-600 dark:text-gray-400" />
+                                <YAxis tick={{ fill: 'currentColor' }} className="text-gray-600 dark:text-gray-400" />
                                 <Tooltip content={<CustomTooltip />} />
                                 <Bar dataKey="value" radius={[8, 8, 0, 0]} barSize={30}>
                                     {financialSummary.data.map((entry, index) => (
@@ -405,15 +405,15 @@ const Dashboard = () => {
                     </div>
                     <div className="mt-6 space-y-2">
                         {financialSummary.data.map((item, index) => (
-                            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                 <div className="flex items-center gap-2">
                                     <div
                                         className="w-3 h-3 rounded-full"
                                         style={{ backgroundColor: item.color }}
                                     />
-                                    <span className="text-sm text-gray-700">{item.name}</span>
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">{item.name}</span>
                                 </div>
-                                <span className="text-sm font-bold text-gray-900">{formatCurrency(item.value)}</span>
+                                <span className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(item.value)}</span>
                             </div>
                         ))}
                     </div>
@@ -421,32 +421,32 @@ const Dashboard = () => {
             </div>
 
             {/* Quick Insights */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Insights</h3>
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-800 rounded-xl border border-blue-200 dark:border-gray-700 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Insights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <div className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                         <div className="flex items-center gap-2 mb-2">
-                            <ArrowUpRight className="w-5 h-5 text-green-600" />
-                            <p className="text-sm font-medium text-gray-600">Sales Performance</p>
+                            <ArrowUpRight className="w-5 h-5 text-green-600 dark:text-green-400" />
+                            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Sales Performance</p>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{insights.soldRate}%</p>
-                        <p className="text-xs text-gray-500 mt-1">{insights.soldCount} of {insights.totalVehicles} vehicles sold</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{insights.soldRate}%</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{insights.soldCount} of {insights.totalVehicles} vehicles sold</p>
                     </div>
-                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <div className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                         <div className="flex items-center gap-2 mb-2">
-                            <Package className="w-5 h-5 text-blue-600" />
-                            <p className="text-sm font-medium text-gray-600">Delivery Rate</p>
+                            <Package className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Delivery Rate</p>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{insights.deliveryRate}%</p>
-                        <p className="text-xs text-gray-500 mt-1">{insights.deliveredCount} vehicles successfully delivered</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{insights.deliveryRate}%</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{insights.deliveredCount} vehicles successfully delivered</p>
                     </div>
-                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <div className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                         <div className="flex items-center gap-2 mb-2">
-                            <Ship className="w-5 h-5 text-purple-600" />
-                            <p className="text-sm font-medium text-gray-600">Active Shipments</p>
+                            <Ship className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Active Shipments</p>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{insights.inTransitCount}</p>
-                        <p className="text-xs text-gray-500 mt-1">Currently in transit</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{insights.inTransitCount}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Currently in transit</p>
                     </div>
                 </div>
             </div>
