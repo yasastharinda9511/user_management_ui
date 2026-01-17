@@ -49,16 +49,6 @@ const CarInformationSection = ({
                 updateField={updateField}
             />
             <EditableField
-                label="Auction Price"
-                value={formatCurrency(editedData.vehicle?.auction_price || '' , editedData.vehicle?.currency ||'LKR')}
-                section="vehicle"
-                field="auction_price"
-                type="number"
-                isEditing={editingSection !== null}
-                currentValue={editedData.vehicle?.auction_price || ''}
-                updateField={updateField}
-            />
-            <EditableField
                 label="Year"
                 value={editedData.vehicle?.year_of_manufacture || ''}
                 section="vehicle"

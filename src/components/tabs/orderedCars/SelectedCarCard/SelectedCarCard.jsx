@@ -401,8 +401,13 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                         vehicleId: vehicle.current.id,
                         financialData: editedData.financials,
                     })).unwrap();
+                    await dispatch(updateVehicle({
+                        vehicleId: vehicle.current.id,
+                        updateData: editedData.vehicle,
+                    })).unwrap();
                     setOriginalData(prev =>({
                         ...prev,
+                        ["vehicle"]: editedData.vehicle,
                         ["financials"]: editedData.financials,
                         ["sales"]: editedData.sales,
                     }));
@@ -980,7 +985,7 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                                     boxShadow: '0 4px 6px -1px rgba(34, 197, 94, 0.4), 0 2px 4px -1px rgba(34, 197, 94, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.4)'
                                                 }}
                                             >
-                                                💾 Save Changes
+                                                💾 Save
                                             </button>
                                             <button
                                                 onClick={cancelEdit}
