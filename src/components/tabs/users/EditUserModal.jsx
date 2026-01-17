@@ -64,30 +64,30 @@ const EditUserModal = ({ user, onClose }) => {
     };
 
     return (
-        <div className={`modal-backdrop fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
+        <div className={`modal-backdrop fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
             {/* Modal container */}
             <div className="flex min-h-full items-center justify-center p-4">
                 {/* Modal panel */}
-                <div className={`modal-content relative bg-white rounded-lg shadow-xl transform transition-all w-full max-w-2xl ${isClosing ? 'closing' : ''}`}>
+                <div className={`modal-content relative bg-white dark:bg-gray-800 rounded-lg shadow-xl transform transition-all w-full max-w-2xl ${isClosing ? 'closing' : ''}`}>
                     {/* Header */}
-                    <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <User className="w-6 h-6 text-blue-600" />
+                                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center">
+                                    <User className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900">
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                         Edit User
                                     </h3>
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
                                         Update user details and role assignment
                                     </p>
                                 </div>
                             </div>
                             <button
                                 onClick={handleClose}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                             >
                                 <X className="w-6 h-6" />
                             </button>
@@ -99,21 +99,21 @@ const EditUserModal = ({ user, onClose }) => {
                         <div className="space-y-6">
                             {/* User ID (read-only) */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     User ID
                                 </label>
                                 <input
                                     type="text"
                                     value={user.id}
                                     disabled
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
                                 />
                             </div>
 
                             {/* Name Fields */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         First Name *
                                     </label>
                                     <input
@@ -122,13 +122,13 @@ const EditUserModal = ({ user, onClose }) => {
                                         value={formData.first_name}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         placeholder="John"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Last Name *
                                     </label>
                                     <input
@@ -137,7 +137,7 @@ const EditUserModal = ({ user, onClose }) => {
                                         value={formData.last_name}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         placeholder="Doe"
                                     />
                                 </div>
@@ -145,7 +145,7 @@ const EditUserModal = ({ user, onClose }) => {
 
                             {/* Contact Fields */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     <div className="flex items-center space-x-2">
                                         <Mail className="w-4 h-4" />
                                         <span>Email *</span>
@@ -157,13 +157,13 @@ const EditUserModal = ({ user, onClose }) => {
                                     value={formData.email}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     placeholder="john.doe@example.com"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     <div className="flex items-center space-x-2">
                                         <Phone className="w-4 h-4" />
                                         <span>Phone</span>
@@ -174,7 +174,7 @@ const EditUserModal = ({ user, onClose }) => {
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     placeholder="1234567890"
                                 />
                             </div>
@@ -182,7 +182,7 @@ const EditUserModal = ({ user, onClose }) => {
                             {/* Role Selection and Status */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         <div className="flex items-center space-x-2">
                                             <Shield className="w-4 h-4" />
                                             <span>Role</span>
@@ -192,7 +192,7 @@ const EditUserModal = ({ user, onClose }) => {
                                         name="role_id"
                                         value={formData.role_id}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                     >
                                         <option value="">No Role Assigned</option>
                                         {roles.map(role => (
@@ -202,14 +202,14 @@ const EditUserModal = ({ user, onClose }) => {
                                         ))}
                                     </select>
                                     {formData.role_id && (
-                                        <p className="text-xs text-gray-500 mt-1">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                             Selected role will define user permissions
                                         </p>
                                     )}
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Status
                                     </label>
                                     <button
@@ -217,8 +217,8 @@ const EditUserModal = ({ user, onClose }) => {
                                         onClick={handleToggleActive}
                                         className={`w-full px-3 py-2 rounded-lg font-medium text-sm transition-colors ${
                                             formData.is_active
-                                                ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                                                : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                                ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900/70'
+                                                : 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/70'
                                         }`}
                                     >
                                         {formData.is_active ? 'Active' : 'Inactive'}
@@ -229,25 +229,25 @@ const EditUserModal = ({ user, onClose }) => {
                             {/* Username (read-only) */}
                             {user.username && (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Username
                                     </label>
                                     <input
                                         type="text"
                                         value={user.username}
                                         disabled
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
                                     />
                                 </div>
                             )}
                         </div>
 
                         {/* Footer */}
-                        <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
+                        <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className={`modal-content px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors ${isClosing ? 'closing' : ''}`}
+                                className={`modal-content px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors ${isClosing ? 'closing' : ''}`}
                             >
                                 Cancel
                             </button>

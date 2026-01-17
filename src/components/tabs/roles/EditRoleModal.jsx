@@ -94,30 +94,30 @@ const EditRoleModal = ({ role, onClose }) => {
     };
 
     return (
-        <div className={`modal-backdrop fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
+        <div className={`modal-backdrop fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
             {/* Modal container */}
             <div className="flex min-h-full items-center justify-center p-4">
                 {/* Modal panel */}
-                <div className={`modal-content relative bg-white rounded-lg shadow-xl transform transition-all w-full max-w-4xl ${isClosing ? 'closing' : ''}`}>
+                <div className={`modal-content relative bg-white dark:bg-gray-800 rounded-lg shadow-xl transform transition-all w-full max-w-4xl ${isClosing ? 'closing' : ''}`}>
                     {/* Header */}
-                    <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                    <Shield className="w-6 h-6 text-purple-600" />
+                                <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/50 rounded-lg flex items-center justify-center">
+                                    <Shield className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900">
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                         Edit Role
                                     </h3>
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
                                         Update role details and permissions
                                     </p>
                                 </div>
                             </div>
                             <button
                                 onClick={handleClose}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                             >
                                 <X className="w-6 h-6" />
                             </button>
@@ -131,7 +131,7 @@ const EditRoleModal = ({ role, onClose }) => {
                             {/* Basic Info */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Role Name *
                                     </label>
                                     <input
@@ -140,26 +140,26 @@ const EditRoleModal = ({ role, onClose }) => {
                                         value={formData.name}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                                         placeholder="e.g., admin, manager"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Role ID
                                     </label>
                                     <input
                                         type="text"
                                         value={role.id}
                                         disabled
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Description
                                 </label>
                                 <textarea
@@ -167,7 +167,7 @@ const EditRoleModal = ({ role, onClose }) => {
                                     value={formData.description}
                                     onChange={handleInputChange}
                                     rows="3"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                                     placeholder="Describe the role and its purpose..."
                                 />
                             </div>
@@ -175,13 +175,13 @@ const EditRoleModal = ({ role, onClose }) => {
                             {/* Permissions Section */}
                             <div>
                                 <div className="flex items-center justify-between mb-4">
-                                    <label className="block text-sm font-medium text-gray-700">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                         Permissions ({selectedPermissions.length} selected)
                                     </label>
                                     <button
                                         type="button"
                                         onClick={handleSelectAll}
-                                        className="text-sm text-purple-600 hover:text-purple-700 font-medium"
+                                        className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium"
                                     >
                                         {selectedPermissions.length === allPermissions.length ? 'Deselect All' : 'Select All'}
                                     </button>
@@ -192,36 +192,36 @@ const EditRoleModal = ({ role, onClose }) => {
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
                                     </div>
                                 ) : (
-                                    <div className="border border-gray-200 rounded-lg max-h-96 overflow-y-auto">
+                                    <div className="border border-gray-200 dark:border-gray-600 rounded-lg max-h-96 overflow-y-auto">
                                         {Object.keys(groupedPermissions).map(resource => (
-                                            <div key={resource} className="border-b border-gray-200 last:border-b-0">
-                                                <div className="bg-gray-50 px-4 py-2 font-medium text-sm text-gray-700 uppercase">
+                                            <div key={resource} className="border-b border-gray-200 dark:border-gray-600 last:border-b-0">
+                                                <div className="bg-gray-50 dark:bg-gray-700 px-4 py-2 font-medium text-sm text-gray-700 dark:text-gray-300 uppercase">
                                                     {resource}
                                                 </div>
                                                 <div className="px-4 py-2 space-y-2">
                                                     {groupedPermissions[resource].map(permission => (
                                                         <label
                                                             key={permission.id}
-                                                            className="flex items-start space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                                                            className="flex items-start space-x-3 p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg cursor-pointer"
                                                         >
                                                             <div className="flex-shrink-0 mt-0.5">
                                                                 {selectedPermissions.includes(permission.id) ? (
-                                                                    <CheckSquare className="w-5 h-5 text-purple-600" />
+                                                                    <CheckSquare className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                                                                 ) : (
                                                                     <Square className="w-5 h-5 text-gray-400" />
                                                                 )}
                                                             </div>
                                                             <div className="flex-1">
                                                                 <div className="flex items-center space-x-2">
-                                                                    <span className="text-sm font-medium text-gray-900">
+                                                                    <span className="text-sm font-medium text-gray-900 dark:text-white">
                                                                         {permission.action}
                                                                     </span>
-                                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">
                                                                         {permission.name}
                                                                     </span>
                                                                 </div>
                                                                 {permission.description && (
-                                                                    <p className="text-xs text-gray-500 mt-1">
+                                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                                                         {permission.description}
                                                                     </p>
                                                                 )}
@@ -243,11 +243,11 @@ const EditRoleModal = ({ role, onClose }) => {
                         </div>
 
                         {/* Footer */}
-                        <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
+                        <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className={`modal-content px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors ${isClosing ? 'closing' : ''}`}
+                                className={`modal-content px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors ${isClosing ? 'closing' : ''}`}
                             >
                                 Cancel
                             </button>

@@ -695,22 +695,22 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Trim Level</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Trim Level</label>
                                         <input
                                             type="text"
                                             value={vehicleForm.trim_level}
                                             onChange={(e) => handleFormChange('trim_level', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., XLE, S, G, Hybrid"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Year of Manufacture *</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Year of Manufacture *</label>
                                         <select
                                             value={vehicleForm.year_of_manufacture}
                                             onChange={(e) => handleFormChange('year_of_manufacture', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         >
                                             {Array.from({ length: 15 }, (_, i) => new Date().getFullYear() - i).map(year => (
                                                 <option key={year} value={year}>{year}</option>
@@ -719,44 +719,44 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Color *</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Color *</label>
                                         <input
                                             type="text"
                                             value={vehicleForm.color}
                                             onChange={(e) => handleFormChange('color', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., Pearl White, Silver, Black"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Mileage (km)</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Mileage (km)</label>
                                         <input
                                             type="number"
                                             value={vehicleForm.mileage_km}
                                             onChange={(e) => handleFormChange('mileage_km', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., 5000"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Chassis ID (REF17)</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chassis ID (REF17)</label>
                                         <input
                                             type="text"
                                             value={vehicleForm.chassis_id}
                                             onChange={(e) => handleFormChange('chassis_id', e.target.value.toUpperCase())}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., JTDEPRAE5NJ123458"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Condition Status</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Condition Status</label>
                                         <select
                                             value={vehicleForm.condition_status}
                                             onChange={(e) => handleFormChange('condition_status', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         >
                                             <option value="UNREGISTERED">Unregistered</option>
                                             <option value="REGISTERED">Registered</option>
@@ -764,58 +764,58 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Auction Grade</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Auction Grade</label>
                                         <input
                                             type="text"
                                             value={vehicleForm.auction_grade}
                                             onChange={(e) => handleFormChange('auction_grade', e.target.value.toUpperCase())}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., 4/B, 4.5/B, 5/A, 5AA, 6AA"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Auction Price</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Auction Price</label>
                                         <input
                                             type="number"
                                             step="0.01"
                                             value={vehicleForm.auction_price}
                                             onChange={(e) => handleFormChange('auction_price', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., 1500000.00"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Quoted Price</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quoted Price</label>
                                         <input
                                             type="number"
                                             step="0.01"
                                             value={vehicleForm.quoted_price}
                                             onChange={(e) => handleFormChange('quoted_price', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., 2000000.00"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">CIF Value</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">CIF Value</label>
                                         <input
                                             type="number"
                                             step="0.01"
                                             value={vehicleForm.cif_value}
                                             onChange={(e) => handleFormChange('cif_value', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="e.g., 2500000.00"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Currency</label>
                                         <select
                                             value={vehicleForm.currency}
                                             onChange={(e) => handleFormChange('currency', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         >
                                             {currencies.map((currency) => (
                                                 <option key={currency} value={currency}>{currency}</option>
@@ -826,17 +826,17 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                             </div>
 
                             {/* Customer Selection Section */}
-                            <div className="bg-purple-50 rounded-lg p-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                    <UserCircle className="w-5 h-5 mr-2 text-purple-600" />
+                            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                                    <UserCircle className="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" />
                                     Customer Information (Optional)
                                 </h3>
 
                                 {selectedCustomer ? (
                                     <div className="space-y-3">
-                                        <div className="bg-white p-4 rounded-lg border border-purple-200">
+                                        <div className="bg-white dark:bg-gray-700 p-4 rounded-lg border border-purple-200 dark:border-purple-700">
                                             <div className="flex justify-between items-start mb-3">
-                                                <h4 className="text-sm font-semibold text-gray-900">Selected Customer</h4>
+                                                <h4 className="text-sm font-semibold text-gray-900 dark:text-white">Selected Customer</h4>
                                                 <div className="flex gap-2">
                                                     <button
                                                         type="button"
@@ -856,39 +856,39 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                             </div>
                                             <div className="space-y-2">
                                                 <div className="flex justify-between">
-                                                    <span className="text-sm text-gray-600">Name:</span>
-                                                    <span className="text-sm font-medium text-gray-900">
+                                                    <span className="text-sm text-gray-600 dark:text-gray-400">Name:</span>
+                                                    <span className="text-sm font-medium text-gray-900 dark:text-white">
                                                         {selectedCustomer.customer_title} {selectedCustomer.customer_name}
                                                     </span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-sm text-gray-600">Email:</span>
-                                                    <span className="text-sm font-medium text-gray-900">
+                                                    <span className="text-sm text-gray-600 dark:text-gray-400">Email:</span>
+                                                    <span className="text-sm font-medium text-gray-900 dark:text-white">
                                                         {selectedCustomer.email || 'N/A'}
                                                     </span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-sm text-gray-600">Phone:</span>
-                                                    <span className="text-sm font-medium text-gray-900">
+                                                    <span className="text-sm text-gray-600 dark:text-gray-400">Phone:</span>
+                                                    <span className="text-sm font-medium text-gray-900 dark:text-white">
                                                         {selectedCustomer.contact_number || 'N/A'}
                                                     </span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className="text-sm text-gray-600">Type:</span>
-                                                    <span className="text-sm font-medium text-gray-900">
+                                                    <span className="text-sm text-gray-600 dark:text-gray-400">Type:</span>
+                                                    <span className="text-sm font-medium text-gray-900 dark:text-white">
                                                         {selectedCustomer.customer_type || 'N/A'}
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <p className="text-xs text-gray-600 italic">
+                                        <p className="text-xs text-gray-600 dark:text-gray-400 italic">
                                             This vehicle will be assigned to this customer upon creation
                                         </p>
                                     </div>
                                 ) : (
                                     <div className="text-center py-8">
-                                        <UserCircle className="w-16 h-16 text-gray-400 mx-auto mb-3" />
-                                        <p className="text-sm text-gray-600 mb-4">
+                                        <UserCircle className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                                             No customer selected. You can assign a customer to this vehicle now or later.
                                         </p>
                                         <button
@@ -903,9 +903,9 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                             </div>
 
                             {/* Image Upload Section */}
-                            <div className="bg-green-50 rounded-lg p-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                    <Upload className="w-5 h-5 mr-2 text-green-600" />
+                            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                                    <Upload className="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
                                     Vehicle Images
                                 </h3>
 
@@ -913,17 +913,17 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                 <div
                                     className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                                         dragActive
-                                            ? 'border-blue-400 bg-blue-50'
-                                            : 'border-gray-300 hover:border-gray-400'
+                                            ? 'border-blue-400 bg-blue-50 dark:bg-blue-900/30'
+                                            : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
                                     }`}
                                     onDrop={handleDrop}
                                     onDragOver={handleDragOver}
                                     onDragLeave={handleDragLeave}
                                 >
-                                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                                    <p className="text-lg text-gray-600 mb-2">
+                                    <Upload className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">
                                         Drag and drop images here, or
-                                        <label className="text-blue-600 hover:text-blue-700 cursor-pointer ml-1">
+                                        <label className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 cursor-pointer ml-1">
                                             browse
                                             <input
                                                 type="file"
@@ -934,7 +934,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                             />
                                         </label>
                                     </p>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                         Support for JPG, PNG, GIF up to 10MB each
                                     </p>
                                 </div>
@@ -942,7 +942,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                 {/* Image Preview Grid */}
                                 {vehicleImages.length > 0 && (
                                     <div className="mt-6">
-                                        <h4 className="text-sm font-medium text-gray-700 mb-3">
+                                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                                             Uploaded Images ({vehicleImages.length})
                                         </h4>
                                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -951,7 +951,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                                     <img
                                                         src={image.preview}
                                                         alt={image.name}
-                                                        className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                                                        className="w-full h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
                                                     />
                                                     <div className="absolute inset-0 bg-black/50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                         <button
@@ -962,7 +962,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                                             <Trash2 className="w-4 h-4" />
                                                         </button>
                                                     </div>
-                                                    <p className="mt-1 text-xs text-gray-500 truncate">{image.name}</p>
+                                                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 truncate">{image.name}</p>
                                                 </div>
                                             ))}
                                         </div>
@@ -971,17 +971,17 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                             </div>
 
                             {/* Document Upload Section */}
-                            <div className="bg-blue-50 rounded-lg p-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                    <FileText className="w-5 h-5 mr-2 text-blue-600" />
+                            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                                    <FileText className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
                                     Vehicle Documents (LC, Invoices, etc.)
                                 </h3>
 
                                 {/* Upload Area */}
-                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                                    <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                                    <p className="text-lg text-gray-600 mb-2">
-                                        <label className="text-blue-600 hover:text-blue-700 cursor-pointer">
+                                <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-gray-400 dark:hover:border-gray-500 transition-colors">
+                                    <FileText className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">
+                                        <label className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 cursor-pointer">
                                             Click to upload documents
                                             <input
                                                 type="file"
@@ -992,7 +992,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                             />
                                         </label>
                                     </p>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                         Support for PDF, DOC, DOCX, JPG, PNG up to 10MB each
                                     </p>
                                 </div>
@@ -1000,24 +1000,24 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                 {/* Document List */}
                                 {vehicleDocuments.length > 0 && (
                                     <div className="mt-6">
-                                        <h4 className="text-sm font-medium text-gray-700 mb-3">
+                                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                                             Documents to Upload ({vehicleDocuments.length})
                                         </h4>
                                         <div className="space-y-2">
                                             {vehicleDocuments.map((doc) => (
-                                                <div key={doc.id} className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                                                <div key={doc.id} className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                                                     <div className="flex items-center space-x-3 flex-1 min-w-0">
-                                                        <FileText className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                                                        <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
                                                         <div className="flex-1 min-w-0">
-                                                            <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
-                                                            <p className="text-xs text-gray-500">
+                                                            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{doc.name}</p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-400">
                                                                 {(doc.size / 1024 / 1024).toFixed(2)} MB
                                                             </p>
                                                         </div>
                                                         <select
                                                             value={doc.documentType}
                                                             onChange={(e) => updateDocumentType(doc.id, e.target.value)}
-                                                            className="text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                            className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                         >
                                                             {getAllDocumentTypes().map(docType => (
                                                                 <option key={docType} value={docType}>{docType}</option>
@@ -1027,7 +1027,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                                                     <button
                                                         type="button"
                                                         onClick={() => removeDocument(doc.id)}
-                                                        className="ml-3 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                                                        className="ml-3 p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors flex-shrink-0"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
@@ -1039,11 +1039,11 @@ const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+                            <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
                                 <button
                                     type="button"
                                     onClick={handleClose}
-                                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                                    className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
                                 >
                                     Cancel
                                 </button>

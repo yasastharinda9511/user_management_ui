@@ -62,28 +62,28 @@ const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="space-y-6">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-                        <p className="text-gray-600 mt-2">Manage your account information.</p>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Profile</h1>
+                        <p className="text-gray-600 dark:text-gray-400 mt-2">Manage your account information.</p>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 lg:p-8">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 lg:p-8">
                         {/* Header with Avatar and Basic Info */}
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8 pb-6 border-b border-gray-200">
-                            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                <span className="text-2xl font-bold text-blue-600">{getInitials()}</span>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
+                            <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">{getInitials()}</span>
                             </div>
                             <div className="flex-grow">
-                                <h2 className="text-2xl font-bold text-gray-900">{getFullName()}</h2>
-                                <p className="text-gray-600">{user?.email}</p>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{getFullName()}</h2>
+                                <p className="text-gray-600 dark:text-gray-400">{user?.email}</p>
                                 <div className="flex items-center mt-2 space-x-4">
-                                    <span className={`px-2 py-1 text-xs rounded-full ${user?.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                    <span className={`px-2 py-1 text-xs rounded-full ${user?.is_active ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300'}`}>
                                         {user?.is_active ? 'Active' : 'Inactive'}
                                     </span>
-                                    <span className={`px-2 py-1 text-xs rounded-full ${user?.is_email_verified ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                    <span className={`px-2 py-1 text-xs rounded-full ${user?.is_email_verified ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300' : 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300'}`}>
                                         {user?.is_email_verified ? 'Email Verified' : 'Email Not Verified'}
                                     </span>
                                 </div>
@@ -118,91 +118,91 @@ const Profile = () => {
                         {/* Form Fields */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name</label>
                                 <input
                                     type="text"
                                     value={isEditing ? editedUser.first_name : (user?.first_name || '')}
                                     onChange={(e) => handleInputChange('first_name', e.target.value)}
-                                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${!isEditing ? 'bg-gray-50' : 'bg-white'}`}
+                                    className={`w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white ${!isEditing ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-700'}`}
                                     readOnly={!isEditing}
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
                                 <input
                                     type="text"
                                     value={isEditing ? editedUser.last_name : (user?.last_name || '')}
                                     onChange={(e) => handleInputChange('last_name', e.target.value)}
-                                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${!isEditing ? 'bg-gray-50' : 'bg-white'}`}
+                                    className={`w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white ${!isEditing ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-700'}`}
                                     readOnly={!isEditing}
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Username</label>
                                 <input
                                     type="text"
                                     value={user?.username || ''}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
                                     readOnly
                                 />
-                                <p className="text-xs text-gray-500 mt-1">Username cannot be changed</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Username cannot be changed</p>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
                                 <input
                                     type="email"
                                     value={isEditing ? editedUser.email : (user?.email || '')}
                                     onChange={(e) => handleInputChange('email', e.target.value)}
-                                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${!isEditing ? 'bg-gray-50' : 'bg-white'}`}
+                                    className={`w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white ${!isEditing ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-700'}`}
                                     readOnly={!isEditing}
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone</label>
                                 <input
                                     type="tel"
                                     value={isEditing ? editedUser.phone : (user?.phone || '')}
                                     onChange={(e) => handleInputChange('phone', e.target.value)}
-                                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${!isEditing ? 'bg-gray-50' : 'bg-white'}`}
+                                    className={`w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white ${!isEditing ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-700'}`}
                                     readOnly={!isEditing}
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">User ID</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">User ID</label>
                                 <input
                                     type="text"
                                     value={user?.id || ''}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
                                     readOnly
                                 />
                             </div>
                         </div>
 
                         {/* Account Information */}
-                        <div className="border-t border-gray-200 pt-6">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">Account Information</h3>
+                        <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Account Information</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Created At</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Created At</label>
                                     <input
                                         type="text"
                                         value={formatDate(user?.created_at)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
                                         readOnly
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Last Login</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Login</label>
                                     <input
                                         type="text"
                                         value={formatDate(user?.last_login)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
                                         readOnly
                                     />
                                 </div>

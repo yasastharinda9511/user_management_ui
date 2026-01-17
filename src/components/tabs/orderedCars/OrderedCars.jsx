@@ -205,21 +205,21 @@ const OrderedCars = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Car Deals Dashboard</h1>
-                    <p className="text-gray-600 mt-2">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Car Deals Dashboard</h1>
+                    <p className="text-gray-600 dark:text-gray-400 mt-2">
                         Track imported car orders from Japan - Shipping, clearing, and sales management
                     </p>
                 </div>
                 <div className="flex items-center gap-4 relative">
 
                     {/* View Mode Toggle */}
-                    <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                    <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                         <button
                             onClick={() => toggleViewMode('grid')}
                             className={`p-2 rounded transition-colors ${
                                 viewMode === 'grid'
-                                    ? 'bg-white text-blue-600 shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                             }`}
                             title="Grid View"
                         >
@@ -229,8 +229,8 @@ const OrderedCars = () => {
                             onClick={() => toggleViewMode('list')}
                             className={`p-2 rounded transition-colors ${
                                 viewMode === 'list'
-                                    ? 'bg-white text-blue-600 shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                             }`}
                             title="List View"
                         >
@@ -244,7 +244,7 @@ const OrderedCars = () => {
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-medium ${
                             filters.is_featured
                                 ? 'bg-yellow-500 text-white hover:bg-yellow-600'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                         }`}
                         title={filters.is_featured ? 'Show all vehicles' : 'Show featured only'}
                     >
@@ -257,7 +257,7 @@ const OrderedCars = () => {
                         className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors font-medium ${
                             showFilters || hasActiveFilters
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                         }`}
                     >
                         <span>Filters</span>
@@ -287,9 +287,9 @@ const OrderedCars = () => {
                 {/* No Results */}
                 {!loading && vehicles.length === 0 && (
                     <div className="text-center py-12">
-                        <Car className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No vehicles found</h3>
-                        <p className="text-gray-600 mb-4">
+                        <Car className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No vehicles found</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">
                             {hasActiveFilters
                                 ? 'Try adjusting your filters to see more results.'
                                 : 'No vehicles available at the moment.'
@@ -298,7 +298,7 @@ const OrderedCars = () => {
                         {hasActiveFilters && (
                             <button
                                 onClick={clearFilters}
-                                className="text-blue-600 hover:text-blue-800 font-medium"
+                                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
                             >
                                 Clear all filters
                             </button>
@@ -360,7 +360,7 @@ const OrderedCars = () => {
                                 <button
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     disabled={currentPage === 1}
-                                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
                                     <ChevronLeft className="w-4 h-4 mr-1" />
                                     Previous
@@ -383,14 +383,14 @@ const OrderedCars = () => {
                                     <button
                                         key={1}
                                         onClick={() => handlePageChange(1)}
-                                        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                        className="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                                     >
                                         1
                                     </button>
                                 );
                                 if (startPage > 2) {
                                     pageNumbers.push(
-                                        <span key="start-ellipsis" className="px-2 text-gray-500">...</span>
+                                        <span key="start-ellipsis" className="px-2 text-gray-500 dark:text-gray-400">...</span>
                                     );
                                 }
                             }
@@ -403,7 +403,7 @@ const OrderedCars = () => {
                                         className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                                             currentPage === i
                                                 ? 'bg-blue-600 text-white border border-blue-600'
-                                                : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                                                : 'text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
                                         }`}
                                     >
                                         {i}
@@ -414,14 +414,14 @@ const OrderedCars = () => {
                             if (endPage < totalPages) {
                                 if (endPage < totalPages - 1) {
                                     pageNumbers.push(
-                                        <span key="end-ellipsis" className="px-2 text-gray-500">...</span>
+                                        <span key="end-ellipsis" className="px-2 text-gray-500 dark:text-gray-400">...</span>
                                     );
                                 }
                                 pageNumbers.push(
                                     <button
                                         key={totalPages}
                                         onClick={() => handlePageChange(totalPages)}
-                                        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                        className="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                                     >
                                         {totalPages}
                                     </button>
@@ -436,7 +436,7 @@ const OrderedCars = () => {
                                 <button
                                     onClick={() => handlePageChange(currentPage + 1)}
                                     disabled={currentPage === totalPages}
-                                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
                                     Next
                                     <ChevronRight className="w-4 h-4 ml-1" />
@@ -446,14 +446,14 @@ const OrderedCars = () => {
 
                         {/* Items per page selector - Right side */}
                         <div className="flex items-center gap-2">
-                            <label htmlFor="pageLimit" className="text-sm font-medium text-gray-700">
+                            <label htmlFor="pageLimit" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Items per page:
                             </label>
                             <select
                                 id="pageLimit"
                                 value={pageLimit}
                                 onChange={(e) => handlePageLimitChange(e.target.value)}
-                                className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="6">6</option>
                                 <option value="9">9</option>

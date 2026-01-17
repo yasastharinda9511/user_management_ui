@@ -100,15 +100,15 @@ const Filter = ({closeModal}) => {
     }
     return(
         <div ref={filterRef} className="absolute right-0 top-full mt-2 w-[60vw] max-w-4xl z-50">
-            <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-2xl border border-gray-200 max-h-[80vh] overflow-y-auto backdrop-blur-sm" style={{
+            <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[80vh] overflow-y-auto backdrop-blur-sm" style={{
                 boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.5)'
             }}>
-                <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
-                    <h3 className="text-xl font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">Filter Options</h3>
+                <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">Filter Options</h3>
                     <div className="flex items-center gap-2">
                         <button
                             onClick={closeModal}
-                            className="text-gray-400 hover:text-gray-600 transition-all hover:rotate-90 duration-300 p-2 rounded-lg hover:bg-gray-100"
+                            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-all hover:rotate-90 duration-300 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -118,7 +118,7 @@ const Filter = ({closeModal}) => {
                 <div className="space-y-6">
                     {/* Search */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Search</label>
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                             <input
@@ -126,25 +126,25 @@ const Filter = ({closeModal}) => {
                                 placeholder="Search by make, model, or VIN..."
                                 value={pendingFilters.search}
                                 onChange={(e) => handleFilterChange('search', e.target.value)}
-                                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
                     </div>
 
                     {/* Vehicle Details */}
-                    <div className="bg-white/50 p-4 rounded-lg shadow-sm border border-gray-100">
-                        <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <div className="bg-white/50 dark:bg-gray-700/50 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-600">
+                        <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
                             <span className="w-1 h-4 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></span>
                             Vehicle Details
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                             {/* Brand */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Brand</label>
                                 <select
                                     value={pendingFilters.make}
                                     onChange={(e) => handleFilterChange('make', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Brands</option>
                                     {loadingOptions ? (
@@ -159,11 +159,11 @@ const Filter = ({closeModal}) => {
 
                             {/* Model */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Model</label>
                                 <select
                                     value={pendingFilters.model}
                                     onChange={(e) => handleFilterChange('model', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Models</option>
                                     {loadingOptions ? (
@@ -179,11 +179,11 @@ const Filter = ({closeModal}) => {
 
                             {/* Transmission */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Transmission</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Transmission</label>
                                 <select
                                     value={pendingFilters.transmission}
                                     onChange={(e) => handleFilterChange('transmission', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Types</option>
                                     {loadingOptions ? (
@@ -198,11 +198,11 @@ const Filter = ({closeModal}) => {
 
                             {/* Fuel Type */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Fuel Type</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fuel Type</label>
                                 <select
                                     value={pendingFilters.fuelType}
                                     onChange={(e) => handleFilterChange('fuelType', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Types</option>
                                     {loadingOptions ? (
@@ -217,11 +217,11 @@ const Filter = ({closeModal}) => {
 
                             {/* Shipping Status */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Shipping Status</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Shipping Status</label>
                                 <select
                                     value={pendingFilters.shipping_status}
                                     onChange={(e) => handleFilterChange('shipping_status', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Statuses</option>
                                     {loadingOptions ? (
@@ -236,11 +236,11 @@ const Filter = ({closeModal}) => {
 
                             {/* Sale Status */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Sale Status</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sale Status</label>
                                 <select
                                     value={pendingFilters.sale_status}
                                     onChange={(e) => handleFilterChange('sale_status', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Statuses</option>
                                     {loadingOptions ? (
@@ -255,11 +255,11 @@ const Filter = ({closeModal}) => {
 
                             {/* Purchase Status */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Purchase Status</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Purchase Status</label>
                                 <select
                                     value={pendingFilters.purchase_status}
                                     onChange={(e) => handleFilterChange('purchase_status', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Statuses</option>
                                     {loadingOptions ? (
@@ -274,11 +274,11 @@ const Filter = ({closeModal}) => {
 
                             {/* Suppliers */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Supplier</label>
                                 <select
                                     value={pendingFilters.supplier_id}
                                     onChange={(e) => handleFilterChange('supplier_id', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Suppliers</option>
                                     {loadingSuppliers ? (
@@ -295,19 +295,19 @@ const Filter = ({closeModal}) => {
                     </div>
 
                     {/* Year & Color */}
-                    <div className="bg-white/50 p-4 rounded-lg shadow-sm border border-gray-100">
-                        <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <div className="bg-white/50 dark:bg-gray-700/50 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-600">
+                        <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
                             <span className="w-1 h-4 bg-gradient-to-b from-yellow-500 to-yellow-600 rounded-full"></span>
                             Year & Color
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Year */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Year</label>
                                 <select
                                     value={pendingFilters.year}
                                     onChange={(e) => handleFilterChange('year', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Years</option>
                                     {filterOptions.years.map(year => (
@@ -318,11 +318,11 @@ const Filter = ({closeModal}) => {
 
                             {/* Color */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Color</label>
                                 <select
                                     value={pendingFilters.color}
                                     onChange={(e) => handleFilterChange('color', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">All Colors</option>
                                     {filterOptions.colors.map(color => (
@@ -334,50 +334,50 @@ const Filter = ({closeModal}) => {
                     </div>
 
                     {/* Price and Date Range */}
-                    <div className="bg-white/50 p-4 rounded-lg shadow-sm border border-gray-100">
-                        <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <div className="bg-white/50 dark:bg-gray-700/50 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-600">
+                        <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
                             <span className="w-1 h-4 bg-gradient-to-b from-green-500 to-green-600 rounded-full"></span>
                             Price & Date Range
                         </h4>
                         <div className="space-y-4">
                             {/* Price Range */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Price Range (LKR)</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price Range (LKR)</label>
                                 <div className="flex items-center space-x-2 max-w-md">
                                     <input
                                         type="number"
                                         placeholder="Min"
                                         value={pendingFilters.priceRangeMin}
                                         onChange={(e) => handleFilterChange('priceRangeMin', e.target.value)}
-                                        className="flex-1 max-w-40 px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="flex-1 max-w-40 px-2 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <span className="text-gray-500">-</span>
+                                    <span className="text-gray-500 dark:text-gray-400">-</span>
                                     <input
                                         type="number"
                                         placeholder="Max"
                                         value={pendingFilters.priceRangeMax}
                                         onChange={(e) => handleFilterChange('priceRangeMax', e.target.value)}
-                                        className="flex-1 max-w-40 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="flex-1 max-w-40 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
                             </div>
 
                             {/* Date Range */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date Range</label>
                                 <div className="flex items-center space-x-2">
                                     <input
                                         type="date"
                                         value={pendingFilters.dateRangeStart}
                                         onChange={(e) => handleFilterChange('dateRangeStart', e.target.value)}
-                                        className="flex-1 px-3 max-w-40 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="flex-1 px-3 max-w-40 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <span className="text-gray-500">-</span>
+                                    <span className="text-gray-500 dark:text-gray-400">-</span>
                                     <input
                                         type="date"
                                         value={pendingFilters.dateRangeEnd}
                                         onChange={(e) => handleFilterChange('dateRangeEnd', e.target.value)}
-                                        className="flex-1 max-w-40 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="flex-1 max-w-40 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
                             </div>
@@ -385,19 +385,19 @@ const Filter = ({closeModal}) => {
                     </div>
 
                     {/* Sorting */}
-                    <div className="bg-white/50 p-4 rounded-lg shadow-sm border border-gray-100">
-                        <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <div className="bg-white/50 dark:bg-gray-700/50 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-600">
+                        <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
                             <span className="w-1 h-4 bg-gradient-to-b from-purple-500 to-purple-600 rounded-full"></span>
                             Sorting
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Order By */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sort By</label>
                                 <select
                                     value={pendingFilters.order_by || 'id'}
                                     onChange={(e) => handleFilterChange('order_by', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="id">ID</option>
                                     <option value="make">Make</option>
@@ -413,11 +413,11 @@ const Filter = ({closeModal}) => {
 
                             {/* Sort Direction */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sort Order</label>
                                 <select
                                     value={pendingFilters.sort || 'ASC'}
                                     onChange={(e) => handleFilterChange('sort', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="ASC">Ascending (A-Z, 0-9)</option>
                                     <option value="DESC">Descending (Z-A, 9-0)</option>
@@ -427,14 +427,14 @@ const Filter = ({closeModal}) => {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-200">
+                <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
                         <button
                             onClick={handleApplyFilters}
                             disabled={!hasChanges && !hasPendingActiveFilters}
                             className={`px-8 py-3 text-sm font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg ${
                                 hasChanges || hasPendingActiveFilters
                                     ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600 shadow-blue-500/50'
-                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-gray-300/50'
+                                    : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed shadow-gray-300/50'
                             }`}
                             style={{
                                 boxShadow: hasChanges || hasPendingActiveFilters
@@ -448,19 +448,19 @@ const Filter = ({closeModal}) => {
 
                 <div className="flex items-center justify-between pt-4 mt-4 ">
                     {hasActiveFilters && (
-                        <div className="flex flex-wrap items-center gap-2 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl shadow-inner border border-blue-100">
-                            <span className="text-sm font-medium text-blue-800">Active Filters:</span>
+                        <div className="flex flex-wrap items-center gap-2 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl shadow-inner border border-blue-100 dark:border-blue-800">
+                            <span className="text-sm font-medium text-blue-800 dark:text-blue-300">Active Filters:</span>
                             {Object.entries(pendingFilters).map(([key, value]) => {
                                 if (typeof value === 'string' && value) {
                                     return (
                                         <span
                                             key={key}
-                                            className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
+                                            className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-sm rounded-full"
                                         >
                                         {key}: {value}
                                             <button
                                                 onClick={() => handleFilterChange(key, '')}
-                                                className="text-blue-600 hover:text-blue-800"
+                                                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
                                             >
                                             <X className="w-3 h-3" />
                                         </button>
