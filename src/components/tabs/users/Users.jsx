@@ -56,14 +56,14 @@ const Users = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Users</h1>
-                    <p className="text-gray-600 mt-2">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Users</h1>
+                    <p className="text-gray-600 dark:text-gray-400 mt-2">
                         Manage and view all registered users in the system
                     </p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="text-sm text-gray-600">
-                        Total Users: <span className="font-semibold text-gray-900">{totalCount}</span>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                        Total Users: <span className="font-semibold text-gray-900 dark:text-white">{totalCount}</span>
                     </div>
                     <button
                         onClick={handleRefresh}
