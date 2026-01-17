@@ -113,21 +113,6 @@ const CarInformationSection = ({
                 updateField={updateField}
             />
             <EditableField
-                label="Auction Price"
-                value={editedData.vehicle?.auction_price ?
-                    editedData.vehicle.auction_price.toLocaleString() :
-                    (vehicle.auction_price ?
-                        vehicle.auction_price.toLocaleString() :
-                        'N/A')}
-                section="vehicle"
-                field="auction_price"
-                type="number"
-                isEditing={editingSection !== null}
-                currentValue={editedData.vehicle?.auction_price ||
-                    vehicle.auction_price || 0}
-                updateField={updateField}
-            />
-            <EditableField
                 label="Quoted Price"
                 value={editedData.vehicle?.price_quoted ?
                     editedData.vehicle.price_quoted.toLocaleString() :
