@@ -11,7 +11,7 @@ import {getAllDocumentTypes} from "../../../utils/documetsUtil.jsx";
 import SelectCustomerModal from "./SelectCustomerModal.jsx";
 import {fetchCustomerById, selectSelectedCustomer, clearSelectedCustomer} from "../../../state/customerSlice.js";
 
-const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
+const CreateVehicle = ({ isOpen, onClose, onSubmitSuccess }) => {
     const dispatch = useDispatch();
     const selectedCustomer = useSelector(selectSelectedCustomer);
 
@@ -442,6 +442,7 @@ const CreateVehicle = ({ isOpen, onClose, onSubmit }) => {
                         sale_status: "RESERVED",
                     });
                     showNotification('success', 'Success', `Vehicle created successfully and assigned to customer`);
+                    onSubmitSuccess();
                 } catch (salesError) {
                     console.error('Failed to update sales information:', salesError);
                     showNotification('warning', 'Warning', `Vehicle created but failed to assign customer`);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Search, Eye, Edit2, UserCircle } from 'lucide-react';
+import {X, Search, Eye, Edit2, UserCircle, Plus} from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     fetchCustomers,
@@ -10,6 +10,7 @@ import {
     selectLoadingCustomer
 } from '../../../state/customerSlice.js';
 import EditCustomerModal from '../customers/EditCustomerModal.jsx';
+import CreateCustomerModal from '../customers/CreateCustomerModal.jsx';
 
 const SelectCustomerModal = ({ currentCustomerId, onSelect, onClose }) => {
     const dispatch = useDispatch();
@@ -22,10 +23,11 @@ const SelectCustomerModal = ({ currentCustomerId, onSelect, onClose }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [showEditModal, setShowEditModal] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
+    const [showCreateCustomerModal, setShowCreateCustomerModal] = useState(false);
 
     useEffect(() => {
         dispatch(fetchCustomers());
-    }, [dispatch]);
+    }, [dispatch, showCreateCustomerModal]);
 
     const handleViewEditCustomer = async () => {
         if (!selectedCustomerId) {
@@ -129,9 +131,17 @@ const SelectCustomerModal = ({ currentCustomerId, onSelect, onClose }) => {
                                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                                     {searchTerm ? 'No customers found' : 'No customers available'}
                                 </h3>
-                                <p className="text-gray-600">
-                                    {searchTerm ? 'Try adjusting your search criteria.' : 'Add customers first.'}
-                                </p>
+                                <button
+                                    onClick={()=> {setShowCreateCustomerModal(true)}}
+                                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+
+                                    <>
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Add Customer
+                                    </>
+
+                                </button>
                             </div>
                         ) : (
                             <div className="space-y-2">
@@ -253,6 +263,14 @@ const SelectCustomerModal = ({ currentCustomerId, onSelect, onClose }) => {
                     onClose={handleCloseEditModal}
                 />
             )}
+
+            {showCreateCustomerModal && (
+                <CreateCustomerModal
+                    onClose={()=> {setShowCreateCustomerModal(false)}}
+                />
+            )}
+
+
         </>
     );
 };

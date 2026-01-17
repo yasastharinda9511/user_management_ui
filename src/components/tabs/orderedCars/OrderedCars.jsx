@@ -91,9 +91,8 @@ const OrderedCars = () => {
         }
     }, [location]);
 
-    const handleOrderSubmit = (orderData) => {
-        console.log('Order received:', orderData);
-        alert(`Order ${orderData.isDraft ? 'saved as draft' : 'placed'} successfully!\nOrder Number: ${orderData.orderNumber}`);
+    const handleCreatVehicleSubmitSuccess = () => {
+        setShowCreateOrder(false);
     };
 
     // Filter handlers
@@ -478,7 +477,7 @@ const OrderedCars = () => {
                 <CreateVehicle
                     isOpen={showCreateOrder}
                     onClose={closeCreateOrder}
-                    onSubmit={handleOrderSubmit}
+                    onSubmitSuccess={handleCreatVehicleSubmitSuccess}
                 />
             )}
         </div>
