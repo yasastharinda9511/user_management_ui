@@ -82,7 +82,7 @@ function App() {
                     <Route path="users" element={<Users />} />
                     <Route path="roles" element={<Roles />} />
                     <Route path="permissions" element={<Permissions />} />
-                    <Route path="analytics" element={<Analytics />} />
+                    {/*<Route path="analytics" element={<Analytics />} />*/}
                     <Route path="settings" element={<Settings />} />
                 </Route>
 
