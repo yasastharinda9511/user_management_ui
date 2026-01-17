@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Save, Key } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,6 +9,7 @@ import {
 const EditPermissionModal = ({ permission, onClose }) => {
     const dispatch = useDispatch();
     const updating = useSelector(selectUpdating);
+    const [isClosing, setIsClosing] = useState(false);
 
     const [formData, setFormData] = useState({
         name: permission.name || '',
@@ -54,30 +55,30 @@ const EditPermissionModal = ({ permission, onClose }) => {
     };
 
     return (
-        <div className={`modal-backdrop fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
+        <div className={`modal-backdrop fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 ${isClosing ? 'closing' : ''}`}>
             {/* Modal container */}
             <div className="flex min-h-full items-center justify-center p-4">
                 {/* Modal panel */}
-                <div className={`modal-content relative bg-white rounded-lg shadow-xl transform transition-all w-full max-w-2xl ${isClosing ? 'closing' : ''}`}>
+                <div className={`modal-content relative bg-white dark:bg-gray-800 rounded-lg shadow-xl transform transition-all w-full max-w-2xl ${isClosing ? 'closing' : ''}`}>
                     {/* Header */}
-                    <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <Key className="w-6 h-6 text-blue-600" />
+                                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center">
+                                    <Key className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900">
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                         Edit Permission
                                     </h3>
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
                                         Update permission details
                                     </p>
                                 </div>
                             </div>
                             <button
                                 onClick={handleClose}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                             >
                                 <X className="w-6 h-6" />
                             </button>
@@ -89,20 +90,20 @@ const EditPermissionModal = ({ permission, onClose }) => {
                         <div className="space-y-6">
                             {/* Permission ID (read-only) */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Permission ID
                                 </label>
                                 <input
                                     type="text"
                                     value={permission.id}
                                     disabled
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
                                 />
                             </div>
 
                             {/* Name */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Permission Name *
                                 </label>
                                 <input
@@ -111,10 +112,10 @@ const EditPermissionModal = ({ permission, onClose }) => {
                                     value={formData.name}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     placeholder="e.g., user:create, role:delete"
                                 />
-                                <p className="text-xs text-gray-500 mt-1">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                     A unique identifier for this permission (usually action:resource)
                                 </p>
                             </div>
@@ -122,7 +123,7 @@ const EditPermissionModal = ({ permission, onClose }) => {
                             {/* Action and Resource */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Action *
                                     </label>
                                     <input
@@ -132,7 +133,7 @@ const EditPermissionModal = ({ permission, onClose }) => {
                                         onChange={handleInputChange}
                                         required
                                         list="actions-list"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         placeholder="e.g., create, read, update"
                                     />
                                     <datalist id="actions-list">
@@ -140,13 +141,13 @@ const EditPermissionModal = ({ permission, onClose }) => {
                                             <option key={action} value={action} />
                                         ))}
                                     </datalist>
-                                    <p className="text-xs text-gray-500 mt-1">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                         The action type (create, read, update, delete, etc.)
                                     </p>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Resource *
                                     </label>
                                     <input
@@ -156,7 +157,7 @@ const EditPermissionModal = ({ permission, onClose }) => {
                                         onChange={handleInputChange}
                                         required
                                         list="resources-list"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         placeholder="e.g., users, roles, vehicles"
                                     />
                                     <datalist id="resources-list">
@@ -164,7 +165,7 @@ const EditPermissionModal = ({ permission, onClose }) => {
                                             <option key={resource} value={resource} />
                                         ))}
                                     </datalist>
-                                    <p className="text-xs text-gray-500 mt-1">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                         The resource this permission applies to
                                     </p>
                                 </div>
@@ -172,7 +173,7 @@ const EditPermissionModal = ({ permission, onClose }) => {
 
                             {/* Description */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Description
                                 </label>
                                 <textarea
@@ -180,21 +181,21 @@ const EditPermissionModal = ({ permission, onClose }) => {
                                     value={formData.description}
                                     onChange={handleInputChange}
                                     rows="3"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     placeholder="Describe what this permission allows users to do..."
                                 />
                             </div>
 
                             {/* Preview */}
                             {formData.action && formData.resource && (
-                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                    <p className="text-sm font-medium text-blue-900 mb-1">Preview:</p>
+                                <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                                    <p className="text-sm font-medium text-blue-900 dark:text-blue-300 mb-1">Preview:</p>
                                     <div className="flex items-center space-x-2">
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
                                             {formData.action}
                                         </span>
-                                        <span className="text-gray-600">on</span>
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                        <span className="text-gray-600 dark:text-gray-400">on</span>
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">
                                             {formData.resource}
                                         </span>
                                     </div>
@@ -203,11 +204,11 @@ const EditPermissionModal = ({ permission, onClose }) => {
                         </div>
 
                         {/* Footer */}
-                        <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
+                        <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className={`modal-content px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors ${isClosing ? 'closing' : ''}`}
+                                className={`modal-content px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors ${isClosing ? 'closing' : ''}`}
                             >
                                 Cancel
                             </button>

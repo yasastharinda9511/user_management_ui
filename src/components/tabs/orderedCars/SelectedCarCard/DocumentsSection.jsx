@@ -6,7 +6,7 @@ import presignedUrlCache from '../../../../utils/presignedUrlCache.js';
 import {getAllDocumentTypes, getDocumentColor, getDocumentIcon} from "../../../../utils/documetsUtil.jsx";
 import PDFViewer from '../../../common/PDFViewer.jsx';
 
-const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
+const DocumentsSection = ({ vehicleId, allDocuments, isEditing, onDocumentsChange }) => {
     const [uploading, setUploading] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [documentType, setDocumentType] = useState('LC_DOCUMENT');
@@ -50,6 +50,10 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
             setDocumentType('LC_DOCUMENT');
             // Reset file input
             document.getElementById('document-upload').value = '';
+            // Refresh vehicle data to show new document
+            if (onDocumentsChange) {
+                onDocumentsChange();
+            }
         } catch (error) {
             console.error('Upload failed:', error);
             showNotification('error', 'Failed to upload document');
@@ -68,6 +72,10 @@ const DocumentsSection = ({ vehicleId, allDocuments, isEditing }) => {
             // Invalidate cache for this specific document
             presignedUrlCache.invalidateDocument(vehicleId, documentId);
             showNotification('success', 'Document deleted successfully');
+            // Refresh vehicle data to update document list
+            if (onDocumentsChange) {
+                onDocumentsChange();
+            }
         } catch (error) {
             console.error('Delete failed:', error);
             showNotification('error', 'Failed to delete document');

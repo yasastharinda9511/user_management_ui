@@ -92,14 +92,14 @@ const Permissions = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Permissions</h1>
-                    <p className="text-gray-600 mt-2">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Permissions</h1>
+                    <p className="text-gray-600 dark:text-gray-400 mt-2">
                         Manage system permissions and access controls
                     </p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="text-sm text-gray-600">
-                        Total Permissions: <span className="font-semibold text-gray-900">{totalCount}</span>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                        Total Permissions: <span className="font-semibold text-gray-900 dark:text-white">{totalCount}</span>
                     </div>
                     <button
                         onClick={handleRefresh}
@@ -125,10 +125,10 @@ const Permissions = () => {
 
                 {/* Error State */}
             {error && !loading && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
                     <div className="flex items-center">
-                        <XCircle className="w-5 h-5 text-red-600 mr-2" />
-                        <p className="text-red-800">Error: {error}</p>
+                        <XCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" />
+                        <p className="text-red-800 dark:text-red-300">Error: {error}</p>
                     </div>
                 </div>
             )}
@@ -136,9 +136,9 @@ const Permissions = () => {
             {/* No Permissions */}
             {!loading && !error && permissions.length === 0 && (
                 <div className="text-center py-12">
-                    <Key className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No permissions found</h3>
-                    <p className="text-gray-600 mb-4">Get started by creating your first permission.</p>
+                    <Key className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No permissions found</h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">Get started by creating your first permission.</p>
                     <button
                         onClick={() => setShowCreateModal(true)}
                         className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
@@ -154,14 +154,14 @@ const Permissions = () => {
                 <div className="flex items-center justify-end gap-2">
                     <button
                         onClick={expandAll}
-                        className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
                         <ChevronDown className="w-4 h-4" />
                         <span>Expand All</span>
                     </button>
                     <button
                         onClick={collapseAll}
-                        className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
                         <ChevronRight className="w-4 h-4" />
                         <span>Collapse All</span>
@@ -173,23 +173,23 @@ const Permissions = () => {
             {!loading && permissions.length > 0 && (
                 <div className="space-y-4">
                     {Object.keys(groupedPermissions).sort().map(resource => (
-                        <div key={resource} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <div key={resource} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                             {/* Resource Header - Clickable */}
                             <button
                                 onClick={() => toggleResourceCollapse(resource)}
-                                className="w-full bg-gray-50 px-6 py-3 border-b border-gray-200 hover:bg-gray-100 transition-colors"
+                                className="w-full bg-gray-50 dark:bg-gray-700 px-6 py-3 border-b border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                             >
                                 <div className="flex items-center space-x-2">
                                     {collapsedResources[resource] ? (
-                                        <ChevronRight className="w-5 h-5 text-gray-600" />
+                                        <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                                     ) : (
-                                        <ChevronDown className="w-5 h-5 text-gray-600" />
+                                        <ChevronDown className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                                     )}
-                                    <Shield className="w-5 h-5 text-gray-600" />
-                                    <h3 className="text-lg font-semibold text-gray-900 uppercase">
+                                    <Shield className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white uppercase">
                                         {resource}
                                     </h3>
-                                    <span className="text-sm text-gray-500">
+                                    <span className="text-sm text-gray-500 dark:text-gray-400">
                                         ({groupedPermissions[resource].length} permissions)
                                     </span>
                                 </div>
@@ -198,7 +198,7 @@ const Permissions = () => {
                             {/* Permissions Table - Collapsible */}
                             {!collapsedResources[resource] && (
                                 <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-gray-200 table-fixed w-full">
+                                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed w-full">
                                     <colgroup>
                                         <col style={{width: '20%'}} />
                                         <col style={{width: '12%'}} />
@@ -206,65 +206,65 @@ const Permissions = () => {
                                         <col style={{width: '18%'}} />
                                         <col style={{width: '15%'}} />
                                     </colgroup>
-                                    <thead className="bg-gray-50">
+                                    <thead className="bg-gray-50 dark:bg-gray-700">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                                 Name
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                                 Action
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                                 Description
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                                 Created
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                                 Actions
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
+                                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                         {groupedPermissions[resource].map((permission) => (
-                                            <tr key={permission.id} className="hover:bg-gray-50 transition-colors">
+                                            <tr key={permission.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center min-w-0">
                                                         <div className="flex-shrink-0 h-10 w-10">
-                                                            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                                                                <Key className="w-5 h-5 text-blue-600" />
+                                                            <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+                                                                <Key className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                                                             </div>
                                                         </div>
                                                         <div className="ml-4 min-w-0 flex-1">
-                                                            <div className="text-sm font-medium text-gray-900 truncate" title={permission.name}>
+                                                            <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={permission.name}>
                                                                 {permission.name}
                                                             </div>
-                                                            <div className="text-sm text-gray-500 truncate">
+                                                            <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
                                                                 ID: {permission.id}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 max-w-full truncate" title={permission.action}>
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 max-w-full truncate" title={permission.action}>
                                                         {permission.action}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <div className="text-sm text-gray-900 truncate" title={permission.description}>
+                                                    <div className="text-sm text-gray-900 dark:text-white truncate" title={permission.description}>
                                                         {permission.description || (
-                                                            <span className="text-gray-400 italic">No description</span>
+                                                            <span className="text-gray-400 dark:text-gray-500 italic">No description</span>
                                                         )}
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                                     {formatDate(permission.created_at)}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                                                     <div className="flex items-center gap-2">
                                                         <button
                                                             onClick={() => setEditingPermission(permission)}
-                                                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
+                                                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
                                                         >
                                                             <Edit className="w-3 h-3 mr-1" />
                                                             Edit
@@ -272,7 +272,7 @@ const Permissions = () => {
                                                         <button
                                                             onClick={() => handleDelete(permission.id, permission.name)}
                                                             disabled={updating}
-                                                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                            className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                         >
                                                             <Trash2 className="w-3 h-3 mr-1" />
                                                             Delete
@@ -293,44 +293,44 @@ const Permissions = () => {
             {/* Stats Cards */}
             {!loading && permissions.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600">Total Permissions</p>
-                                <p className="text-2xl font-bold text-gray-900 mt-2">
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Permissions</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
                                     {totalCount}
                                 </p>
                             </div>
-                            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <Key className="w-6 h-6 text-blue-600" />
+                            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center">
+                                <Key className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600">Resource Types</p>
-                                <p className="text-2xl font-bold text-gray-900 mt-2">
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Resource Types</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
                                     {Object.keys(groupedPermissions).length}
                                 </p>
                             </div>
-                            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                                <Shield className="w-6 h-6 text-green-600" />
+                            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-lg flex items-center justify-center">
+                                <Shield className="w-6 h-6 text-green-600 dark:text-green-400" />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600">Unique Actions</p>
-                                <p className="text-2xl font-bold text-gray-900 mt-2">
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Unique Actions</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
                                     {new Set(permissions.map(p => p.action)).size}
                                 </p>
                             </div>
-                            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                                <Key className="w-6 h-6 text-purple-600" />
+                            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/50 rounded-lg flex items-center justify-center">
+                                <Key className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                             </div>
                         </div>
                     </div>

@@ -40,6 +40,7 @@ export const VehicleSections = ({
     onSelectChangeSupplier,
     onShowPurchaseHistory,
     onShowShippingHistory,
+    onDocumentsChange,
     vehicleId
 }) => {
 
@@ -90,6 +91,7 @@ export const VehicleSections = ({
                         vehicleId={vehicleId}
                         allDocuments={documents}
                         isEditing={editingSection !== null}
+                        onDocumentsChange={onDocumentsChange}
                     />
                 </div>
             )

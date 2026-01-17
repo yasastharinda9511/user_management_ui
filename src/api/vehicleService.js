@@ -277,7 +277,7 @@ const vehicleService = {
      * @returns {Promise} - Delete response
      */
     deleteVehicleDocument: async (vehicleId, documentId) => {
-        const response = await carServiceApi.delete(`/vehicles/${vehicleId}/documents/${documentId}`);
+        const response = await carServiceApi.delete(`/vehicles/document/${documentId}`);
         // Invalidate cache for this specific document
         presignedUrlCache.invalidateDocument(vehicleId, documentId);
         return response.data;

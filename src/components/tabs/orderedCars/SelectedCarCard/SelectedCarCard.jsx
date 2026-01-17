@@ -258,6 +258,11 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
         setNotification({ show: false, type: '', title: '', message: '' });
     };
 
+    // Callback to refresh vehicle data after document changes
+    const handleDocumentsChange = useCallback(() => {
+        dispatch(fetchVehicleById(id));
+    }, [dispatch, id]);
+
     useEffect(()=>{
         setSections(VehicleSections({
             permissions,
@@ -275,9 +280,10 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
             onSelectChangeSupplier: handleSelectChangeSupplier,
             onShowPurchaseHistory: handleShowPurchaseHistory,
             onShowShippingHistory: handleShowShippingHistory,
+            onDocumentsChange: handleDocumentsChange,
             vehicleId: id
         }));
-    }, [editingSection, editedData])
+    }, [editingSection, editedData, handleDocumentsChange])
     // Initialize edited data
     useEffect(() => {
 
@@ -952,27 +958,41 @@ const SelectedCarCard = ({id, closeModal, onSave}) => {
                                 )}
                             </div>
 
-                            {/* Save/Cancel Buttons */}
+                            {/* Save/Cancel Buttons - Show Done button for Documents section since documents save immediately */}
                             {editingSection === currentSection && (
                                 <div className="flex justify-center space-x-3 mb-6">
-                                    <button
-                                        onClick={saveEdit}
-                                        className="px-6 py-2.5 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 text-sm font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
-                                        style={{
-                                            boxShadow: '0 4px 6px -1px rgba(34, 197, 94, 0.4), 0 2px 4px -1px rgba(34, 197, 94, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.4)'
-                                        }}
-                                    >
-                                        💾 Save Changes
-                                    </button>
-                                    <button
-                                        onClick={cancelEdit}
-                                        className="px-6 py-2.5 bg-gradient-to-br from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 text-sm font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
-                                        style={{
-                                            boxShadow: '0 4px 6px -1px rgba(107, 114, 128, 0.4), 0 2px 4px -1px rgba(107, 114, 128, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.4)'
-                                        }}
-                                    >
-                                        ✕ Cancel
-                                    </button>
+                                    {sections[currentSection]?.title === SELECTED_VEHICLE_CARD_OPTIONS.DOCUMENTS ? (
+                                        <button
+                                            onClick={cancelEdit}
+                                            className="px-6 py-2.5 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 text-sm font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+                                            style={{
+                                                boxShadow: '0 4px 6px -1px rgba(59, 130, 246, 0.4), 0 2px 4px -1px rgba(59, 130, 246, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.4)'
+                                            }}
+                                        >
+                                            ✓ Done
+                                        </button>
+                                    ) : (
+                                        <>
+                                            <button
+                                                onClick={saveEdit}
+                                                className="px-6 py-2.5 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 text-sm font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+                                                style={{
+                                                    boxShadow: '0 4px 6px -1px rgba(34, 197, 94, 0.4), 0 2px 4px -1px rgba(34, 197, 94, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.4)'
+                                                }}
+                                            >
+                                                💾 Save Changes
+                                            </button>
+                                            <button
+                                                onClick={cancelEdit}
+                                                className="px-6 py-2.5 bg-gradient-to-br from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 text-sm font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+                                                style={{
+                                                    boxShadow: '0 4px 6px -1px rgba(107, 114, 128, 0.4), 0 2px 4px -1px rgba(107, 114, 128, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.4)'
+                                                }}
+                                            >
+                                                ✕ Cancel
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             )}
 
